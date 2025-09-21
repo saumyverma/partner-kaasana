@@ -243,7 +243,7 @@ const MasterLayout = ({ children }) => {
             </li> 
 
 
-    <li className='dropdown'>
+           <li className='dropdown'>
               <Link href='#'>
                 <Icon
                   icon='flowbite:users-group-outline'
@@ -301,6 +301,191 @@ const MasterLayout = ({ children }) => {
                 </li>
               </ul>
             </li>
+             {/* Bookings */}
+            <li className='dropdown'>
+              <Link href='#'>
+                <Icon
+                  icon='flowbite:users-group-outline'
+                  className='menu-icon'
+                />
+                <span>Bookings</span>
+              </Link>
+              <ul className='sidebar-submenu'>
+                <li>
+                  <Link
+                    href='/bookings/packages'
+                    className={pathname === '/bookings/packages' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />{" "}
+                    Packages
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/bookings/hotels"
+                    className={
+                      pathname === "/bookings/hotels" ? "active-page" : ""
+                    }
+                  >
+                    <i className='ri-circle-fill circle-icon text-warning-main w-auto' />{" "}
+                 Hotels
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/bookings/flights'
+                    className={pathname === "/bookings/flights" ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
+                    Flights
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/bookings/activities'
+                    className={pathname === '/bookings/activities' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-success-main w-auto' />{" "}
+                   Activities
+                  </Link>
+                </li>
+                 <li>
+                  <Link
+                    href='/bookings/transportations'
+                    className={pathname === '/bookings/transportations' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-danger-main w-auto' />{" "}
+                   Transportations
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/bookings/visa'
+                    className={pathname === '/bookings/visa' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-primary-main w-auto' />{" "}
+                   Visa
+                  </Link>
+                </li>
+              </ul>
+            </li>
+
+            {/* Inventory */}
+            <li className='dropdown'>
+              <Link href='#'>
+                <Icon
+                  icon='flowbite:users-group-outline'
+                  className='menu-icon'
+                />
+                <span>Inventory</span>
+              </Link>
+              <ul className='sidebar-submenu'>
+                <li>
+                  <Link
+                    href='/inventory/hotels'
+                    className={pathname === '/inventory/hotels' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />{" "}
+                    Hotels
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/inventory/packages"
+                    className={
+                      pathname === "/inventory/packages" ? "active-page" : ""
+                    }
+                  >
+                    <i className='ri-circle-fill circle-icon text-warning-main w-auto' />{" "}
+                 Packages
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/inventory/transportations'
+                    className={pathname === "/inventory/transportations" ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
+                    Transportations
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/inventory/visa'
+                    className={pathname === '/inventory/visa' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-success-main w-auto' />{" "}
+                   Visa
+                  </Link>
+                </li>
+                 <li>
+                  <Link
+                    href='/inventory/activities'
+                    className={pathname === '/inventory/activities' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-danger-main w-auto' />{" "}
+                   Activities
+                  </Link>
+                </li>
+                
+              </ul>
+            </li>
+
+                {/* Resources */}
+            <li className='dropdown'>
+              <Link href='#'>
+                <Icon
+                  icon='flowbite:users-group-outline'
+                  className='menu-icon'
+                />
+                <span>Resources</span>
+              </Link>
+              <ul className='sidebar-submenu'>
+                <li>
+                  <Link
+                    href='/resources/roles'
+                    className={pathname === '/resources/roles' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />{" "}
+                    Roles / Permissions
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/resources/users"
+                    className={
+                      pathname === "/resources/users" ? "active-page" : ""
+                    }
+                  >
+                    <i className='ri-circle-fill circle-icon text-warning-main w-auto' />{" "}
+                 Users
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/resources/branches'
+                    className={pathname === "/resources/branches" ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
+                    Branches
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/resources/suppliers'
+                    className={pathname === '/resources/suppliers' ? "active-page" : ""}
+                  >
+                    <i className='ri-circle-fill circle-icon text-success-main w-auto' />{" "}
+                   Suppliers / Partners
+                  </Link>
+                </li>
+                 
+                
+              </ul>
+            </li>
+
+
+            
 
 
 
