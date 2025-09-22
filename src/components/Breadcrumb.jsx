@@ -2,7 +2,7 @@
 import React from "react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-const Breadcrumb = ({ title }) => {
+const Breadcrumb = ({ breadcrumbs }) => {
   return (
     <div className='d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24'>
       <h6 className='fw-semibold mb-0'>Dashboard</h6>
@@ -19,8 +19,14 @@ const Breadcrumb = ({ title }) => {
             Dashboard
           </Link>
         </li>
-        <li> - </li>
-        <li className='fw-medium'>{title}</li>
+           {breadcrumbs.length>0 && breadcrumbs.map((item, index) => (
+               <>                
+                <li> - </li>
+                <li className='fw-medium'>{item.label}</li>
+                </>
+
+             ))}
+
       </ul>
     </div>
   );

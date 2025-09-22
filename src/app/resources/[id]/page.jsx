@@ -8,10 +8,14 @@ import SuppliersLayer from '@/components/Resources/SuppliersLayer';
 
 export default async function Page({params}) {
      const resolvedParams = await params;
-      const pageId = resolvedParams.id;
+     const pageId = resolvedParams.id;
+     const breadcrumbs = [
+    {  label: "Resources",  href: "#"},
+  
+  ];
   return (
      <MasterLayout>
-       <Breadcrumb title={pageId} />
+       <Breadcrumb breadcrumbs={breadcrumbs} />
 
        {pageId === "roles" ? (
          <RolesLayer/>

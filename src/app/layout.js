@@ -3,9 +3,9 @@ import "./font.css";
 import "./globals.css";
 
 export const metadata = {
-  title: "WowDash NEXT JS - Admin Dashboard Multipurpose Bootstrap 5 Template",
+  title: "Kaasana.com | Dashboard Page",
   description:
-    "Wowdash NEXT JS is a developer-friendly, ready-to-use admin template designed for building attractive, scalable, and high-performing web applications.",
+    "Kaasana.com | Dashboard Page - Partner Portal for Managing Your Business",
 };
 
 export default function RootLayout({ children }) {

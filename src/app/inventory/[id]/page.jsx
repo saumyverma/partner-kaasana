@@ -9,11 +9,30 @@ import ActivitiesLayer from '@/components/Inventory/ActivitiesLayer';
 
 
 export default async function Page({params}) {
-     const resolvedParams = await params;
+      const resolvedParams = await params;
       const pageId = resolvedParams.id;
+      const breadcrumbs = [
+   {  label: "Inventory",  href: "#"},
+    { 
+      label: 
+        pageId === "hotels"
+          ? "Hotels List"
+          : pageId === "packages"
+          ? "Packages List"
+          : pageId === "transportations"
+          ? "Transportation List"
+          : pageId === "visa"
+          ? "Visa List"
+           : pageId === "activities"
+          ? "Activities List"
+          : "",
+      href: "#"
+    }
+  ];
+
   return (
      <MasterLayout>
-       <Breadcrumb title={pageId} />
+       <Breadcrumb breadcrumbs={breadcrumbs} />
 
        {pageId === "hotels" ? (
          <HotelsLayer/>
