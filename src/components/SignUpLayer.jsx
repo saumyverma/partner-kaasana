@@ -1,7 +1,22 @@
+"use client"
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
+import { useSelector, useDispatch } from "react-redux";
+import { login, logout } from "../store/slices/authSlice";
 
 const SignUpLayer = () => {
+   const dispatch = useDispatch();
+   const { isAuthenticated, user } = useSelector((state) => state.auth);
+    const handleLogin = () => {
+      console.log("Login clicked");
+    dispatch(
+      login({
+        user: { name: "Saumy", email: "saumy@example.com" },
+        token: "abc123xyz",
+      })
+    );
+  };
+  
   return (
     <section className='auth bg-base d-flex flex-wrap'>
       <div className='auth-left d-lg-block d-none'>
@@ -15,12 +30,15 @@ const SignUpLayer = () => {
             <Link href='/' className='mb-40 max-w-290-px'>
               <img src='assets/images/logo.png' alt='' />
             </Link>
+
+
+
             <h4 className='mb-12'>Sign Up to your Account</h4>
             <p className='mb-32 text-secondary-light text-lg'>
               Welcome back! please enter your detail
             </p>
           </div>
-          <form action='#'>
+          {/* <form action='#'> */}
             <div className='icon-field mb-16'>
               <span className='icon top-50 translate-middle-y'>
                 <Icon icon='f7:person' />
@@ -91,6 +109,7 @@ const SignUpLayer = () => {
             <button
               type='submit'
               className='btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32'
+              onClick={handleLogin}
             >
               {" "}
               Sign Up
@@ -123,12 +142,19 @@ const SignUpLayer = () => {
             <div className='mt-32 text-center text-sm'>
               <p className='mb-0'>
                 Already have an account?{" "}
-                <Link href='/sign-in' className='text-primary-600 fw-semibold'>
+                <Link href='/sign-in'  className='text-primary-600 fw-semibold' on>
                   Sign In
                 </Link>
               </p>
+
+              {isAuthenticated  &&
+                 <>
+            <p>Welcome, {user.name}</p>
+          <button onClick={() => dispatch(logout())}>Logout</button>
+             </>
+              }
             </div>
-          </form>
+          {/* </form> */}
         </div>
       </div>
     </section>
