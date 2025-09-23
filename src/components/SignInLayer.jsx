@@ -1,7 +1,38 @@
+"use client"
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
+import { useSelector, useDispatch } from "react-redux";
+import { login, logout } from "../store/slices/authSlice";
+import { useState } from "react";
+import { api } from "@/utils/api";
 
-const SignInLayer = () => {
+const SignInLayer =  () => {
+    const dispatch = useDispatch();
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("");
+     const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+      const handleLogin = async() => {
+        console.log("Login clicked", email, password);
+        const formData = { email, password };
+           try {
+  //     // ✅ Reuse same post method for any form
+      const res = await api.post("/users", formData);
+      // console.log("formData",res);
+      // setMessage("Saved successfully!");
+      console.log("Response:", res);
+    } catch (err) {
+      // setMessage("Error: " + err.message);
+    }
+        
+
+      // dispatch(
+      //   login({
+      //     user: { password: password, email:email },
+      //     token: "abc123xyz",
+      //   })
+      // );
+    };
   return (
     <section className='auth bg-base d-flex flex-wrap'>
       <div className='auth-left d-lg-block d-none'>
@@ -20,7 +51,7 @@ const SignInLayer = () => {
               Welcome back! please enter your detail
             </p>
           </div>
-          <form action='#'>
+          {/* <form action='#'> */}
             <div className='icon-field mb-16'>
               <span className='icon top-50 translate-middle-y'>
                 <Icon icon='mage:email' />
@@ -28,7 +59,9 @@ const SignInLayer = () => {
               <input
                 type='email'
                 className='form-control h-56-px bg-neutral-50 radius-12'
-                placeholder='Email'
+                 placeholder='Email'
+                 onChange={(e) => setEmail(e.target.value)}
+                 value={email}
               />
             </div>
             <div className='position-relative mb-20'>
@@ -41,6 +74,8 @@ const SignInLayer = () => {
                   className='form-control h-56-px bg-neutral-50 radius-12'
                   id='your-password'
                   placeholder='Password'
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                 />
               </div>
               <span
@@ -69,6 +104,7 @@ const SignInLayer = () => {
             <button
               type='submit'
               className='btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32'
+              onClick={handleLogin}
             >
               {" "}
               Sign In
@@ -106,7 +142,7 @@ const SignInLayer = () => {
                 </Link>
               </p>
             </div>
-          </form>
+          {/* </form> */}
         </div>
       </div>
     </section>
