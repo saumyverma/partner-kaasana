@@ -6,7 +6,7 @@ import PackagesLayer from '@/components/Inventory/PackagesLayer';
 import TransportationsLayer from '@/components/Inventory/TransportationsLayer';
 import VisaLayer from '@/components/Inventory/VisaLayer';
 import ActivitiesLayer from '@/components/Inventory/ActivitiesLayer';
-
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default async function Page({params}) {
       const resolvedParams = await params;
@@ -31,6 +31,7 @@ export default async function Page({params}) {
   ];
 
   return (
+     <ProtectedRoute>
      <MasterLayout>
        <Breadcrumb breadcrumbs={breadcrumbs} />
 
@@ -47,6 +48,7 @@ export default async function Page({params}) {
       ) : (
        null
       )}
-   </MasterLayout>
+    </MasterLayout>
+   </ProtectedRoute>
   )
 }

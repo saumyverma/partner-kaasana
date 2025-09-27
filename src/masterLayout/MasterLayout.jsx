@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { usePathname } from "next/navigation";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 
 const MasterLayout = ({ children }) => {
@@ -14,6 +14,9 @@ const MasterLayout = ({ children }) => {
   let [mobileMenu, setMobileMenu] = useState(false);
   const location = usePathname(); // Hook to get the current route
 
+     const { user } = useSelector((state) => state.auth);
+     const userDetails=user.userDetails;
+  console.log("#########",user)
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -2047,10 +2050,10 @@ const MasterLayout = ({ children }) => {
                     <div className='py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2'>
                       <div>
                         <h6 className='text-lg text-primary-light fw-semibold mb-2'>
-                          Shaidul Islam
+                        {userDetails?.name}
                         </h6>
                         <span className='text-secondary-light fw-medium text-sm'>
-                          Admin
+                            {userDetails?.company_name}
                         </span>
                       </div>
                       <button type='button' className='hover-text-danger'>

@@ -5,6 +5,7 @@ import RolesLayer from '@/components/Resources/RolesLayer';
 import UsersLayer from '@/components/Resources/UsersLayer';
 import BranchesLayer from '@/components/Resources/BranchesLayer';
 import SuppliersLayer from '@/components/Resources/SuppliersLayer';
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default async function Page({params}) {
      const resolvedParams = await params;
@@ -14,6 +15,7 @@ export default async function Page({params}) {
   
   ];
   return (
+     <ProtectedRoute>
      <MasterLayout>
        <Breadcrumb breadcrumbs={breadcrumbs} />
 
@@ -28,6 +30,7 @@ export default async function Page({params}) {
       ) : (
        null
       )}
-   </MasterLayout>
+    </MasterLayout>
+   </ProtectedRoute>
   )
 }

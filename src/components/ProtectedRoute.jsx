@@ -12,8 +12,6 @@ export default function ProtectedRoute({ children }) {
     console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
     if (!isAuthenticated) {
       router.push("/sign-in"); // redirect if not logged in
-    }else{
-       router.push("/"); 
     }
   }, [isAuthenticated, router]);
 

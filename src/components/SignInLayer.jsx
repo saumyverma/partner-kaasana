@@ -27,8 +27,8 @@ const SignInLayer =  () => {
          dispatch(
         login({
           user: { companyDetails: res?.data?.companyDetails,
-                 userDetails:res?.data?.userDetails,
-                menuList:res?.data?.menuList 
+                 userDetails:res?.userDetails,
+                menuList:res?.menuList 
              },
              token: res.data.accessToken,
         })
