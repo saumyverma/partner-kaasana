@@ -5,26 +5,43 @@ import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../store/slices/authSlice";
 import { useState } from "react";
 import { api } from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 const SignInLayer =  () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("");
      const { isAuthenticated, user } = useSelector((state) => state.auth);
 
       const handleLogin = async() => {
         console.log("Login clicked", email, password);
-        const formData = { email, password };
+        const tokenCaptcha="kjdfhdsfsdkjfsdf";
+        const formData = { email, password ,tokenCaptcha};
            try {
   //     // ✅ Reuse same post method for any form
-      const res = await api.post("/users", formData);
-      // console.log("formData",res);
-      // setMessage("Saved successfully!");
+      const res = await api.post("auth/signin", formData);
+      console.log("formData",res);
+
+      if(res.status==="success"){
+         dispatch(
+        login({
+          user: { companyDetails: res?.data?.companyDetails,
+                 userDetails:res?.data?.userDetails,
+                menuList:res?.data?.menuList 
+             },
+             token: res.data.accessToken,
+        })
+      );
+
+      router.push("/");
+      }
+      
       console.log("Response:", res);
     } catch (err) {
       // setMessage("Error: " + err.message);
     }
-        
+       
 
       // dispatch(
       //   login({

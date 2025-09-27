@@ -2,7 +2,8 @@ import React from 'react'
 import LeadsLayer from '@/components/crm/LeadsLayer'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
-// import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
 
 export default async  function Page({params}) {
    const resolvedParams = await params;
@@ -25,11 +26,11 @@ export default async  function Page({params}) {
     }
   ];
    return (
-    //  <ProtectedRoute>
+     <ProtectedRoute>
         <MasterLayout>
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <LeadsLayer pageId={pageId}/>
       </MasterLayout>
-  //  </ProtectedRoute>
+    </ProtectedRoute>
   )
 }

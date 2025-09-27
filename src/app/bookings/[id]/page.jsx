@@ -7,6 +7,7 @@ import HotelsLayer from '@/components/bookings/HotelsLayer';
 import PackagesLayer from '@/components/bookings/PackagesLayer';
 import TransportationsLayer from '@/components/bookings/TransportationsLayer';
 import VisaLayer from '@/components/bookings/VisaLayer';
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default async function Page({params}) {
      const resolvedParams = await params;
@@ -45,7 +46,7 @@ export default async function Page({params}) {
     }
   ];
   return (
-
+<ProtectedRoute>
      <MasterLayout>
        <Breadcrumb breadcrumbs={breadcrumbs} />
 
@@ -65,5 +66,6 @@ export default async function Page({params}) {
        null
       )}
  </MasterLayout>
+ </ProtectedRoute>
   )
 }

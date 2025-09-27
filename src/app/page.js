@@ -1,6 +1,7 @@
 import DashBoardLayerOne from "@/components/DashBoardLayerOne";
 import MasterLayout from "@/masterLayout/MasterLayout";
 import { Breadcrumb } from "react-bootstrap";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export const metadata = {
   title: "WowDash NEXT JS - Admin Dashboard Multipurpose Bootstrap 5 Template",
@@ -12,6 +13,7 @@ const Page = () => {
   return (
     <>
       {/* MasterLayout */}
+      <ProtectedRoute>
       <MasterLayout>
         {/* Breadcrumb */}
         <Breadcrumb title={[]} />
@@ -19,6 +21,7 @@ const Page = () => {
         {/* DashBoardLayerOne */}
         <DashBoardLayerOne />
       </MasterLayout>
+      </ProtectedRoute>
     </>
   );
 };

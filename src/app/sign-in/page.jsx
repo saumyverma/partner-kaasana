@@ -1,16 +1,24 @@
+"use client";
+
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import SignInLayer from "@/components/SignInLayer";
 
-export const metadata = {
-  title: "WowDash NEXT JS - Admin Dashboard Multipurpose Bootstrap 5 Template",
-  description:
-    "Wowdash NEXT JS is a developer-friendly, ready-to-use admin template designed for building attractive, scalable, and high-performing web applications.",
-};
-
 const Page = () => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const router = useRouter();
+
+  // Redirect if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
+
   return (
     <>
-      {/* SignInLayer */}
-      <SignInLayer />
+      {!isAuthenticated && <SignInLayer />}
     </>
   );
 };

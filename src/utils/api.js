@@ -1,11 +1,16 @@
+import { toast } from "react-toastify";
+import { loaderRef } from "@/utils/loaderRef";
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
 /**
  * Core request function
  */
-async function request(url, method = "GET", data = null, customHeaders = {}) {
+async function request(url, method = "GET", data = null, customHeaders = {},options = {}) {
+  const { showLoader = true, successMessage = null } = options
   try {
+     if (showLoader) loaderRef.show();
     // ✅ token handling (after login)
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -23,13 +28,18 @@ async function request(url, method = "GET", data = null, customHeaders = {}) {
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || `API error: ${res.status}`);
+      const msg = errorData.message || `API error: ${res.status}`;
+      // toast.error(msg); // ❌ Show error toast
+      throw new Error(msg)
     }
 
     return res.json();
   } catch (err) {
     console.error("API Error:", err.message);
+    toast.error(err?.message);
     throw err;
+  } finally {
+    if (showLoader) loaderRef.hide();
   }
 }
 
@@ -37,8 +47,8 @@ async function request(url, method = "GET", data = null, customHeaders = {}) {
  * Export simple methods
  */
 export const api = {
-  get: (url, headers) => request(url, "GET", null, headers),
-  post: (url, data, headers) => request(url, "POST", data, headers),
-  put: (url, data, headers) => request(url, "PUT", data, headers),
-  delete: (url, headers) => request(url, "DELETE", null, headers),
+  get: (url, headers = {}, options = {}) => request(url, "GET", null, headers, options),
+  post: (url, data, headers = {}, options = {}) => request(url, "POST", data, headers, options),
+  put: (url, data, headers = {}, options = {}) => request(url, "PUT", data, headers, options),
+  delete: (url, headers = {}, options = {}) => request(url, "DELETE", null, headers, options),
 };

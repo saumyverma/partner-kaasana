@@ -9,8 +9,11 @@ export default function ProtectedRoute({ children }) {
   const router = useRouter();
 
   useEffect(() => {
+    console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
     if (!isAuthenticated) {
-      router.push("/sign-up"); // redirect if not logged in
+      router.push("/sign-in"); // redirect if not logged in
+    }else{
+       router.push("/"); 
     }
   }, [isAuthenticated, router]);
 

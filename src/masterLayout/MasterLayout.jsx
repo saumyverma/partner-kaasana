@@ -4,8 +4,11 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { usePathname } from "next/navigation";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 const MasterLayout = ({ children }) => {
+   const dispatch = useDispatch();
   let pathname = usePathname();
   let [sidebarActive, seSidebarActive] = useState(false);
   let [mobileMenu, setMobileMenu] = useState(false);
@@ -2098,6 +2101,7 @@ const MasterLayout = ({ children }) => {
                         <Link
                           className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3'
                           href='#'
+                          onClick={() => dispatch(logout())}
                         >
                           <Icon icon='lucide:power' className='icon text-xl' />{" "}
                           Log Out
