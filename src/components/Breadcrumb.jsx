@@ -9,7 +9,7 @@ const Breadcrumb = ({ breadcrumbs }) => {
       <ul className='d-flex align-items-center gap-2'>
         <li className='fw-medium'>
           <Link
-            href='/'
+            href='/dashboard'
             className='d-flex align-items-center gap-1 hover-text-primary'
           >
             <Icon
