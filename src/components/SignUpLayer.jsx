@@ -21,14 +21,14 @@ const SignUpLayer = () => {
     <section className='auth bg-base d-flex flex-wrap'>
       <div className='auth-left d-lg-block d-none'>
         <div className='d-flex align-items-center flex-column h-100 justify-content-center'>
-          <img src='assets/images/auth/auth-img.png' alt='' />
+          <img src='assets/img/upper-bg.png' alt='' />
         </div>
       </div>
       <div className='auth-right py-32 px-24 d-flex flex-column justify-content-center'>
         <div className='max-w-464-px mx-auto w-100'>
           <div>
             <Link href='/' className='mb-40 max-w-290-px'>
-              <img src='assets/images/logo.png' alt='' />
+              <img src='assets/img/KS-logo.svg' alt='' />
             </Link>
 
 
@@ -46,7 +46,17 @@ const SignUpLayer = () => {
               <input
                 type='text'
                 className='form-control h-56-px bg-neutral-50 radius-12'
-                placeholder='Username'
+                placeholder='First Name'
+              />
+            </div>
+            <div className='icon-field mb-16'>
+              <span className='icon top-50 translate-middle-y'>
+                <Icon icon='f7:person' />
+              </span>
+              <input
+                type='text'
+                className='form-control h-56-px bg-neutral-50 radius-12'
+                placeholder='Last Name'
               />
             </div>
             <div className='icon-field mb-16'>
@@ -114,7 +124,7 @@ const SignUpLayer = () => {
               {" "}
               Sign Up
             </button>
-            <div className='mt-32 center-border-horizontal text-center'>
+            {/*<div className='mt-32 center-border-horizontal text-center'>
               <span className='bg-base z-1 px-4'>Or sign up with</span>
             </div>
             <div className='mt-32 d-flex align-items-center gap-3'>
@@ -138,11 +148,11 @@ const SignUpLayer = () => {
                 />
                 Google
               </button>
-            </div>
+            </div>*/}
             <div className='mt-32 text-center text-sm'>
               <p className='mb-0'>
                 Already have an account?{" "}
-                <Link href='/sign-in'  className='text-primary-600 fw-semibold' on>
+                <Link href='/sign-in' className='text-primary-600 fw-semibold'>
                   Sign In
                 </Link>
               </p>
