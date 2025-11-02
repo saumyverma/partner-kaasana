@@ -113,7 +113,7 @@ const SignInLayer =  () => {
                     Remember me{" "}
                   </label>
                 </div>
-                <Link href='#' className='text-primary-600 fw-medium'>
+                <Link href='/forgot-password' className='text-primary-600 fw-medium'>
                   Forgot Password?
                 </Link>
               </div>
