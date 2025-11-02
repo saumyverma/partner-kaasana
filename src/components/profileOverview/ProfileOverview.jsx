@@ -242,7 +242,7 @@ export default function ProfileOverview({pageId}) {
         <section key={sectionIndex} className="mb-56">
           {/* Category Header */}
           <div className="d-flex align-items-center gap-3 mb-32">
-            <div className="bg-primary-50 radius-12 d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px' }}>
+            <div className="bg-primary-100 radius-12 d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px' }}>
               <Icon 
                 icon={section.categoryIcon} 
                 className="text-primary-600"
@@ -274,9 +274,9 @@ export default function ProfileOverview({pageId}) {
                        e.currentTarget.style.transform = 'translateY(0)';
                      }}>
                   {/* Card Header with Icon */}
-                  <div className="bg-primary-600 p-24 text-white">
+                  <div className="bg-primary-600 p-24 text-white position-relative">
                     <div className="d-flex align-items-center justify-content-between mb-16">
-                      <div className="bg-white bg-opacity-20 radius-12 d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px' }}>
+                      <div className="radius-12 d-flex align-items-center justify-content-center bg-primary-700" style={{ width: '56px', height: '56px' }}>
                         <Icon 
                           icon={feature.icon} 
                           className="text-white"
@@ -284,7 +284,7 @@ export default function ProfileOverview({pageId}) {
                           height="28"
                         />
                       </div>
-                      <span className="badge bg-white bg-opacity-20 text-white border-0 radius-8 px-12 py-4 fw-medium">
+                      <span className="badge bg-primary-700 text-white border-0 radius-8 px-12 py-4 fw-medium">
                         {section.category.split(' ')[0]}
                       </span>
                     </div>
@@ -343,7 +343,7 @@ export default function ProfileOverview({pageId}) {
       {/* Explore More Section */}
       <section className="mb-56">
         <div className="d-flex align-items-center gap-3 mb-32">
-          <div className="bg-primary-50 radius-12 d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px' }}>
+          <div className="bg-primary-100 radius-12 d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px' }}>
             <Icon 
               icon="solar:widget-5-bold" 
               className="text-primary-600"
@@ -368,7 +368,7 @@ export default function ProfileOverview({pageId}) {
                 href={item.link}
                 className="d-flex align-items-center gap-3 p-20 border radius-12 bg-base hover-bg-neutral-50 transition-all text-decoration-none explore-item"
               >
-                <div className="bg-primary-50 radius-8 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                <div className="bg-primary-100 radius-8 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
                   <Icon 
                     icon={item.icon} 
                     className="text-primary-600"
