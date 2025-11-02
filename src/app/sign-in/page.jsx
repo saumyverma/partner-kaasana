@@ -1,26 +1,13 @@
-"use client";
+import SignInPageClient from "@/components/SignInPageClient";
 
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
-import SignInLayer from "@/components/SignInLayer";
+export const metadata = {
+  title: "Sign In - Kaasana",
+  description:
+    "Sign in to your Kaasana account. Access your travel business dashboard.",
+};
 
 const Page = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const router = useRouter();
-
-  // Redirect if authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated, router]);
-
-  return (
-    <>
-      {!isAuthenticated && <SignInLayer />}
-    </>
-  );
+  return <SignInPageClient />;
 };
 
 export default Page;

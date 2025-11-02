@@ -2,9 +2,9 @@ import SignUpLayer from "@/components/SignUpLayer";
 
 
 export const metadata = {
-  title: "WowDash NEXT JS - Admin Dashboard Multipurpose Bootstrap 5 Template",
+  title: "Sign Up - Kaasana",
   description:
-    "Wowdash NEXT JS is a developer-friendly, ready-to-use admin template designed for building attractive, scalable, and high-performing web applications.",
+    "Create your Kaasana account. Sign up for FREE and start using Kaasana in seconds!",
 };
 
 const Page = () => {

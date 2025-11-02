@@ -63,9 +63,9 @@ const SignInLayer =  () => {
             <Link href='/' className='mb-40 max-w-290-px'>
               <img src='assets/img/KS-logo.svg' alt='' />
             </Link>
-            <h4 className='mb-12'>Sign In to your Account</h4>
+            <h4 className='mb-12'>Sign In to Kaasana</h4>
             <p className='mb-32 text-secondary-light text-lg'>
-              Welcome back! please enter your detail
+              Access your travel business dashboard
             </p>
           </div>
           {/* <form action='#'> */}
@@ -76,7 +76,7 @@ const SignInLayer =  () => {
               <input
                 type='email'
                 className='form-control h-56-px bg-neutral-50 radius-12'
-                 placeholder='Email'
+                 placeholder='Work Email'
                  onChange={(e) => setEmail(e.target.value)}
                  value={email}
               />

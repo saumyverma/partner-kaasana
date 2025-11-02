@@ -33,9 +33,9 @@ const SignUpLayer = () => {
 
 
 
-            <h4 className='mb-12'>Sign Up to your Account</h4>
+            <h4 className='mb-12'>Create Your Account</h4>
             <p className='mb-32 text-secondary-light text-lg'>
-              Welcome back! please enter your detail
+              Sign up for FREE and start using Kaasana in seconds !
             </p>
           </div>
           {/* <form action='#'> */}
@@ -66,7 +66,7 @@ const SignUpLayer = () => {
               <input
                 type='email'
                 className='form-control h-56-px bg-neutral-50 radius-12'
-                placeholder='Email'
+                placeholder='Work Email'
               />
             </div>
             <div className='mb-20'>
@@ -103,15 +103,7 @@ const SignUpLayer = () => {
                   <label
                     className='form-check-label text-sm'
                     htmlFor='condition'
-                  >
-                    By creating an account means you agree to the
-                    <Link href='#' className='text-primary-600 fw-semibold'>
-                      Terms &amp; Conditions
-                    </Link>{" "}
-                    and our
-                    <Link href='#' className='text-primary-600 fw-semibold'>
-                      Privacy Policy
-                    </Link>
+                  >I agree to the Terms & Conditions
                   </label>
                 </div>
               </div>
