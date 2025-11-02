@@ -59,7 +59,7 @@ export default function ProfileOverview({pageId}) {
         },
         {
           title: "Suppliers",
-          icon: "solar:handshake-circle-bold",
+          icon: "mdi:handshake",
           description: "Maintain supplier relationships, contracts, performance metrics, and payment terms. Build a network of reliable partners for your travel services.",
           benefits: ["Supplier Database", "Contract Management", "Performance Tracking", "Payment Terms"],
           link: "/resources/suppliers"
@@ -87,7 +87,7 @@ export default function ProfileOverview({pageId}) {
         },
         {
           title: "Transportations",
-          icon: "solar:car-bold",
+          icon: "mdi:car-multiple",
           description: "Manage transportation inventory including vehicle types, capacities, pricing structures, and availability across different routes and destinations.",
           benefits: ["Vehicle Inventory", "Route Management", "Pricing Structures", "Availability Control"],
           link: "/inventory/transportations"
@@ -101,7 +101,7 @@ export default function ProfileOverview({pageId}) {
         },
         {
           title: "Activities",
-          icon: "solar:mountain-bold",
+          icon: "mdi:compass-outline",
           description: "Manage activity inventory with descriptions, pricing, schedules, capacity limits, and supplier relationships for diverse travel experiences.",
           benefits: ["Activity Catalog", "Schedule Management", "Capacity Planning", "Supplier Relations"],
           link: "/inventory/activities"
@@ -178,14 +178,14 @@ export default function ProfileOverview({pageId}) {
         },
         {
           title: "Flights",
-          icon: "solar:airplane-bold",
+          icon: "mdi:airplane",
           description: "Manage flight bookings with seat selection, meal preferences, baggage tracking, and real-time flight status updates for a smooth travel experience.",
           benefits: ["Flight Reservations", "Seat Management", "Baggage Tracking", "Real-time Updates"],
           link: "/bookings/flights"
         },
         {
           title: "Transportations",
-          icon: "solar:car-bold",
+          icon: "mdi:car-multiple",
           description: "Coordinate ground transportation including airport transfers, car rentals, and local transport. Manage fleets, drivers, and routes for optimal logistics.",
           benefits: ["Fleet Management", "Route Optimization", "Driver Assignment", "Real-time Tracking"],
           link: "/bookings/transportations"
@@ -199,7 +199,7 @@ export default function ProfileOverview({pageId}) {
         },
         {
           title: "Activities",
-          icon: "solar:mountain-bold",
+          icon: "mdi:compass-outline",
           description: "Organize and manage tours, excursions, and activities. Handle bookings, capacity management, guide assignments, and customer preferences.",
           benefits: ["Activity Booking", "Capacity Management", "Guide Scheduling", "Customer Preferences"],
           link: "/bookings/activities"
@@ -238,126 +238,172 @@ export default function ProfileOverview({pageId}) {
       </section>
 
       {/* Feature Sections */}
-      {featureSections.map((section, sectionIndex) => (
-        <section key={sectionIndex} className="mb-56">
-          {/* Category Header */}
-          <div className="d-flex align-items-center gap-3 mb-32">
-            <div className="bg-primary-100 radius-12 d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px' }}>
-              <Icon 
-                icon={section.categoryIcon} 
-                className="text-primary-600"
-                width="28"
-                height="28"
-              />
+      {featureSections.map((section, sectionIndex) => {
+        // Consistent gradient for all sections
+        const headerGradient = 'linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%)';
+        
+        return (
+          <section key={sectionIndex} className="mb-56">
+            {/* Category Header */}
+            <div className="d-flex align-items-center gap-3 mb-32">
+              <div className="bg-white radius-16 d-flex align-items-center justify-content-center shadow-sm position-relative" style={{ 
+                width: '64px', 
+                height: '64px'
+              }}>
+                <Icon 
+                  icon={section.categoryIcon} 
+                  width="32"
+                  height="32"
+                  style={{
+                    background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    color: '#2563eb',
+                    display: 'block'
+                  }}
+                />
+              </div>
+              <div className="flex-grow-1">
+                <h2 className="text-2xl fw-bold mb-4 text-primary-600">
+                  {section.category}
+                </h2>
+                <div className="radius-4" style={{ width: '60px', height: '4px', background: 'linear-gradient(90deg, #2563eb 0%, #3b82f6 100%)' }}></div>
+              </div>
             </div>
-            <div>
-              <h2 className="text-2xl fw-bold mb-0 text-primary-600">
-                {section.category}
-              </h2>
-              <p className="text-sm text-secondary mb-0">
-                Comprehensive tools for {section.category.toLowerCase()}
-              </p>
-            </div>
-          </div>
 
-          {/* Feature Cards */}
-          <div className="row gy-4">
-            {section.features.map((feature, featureIndex) => (
-              <div key={featureIndex} className="col-xl-4 col-lg-6 col-md-6">
-                <div className="h-100 border radius-16 overflow-hidden bg-base shadow-sm d-flex flex-column feature-card" 
-                     onMouseEnter={(e) => { 
-                       e.currentTarget.classList.add('shadow-lg'); 
-                       e.currentTarget.style.transform = 'translateY(-4px)';
-                     }} 
-                     onMouseLeave={(e) => { 
-                       e.currentTarget.classList.remove('shadow-lg'); 
-                       e.currentTarget.style.transform = 'translateY(0)';
-                     }}>
-                  {/* Card Header with Icon */}
-                  <div className="bg-primary-600 p-24 text-white position-relative">
-                    <div className="d-flex align-items-center justify-content-between mb-16">
-                      <div className="radius-12 d-flex align-items-center justify-content-center bg-primary-700" style={{ width: '56px', height: '56px' }}>
-                        <Icon 
-                          icon={feature.icon} 
-                          className="text-white"
-                          width="28"
-                          height="28"
-                        />
+            {/* Feature Cards */}
+            <div className="row gy-4">
+              {section.features.map((feature, featureIndex) => (
+                <div key={featureIndex} className="col-xl-4 col-lg-6 col-md-6">
+                  <div className="h-100 border radius-16 overflow-hidden bg-base shadow-sm d-flex flex-column feature-card position-relative" 
+                       style={{ transition: 'all 0.3s ease' }}
+                       onMouseEnter={(e) => { 
+                         e.currentTarget.classList.add('shadow-lg'); 
+                         e.currentTarget.style.transform = 'translateY(-6px)';
+                         e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                       }} 
+                       onMouseLeave={(e) => { 
+                         e.currentTarget.classList.remove('shadow-lg'); 
+                         e.currentTarget.style.transform = 'translateY(0)';
+                         e.currentTarget.style.borderColor = '';
+                       }}>
+                    {/* Card Header with Icon */}
+                    <div className="p-24 text-white position-relative overflow-hidden" style={{ background: headerGradient }}>
+                      {/* Decorative pattern */}
+                      <div className="position-absolute top-0 end-0 opacity-10" style={{ width: '120px', height: '120px', background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30px, -30px)' }}></div>
+                      
+                      <div className="d-flex align-items-center justify-content-between mb-16 position-relative">
+                        <div 
+                          className="bg-white radius-12 d-flex align-items-center justify-content-center shadow-sm position-relative"
+                          style={{ 
+                            width: '64px', 
+                            height: '64px'
+                          }}
+                        >
+                          <Icon 
+                            icon={feature.icon} 
+                            width="32"
+                            height="32"
+                            style={{
+                              background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                              WebkitBackgroundClip: 'text',
+                              WebkitTextFillColor: 'transparent',
+                              backgroundClip: 'text',
+                              color: '#2563eb',
+                              display: 'block'
+                            }}
+                          />
+                        </div>
+                        <span className="badge border-0 radius-8 px-16 py-6 fw-semibold" style={{ 
+                          background: 'rgba(255, 255, 255, 0.25)',
+                          backdropFilter: 'blur(10px)'
+                        }}>
+                          {section.category.split(' ')[0]}
+                        </span>
                       </div>
-                      <span className="badge bg-primary-700 text-white border-0 radius-8 px-12 py-4 fw-medium">
-                        {section.category.split(' ')[0]}
-                      </span>
+                      <h3 className="text-xl fw-bold mb-0 text-white position-relative">
+                        {feature.title}
+                      </h3>
                     </div>
-                    <h3 className="text-xl fw-bold mb-0 text-white">
-                      {feature.title}
-                    </h3>
-                  </div>
 
-                  {/* Card Body */}
-                  <div className="p-24 d-flex flex-column flex-grow-1">
-                    <p className="text-sm text-secondary mb-20 line-height-1-7">
-                      {feature.description}
-                    </p>
+                    {/* Card Body */}
+                    <div className="p-28 d-flex flex-column flex-grow-1 bg-base">
+                      <p className="text-sm text-secondary mb-24 line-height-1-8">
+                        {feature.description}
+                      </p>
 
-                    {/* Benefits List */}
-                    <div className="mb-24 flex-grow-1">
-                      <div className="row gy-2">
-                        {feature.benefits.map((benefit, benefitIndex) => (
-                          <div key={benefitIndex} className="col-6">
-                            <div className="d-flex align-items-center gap-2">
-                              <Icon 
-                                icon="solar:check-circle-bold" 
-                                className="text-primary-600"
-                                width="16"
-                                height="16"
-                              />
-                              <span className="text-xs text-secondary">
-                                {benefit}
-                              </span>
+                      {/* Benefits List */}
+                      <div className="mb-28 flex-grow-1">
+                        <div className="row gy-3">
+                          {feature.benefits.map((benefit, benefitIndex) => (
+                            <div key={benefitIndex} className="col-6">
+                              <div className="d-flex align-items-center gap-2">
+                                <div className="bg-primary-50 radius-4 d-flex align-items-center justify-content-center" style={{ width: '20px', height: '20px', minWidth: '20px' }}>
+                                  <Icon 
+                                    icon="solar:check-circle-bold" 
+                                    className="text-primary-600"
+                                    width="14"
+                                    height="14"
+                                  />
+                                </div>
+                                <span className="text-xs text-secondary fw-medium">
+                                  {benefit}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* CTA Button */}
-                    <Link 
-                      href={feature.link}
-                      className="btn btn-primary w-100 radius-8 py-12 px-16 fw-semibold d-flex align-items-center justify-content-center gap-2 text-white text-decoration-none border-0 mt-auto"
-                    >
-                      <span>Explore {feature.title}</span>
-                      <Icon 
-                        icon="solar:arrow-right-linear" 
-                        width="18"
-                        height="18"
-                      />
-                    </Link>
+                      {/* CTA Button */}
+                      <Link 
+                        href={feature.link}
+                        className="btn btn-primary w-100 radius-12 py-14 px-20 fw-semibold d-flex align-items-center justify-content-center gap-2 text-white text-decoration-none border-0 mt-auto shadow-sm hover-shadow-md transition-all"
+                        style={{ fontSize: '14px', transition: 'all 0.2s ease' }}
+                      >
+                        <span>Explore {feature.title}</span>
+                        <Icon 
+                          icon="solar:arrow-right-linear" 
+                          width="18"
+                          height="18"
+                        />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
         </section>
-      ))}
+        );
+      })}
 
       {/* Explore More Section */}
       <section className="mb-56">
         <div className="d-flex align-items-center gap-3 mb-32">
-          <div className="bg-primary-100 radius-12 d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px' }}>
+          <div className="bg-white radius-16 d-flex align-items-center justify-content-center shadow-sm position-relative" style={{ 
+            width: '64px', 
+            height: '64px'
+          }}>
             <Icon 
               icon="solar:widget-5-bold" 
-              className="text-primary-600"
-              width="28"
-              height="28"
+              width="32"
+              height="32"
+              style={{
+                background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                color: '#2563eb',
+                display: 'block'
+              }}
             />
           </div>
-          <div>
-            <h2 className="text-2xl fw-bold mb-0 text-primary-600">
+          <div className="flex-grow-1">
+            <h2 className="text-2xl fw-bold mb-4 text-primary-600">
               Explore More
             </h2>
-            <p className="text-sm text-secondary mb-0">
-              Additional features and tools for your travel business
-            </p>
+            <div className="radius-4" style={{ width: '60px', height: '4px', background: 'linear-gradient(90deg, #2563eb 0%, #3b82f6 100%)' }}></div>
           </div>
         </div>
 
@@ -366,24 +412,41 @@ export default function ProfileOverview({pageId}) {
             <div key={index} className="col-xl-3 col-lg-4 col-md-6">
               <Link 
                 href={item.link}
-                className="d-flex align-items-center gap-3 p-20 border radius-12 bg-base hover-bg-neutral-50 transition-all text-decoration-none explore-item"
+                className="d-flex align-items-center gap-3 p-24 border radius-12 bg-base hover-bg-primary-50 transition-all text-decoration-none explore-item shadow-sm hover-shadow-md"
+                style={{ transition: 'all 0.2s ease' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                  e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateX(0)';
+                  e.currentTarget.style.borderColor = '';
+                }}
               >
-                <div className="bg-primary-100 radius-8 d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                <div className="bg-white radius-10 d-flex align-items-center justify-content-center shadow-sm" style={{ 
+                  width: '48px', 
+                  height: '48px'
+                }}>
                   <Icon 
                     icon={item.icon} 
-                    className="text-primary-600"
-                    width="20"
-                    height="20"
+                    width="24"
+                    height="24"
+                    style={{
+                      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text'
+                    }}
                   />
                 </div>
-                <span className="text-md fw-medium text-primary-600 flex-grow-1">
+                <span className="text-md fw-semibold text-primary-600 flex-grow-1">
                   {item.title}
                 </span>
                 <Icon 
                   icon="solar:arrow-right-linear" 
-                  className="text-secondary"
-                  width="16"
-                  height="16"
+                  className="text-primary-400"
+                  width="18"
+                  height="18"
                 />
               </Link>
             </div>
