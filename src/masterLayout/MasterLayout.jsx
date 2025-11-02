@@ -119,17 +119,17 @@ const MasterLayout = ({ children }) => {
         <div>
           <Link href='/' className='sidebar-logo'>
             <img
-              src='/assets/images/logo.png'
+              src='/assets/img/KS-logo.svg'
               alt='site logo'
               className='light-logo'
             />
             <img
-              src='/assets/images/logo-light.png'
+              src='/assets/img/KS-logo.svg'
               alt='site logo'
               className='dark-logo'
             />
             <img
-              src='/assets/images/logo-icon.png'
+              src='/assets/img/logo.svg'
               alt='site logo'
               className='logo-icon'
             />
@@ -173,7 +173,6 @@ const MasterLayout = ({ children }) => {
                  } 
                 </li>
               )
-
           })} 
         </ul>
     
@@ -776,7 +775,7 @@ const MasterLayout = ({ children }) => {
                     data-bs-toggle='dropdown'
                   >
                     <img
-                      src='/assets/images/user.png'
+                      src='/assets/img/user.png'
                       alt='image_user'
                       className='w-40-px h-40-px object-fit-cover rounded-circle'
                     />
