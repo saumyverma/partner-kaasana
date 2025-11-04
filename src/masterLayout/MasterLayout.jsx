@@ -4,18 +4,18 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { usePathname } from "next/navigation";
 import ThemeToggleButton from "../helper/ThemeToggleButton";
 import Link from "next/link";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 
 const MasterLayout = ({ children }) => {
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   let pathname = usePathname();
   let [sidebarActive, seSidebarActive] = useState(false);
   let [mobileMenu, setMobileMenu] = useState(false);
   const location = usePathname(); // Hook to get the current route
   const { user } = useSelector((state) => state.auth);
-  const userDetails=user.userDetails;
-  const menuList=user.menuList;
+  const userDetails = user.userDetails;
+  const menuList = user.menuList;
   let dotColor = ['text-info-main', 'text-success-main', 'text-warning-main', 'text-danger-main'];
   // console.log("################---------",menuList)
   useEffect(() => {
@@ -105,8 +105,8 @@ const MasterLayout = ({ children }) => {
           sidebarActive
             ? "sidebar active "
             : mobileMenu
-            ? "sidebar sidebar-open"
-            : "sidebar"
+              ? "sidebar sidebar-open"
+              : "sidebar"
         }
       >
         <button
@@ -137,50 +137,50 @@ const MasterLayout = ({ children }) => {
         </div>
         <div className='sidebar-menu-area'>
           <ul className='sidebar-menu' id='sidebar-menu'>
-          {menuList?.map((menu,index)=>{
+            {menuList?.map((menu, index) => {
 
-             const mainMenuLink=menu?.menu_link? `/${menu?.menu_link}`:"#";
-        
+              const mainMenuLink = menu?.menu_link ? `/${menu?.menu_link}` : "#";
+
               return (<li className={` ${menu?.subMenu.length > 0 ? "dropdown" : ""} ${pathname === mainMenuLink ? "active-page" : ""}`} key={index}>
-                    <Link href={mainMenuLink} className={` ${pathname === mainMenuLink ? "active-page" : ""}`}>
-                      <Icon
-                      icon='flowbite:users-group-outline'
-                      className='menu-icon'
-                    />
-                    <span>{menu?.menu_name}</span>
-                  </Link>
+                <Link href={mainMenuLink} className={` ${pathname === mainMenuLink ? "active-page" : ""}`}>
+                  <Icon
+                    icon='flowbite:users-group-outline'
+                    className='menu-icon'
+                  />
+                  <span>{menu?.menu_name}</span>
+                </Link>
 
-                   {menu?.subMenu.length > 0 && 
-                    <ul className='sidebar-submenu'>
-                      {menu?.subMenu?.map((subMenu,subIndex)=>{
-                      const link = subMenu?.menu_link?.startsWith("/")
+                    {menu?.subMenu.length > 0 &&
+                      <ul className='sidebar-submenu'>
+                        {menu?.subMenu?.map((subMenu, subIndex) => {
+                          const link = subMenu?.menu_link?.startsWith("/")
                             ? subMenu.menu_link
                             : `/${subMenu.menu_link}`;
-                            const dotClass = dotColor[subIndex % dotColor.length];
+                          const dotClass = dotColor[subIndex % dotColor.length];
 
-                        return (<li key={subIndex}>
+                          return (<li key={subIndex}>
                             <Link
                               href={link}
                               className={pathname === link ? "active-page" : ""}
                             >
-                             <i className={`ri-circle-fill circle-icon ${dotClass} w-auto`} />
+                              <i className={`ri-circle-fill circle-icon ${dotClass} w-auto`} />
                               {subMenu?.menu_name}
                             </Link>
                           </li>)
-                        
-                      })} 
-                  
-                    </ul>
-                 } 
-                </li>
+
+                        })}
+
+                      </ul>
+                    }
+              </li>
               )
-          })} 
-        </ul>
-    
+            })}
+          </ul>
 
 
 
-   
+
+
         </div>
       </aside>
 
@@ -785,10 +785,10 @@ const MasterLayout = ({ children }) => {
                     <div className='py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2'>
                       <div>
                         <h6 className='text-lg text-primary-light fw-semibold mb-2'>
-                        {userDetails?.name}
+                          {userDetails?.name}
                         </h6>
                         <span className='text-secondary-light fw-medium text-sm'>
-                            {userDetails?.company_name}
+                          {userDetails?.company_name}
                         </span>
                       </div>
                       <button type='button' className='hover-text-danger'>
