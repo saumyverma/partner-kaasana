@@ -139,9 +139,10 @@ const MasterLayout = ({ children }) => {
           <ul className='sidebar-menu' id='sidebar-menu'>
           {menuList?.map((menu,index)=>{
 
-             const mainMenuLink=menu?.menu_link?menu?.menu_link:"#";
-              return (<li className='dropdown' key={index}>
-                    <Link href={mainMenuLink}>
+             const mainMenuLink=menu?.menu_link? `/${menu?.menu_link}`:"#";
+        
+              return (<li className={` ${menu?.subMenu.length > 0 ? "dropdown" : ""} ${pathname === mainMenuLink ? "active-page" : ""}`} key={index}>
+                    <Link href={mainMenuLink} className={` ${pathname === mainMenuLink ? "active-page" : ""}`}>
                       <Icon
                       icon='flowbite:users-group-outline'
                       className='menu-icon'

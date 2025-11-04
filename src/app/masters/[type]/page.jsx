@@ -2,13 +2,13 @@ import React from 'react'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Currency from '@/components/master/Currency';
-import HotelType from '@/components/master/HotelType';
-import MealOptions from '@/components/master/MealOptions';
-import PackageDuration from '@/components/master/PackageDuration';
-import StayType from '@/components/master/StayType';
-import Themes from '@/components/master/Themes';
-import PackageType from '@/components/master/PackageType';
+import CurrencyLayer from '@/components/master/CurrencyLayer';
+import HotelTypeLayer from '@/components/master/HotelTypeLayer';
+import MealOptionsLayer from '@/components/master/MealOptionsLayer';
+import PackageDurationLayer from '@/components/master/PackageDurationLayer';
+import StayTypeLayer from '@/components/master/StayTypeLayer';
+import ThemesLayer from '@/components/master/ThemesLayer';
+import PackageTypeLayer from '@/components/master/PackageTypeLayer';
 
 export default async  function Page({params}) {
    const resolvedParams = await params;
@@ -23,19 +23,19 @@ export default async  function Page({params}) {
         <MasterLayout>
         <Breadcrumb breadcrumbs={breadcrumbs} />
           {pageId === "currency" ? (
-            <Currency  pageId={pageId}/>
+            <CurrencyLayer  pageId={pageId}/>
           ) : pageId === "hotel-type" ? (
-            <HotelType  pageId={pageId}/>
+            <HotelTypeLayer  pageId={pageId}/>
           ) : pageId === "meal-options" ? (
-            <MealOptions  pageId={pageId}/>
+            <MealOptionsLayer  pageId={pageId}/>
           ) : pageId === "package-duration" ? (
-            <PackageDuration  pageId={pageId}/>
+            <PackageDurationLayer  pageId={pageId}/>
           ) : pageId === "stay-type" ? (
-            <StayType  pageId={pageId}/>
+            <StayTypeLayer  pageId={pageId}/>
           ) : pageId === "themes" ? (
-            <Themes  pageId={pageId}/>
+            <ThemesLayer  pageId={pageId}/>
           ) : pageId === "package-type" ? (
-            <PackageType  pageId={pageId}/>
+            <PackageTypeLayer  pageId={pageId}/>
           ) : (
             null
           )}
