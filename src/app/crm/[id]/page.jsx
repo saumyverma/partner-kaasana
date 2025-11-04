@@ -3,7 +3,7 @@ import LeadsLayer from '@/components/crm/LeadsLayer'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
-
+import CustomerLayer from '@/components/crm/CustomerLayer';
 
 export default async  function Page({params}) {
    const resolvedParams = await params;
@@ -29,7 +29,13 @@ export default async  function Page({params}) {
      <ProtectedRoute>
         <MasterLayout>
         <Breadcrumb breadcrumbs={breadcrumbs} />
-        <LeadsLayer pageId={pageId}/>
+          {pageId === "customers" ? (
+            <CustomerLayer  pageId={pageId}/>
+          ) : (
+            <LeadsLayer pageId={pageId}/>
+          )}
+      
+        
       </MasterLayout>
     </ProtectedRoute>
   )

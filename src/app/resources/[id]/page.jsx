@@ -12,6 +12,7 @@ export default async function Page({params}) {
      const pageId = resolvedParams.id;
      const breadcrumbs = [
     {  label: "Resources",  href: "#"},
+    {  label: pageId === "roles" ? "Roles" : pageId === "users" ? "Users" : pageId === "branches" ? "Branches" : pageId === "suppliers" ? "Suppliers" : "",  href: "#"},
   
   ];
   return (
