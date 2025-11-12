@@ -1,10 +1,9 @@
 "use client"
 import React from 'react'
 import { api } from "@/utils/api";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
-import AddNewLeadModal from "@/components/modal/addNewLead";
 
 export default function LeadsLayer({ pageId }) {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -26,7 +25,6 @@ export default function LeadsLayer({ pageId }) {
 
   return (
     <>
-      <AddNewLeadModal />
       <div className='card h-100 p-0 radius-12'>
         <div className='card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between'>
           <div className='d-flex align-items-center flex-wrap gap-3'>
@@ -72,10 +70,8 @@ export default function LeadsLayer({ pageId }) {
             </select>
           </div>
           <Link
-            href='#'
+            href='/crm/addSingleLeads'
             className='btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2'
-            data-bs-toggle='modal'
-            data-bs-target='#exampleModal'
           >
             <Icon
               icon='ic:baseline-plus'
