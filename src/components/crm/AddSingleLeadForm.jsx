@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import MultiSelectDropdown from "@/components/child/MultiSelectDropdown";
+import Select from "react-select";
 
 const companyTypeOptions = [
   { value: "", label: "Select Your Agent Type" },
@@ -74,6 +74,12 @@ const leadMediumOptions = [
   { value: "walk-in", label: "Walk-in" },
 ];
 
+const getOptionByValue = (options, value) =>
+  options.find((opt) => opt.value === value) || null;
+
+const getOptionsByValues = (options, values) =>
+  options.filter((opt) => values.includes(opt.value));
+
 const AddSingleLeadForm = () => {
   const [leadType, setLeadType] = useState("B2C");
   const [assignedSales, setAssignedSales] = useState("");
@@ -89,6 +95,46 @@ const AddSingleLeadForm = () => {
 
   const nightsOptions = useMemo(
     () => Array.from({ length: 15 }, (_, index) => `${index + 1} Nights`),
+    []
+  );
+
+  const salesPersonSelectOptions = useMemo(
+    () => salesPersonOptions.filter(({ value }) => value),
+    []
+  );
+
+  const partnerCompanySelectOptions = useMemo(
+    () => partnerCompanyOptions.filter(({ value }) => value),
+    []
+  );
+
+  const companyTypeSelectOptions = useMemo(
+    () => companyTypeOptions.filter(({ value }) => value),
+    []
+  );
+
+  const holidayTypeSelectOptions = useMemo(
+    () => holidayTypeOptions.map((value) => ({ value, label: value })),
+    []
+  );
+
+  const paxSelectOptions = useMemo(
+    () => paxRanges.map((value) => ({ value, label: value })),
+    []
+  );
+
+  const durationSelectOptions = useMemo(
+    () => nightsOptions.map((value) => ({ value, label: value })),
+    [nightsOptions]
+  );
+
+  const leadSourceSelectOptions = useMemo(
+    () => leadSourceOptions.filter(({ value }) => value),
+    []
+  );
+
+  const leadMediumSelectOptions = useMemo(
+    () => leadMediumOptions.filter(({ value }) => value),
     []
   );
 
@@ -166,13 +212,22 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="AssignedSales">
                 Assigned to Sales
               </label>
-              <MultiSelectDropdown
-                options={salesPersonOptions}
-                placeholder="Select Sales Person"
-                selected={assignedSales}
-                onChange={setAssignedSales}
-                selectionMode="single"
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="solar:user-circle-line-duotone" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="AssignedSales"
+                    options={salesPersonSelectOptions}
+                    placeholder="Select Sales Person"
+                    isClearable
+                    isSearchable
+                    value={getOptionByValue(salesPersonSelectOptions, assignedSales)}
+                    onChange={(selected) => setAssignedSales(selected ? selected.value : "")}
+                  />
+                </div>
+              </div>
               {assignedSales && (
                 <input type="hidden" name="AssignedSales" value={assignedSales} />
               )}
@@ -184,13 +239,22 @@ const AddSingleLeadForm = () => {
                   <label className="form-label" htmlFor="CompanyName">
                     Company name <sup>*</sup>
                   </label>
-                  <MultiSelectDropdown
-                    options={partnerCompanyOptions}
-                    placeholder="Select Company"
-                    selected={companySelection}
-                    onChange={setCompanySelection}
-                    selectionMode="single"
-                  />
+                  <div className="icon-field">
+                    <span className="icon">
+                      <Icon icon="mdi:office-building-outline" />
+                    </span>
+                    <div className="form-control p-0 border-0">
+                      <Select
+                        inputId="CompanyName"
+                        options={partnerCompanySelectOptions}
+                        placeholder="Select Company"
+                        isClearable
+                        isSearchable
+                        value={getOptionByValue(partnerCompanySelectOptions, companySelection)}
+                        onChange={(selected) => setCompanySelection(selected ? selected.value : "")}
+                      />
+                    </div>
+                  </div>
                   {companySelection && (
                     <input type="hidden" name="CompanyName" value={companySelection} />
                   )}
@@ -200,13 +264,22 @@ const AddSingleLeadForm = () => {
                   <label className="form-label" htmlFor="leadCategoryType">
                     Lead Category Type <sup>*</sup>
                   </label>
-                  <MultiSelectDropdown
-                    options={companyTypeOptions}
-                    placeholder="Select Agent Type"
-                    selected={leadCategoryType}
-                    onChange={setLeadCategoryType}
-                    selectionMode="single"
-                  />
+                  <div className="icon-field">
+                    <span className="icon">
+                      <Icon icon="mdi:tag-outline" />
+                    </span>
+                    <div className="form-control p-0 border-0">
+                      <Select
+                        inputId="leadCategoryType"
+                        options={companyTypeSelectOptions}
+                        placeholder="Select Agent Type"
+                        isClearable
+                        isSearchable
+                        value={getOptionByValue(companyTypeSelectOptions, leadCategoryType)}
+                        onChange={(selected) => setLeadCategoryType(selected ? selected.value : "")}
+                      />
+                    </div>
+                  </div>
                   {leadCategoryType && (
                     <input type="hidden" name="leadCategoryType" value={leadCategoryType} />
                   )}
@@ -328,13 +401,22 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="HolidayType">
                 Holiday Type <sup>*</sup>
               </label>
-              <MultiSelectDropdown
-                options={holidayTypeOptions.map((value) => ({ value, label: value }))}
-                placeholder="Select Holiday Type"
-                selected={holidayTypeSelection}
-                onChange={setHolidayTypeSelection}
-                selectionMode="single"
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:calendar-month-outline" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="HolidayType"
+                    options={holidayTypeSelectOptions}
+                    placeholder="Select Holiday Type"
+                    isClearable
+                    isSearchable
+                    value={getOptionByValue(holidayTypeSelectOptions, holidayTypeSelection)}
+                    onChange={(selected) => setHolidayTypeSelection(selected ? selected.value : "")}
+                  />
+                </div>
+              </div>
               {holidayTypeSelection && (
                 <input type="hidden" name="HolidayType" value={holidayTypeSelection} />
               )}
@@ -344,13 +426,22 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="NoofPax">
                 No of Pax <sup>*</sup>
               </label>
-              <MultiSelectDropdown
-                options={paxRanges.map((value) => ({ value, label: value }))}
-                placeholder="Select Pax"
-                selected={paxSelection}
-                onChange={setPaxSelection}
-                selectionMode="single"
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:account-group-outline" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="NoofPax"
+                    options={paxSelectOptions}
+                    placeholder="Select Pax"
+                    isClearable
+                    isSearchable
+                    value={getOptionByValue(paxSelectOptions, paxSelection)}
+                    onChange={(selected) => setPaxSelection(selected ? selected.value : "")}
+                  />
+                </div>
+              </div>
               {paxSelection && (
                 <input type="hidden" name="NoofPax" value={paxSelection} />
               )}
@@ -360,12 +451,26 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="DestinationsCountry">
                 Destinations Country <sup>*</sup>
               </label>
-              <MultiSelectDropdown
-                options={destinationCountryOptions}
-                placeholder="Select Destinations Country"
-                selected={destinationsCountry}
-                onChange={setDestinationsCountry}
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:earth" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="DestinationsCountry"
+                    options={destinationCountryOptions}
+                    placeholder="Select Destinations Country"
+                    isMulti
+                    isClearable
+                    isSearchable
+                    closeMenuOnSelect={false}
+                    value={getOptionsByValues(destinationCountryOptions, destinationsCountry)}
+                    onChange={(selected) =>
+                      setDestinationsCountry(selected ? selected.map((opt) => opt.value) : [])
+                    }
+                  />
+                </div>
+              </div>
               {destinationsCountry.map((value) => (
                 <input key={`DestinationsCountry-${value}`} type="hidden" name="DestinationsCountry[]" value={value} />
               ))}
@@ -375,12 +480,26 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="Destinations">
                 Destinations City <sup>*</sup>
               </label>
-              <MultiSelectDropdown
-                options={destinationCityOptions}
-                placeholder="Select Destinations City"
-                selected={destinationsCity}
-                onChange={setDestinationsCity}
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:city" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="Destinations"
+                    options={destinationCityOptions}
+                    placeholder="Select Destinations City"
+                    isMulti
+                    isClearable
+                    isSearchable
+                    closeMenuOnSelect={false}
+                    value={getOptionsByValues(destinationCityOptions, destinationsCity)}
+                    onChange={(selected) =>
+                      setDestinationsCity(selected ? selected.map((opt) => opt.value) : [])
+                    }
+                  />
+                </div>
+              </div>
               {destinationsCity.map((value) => (
                 <input key={`Destinations-${value}`} type="hidden" name="Destinations[]" value={value} />
               ))}
@@ -390,13 +509,22 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="Duration">
                 Duration <sup>*</sup>
               </label>
-              <MultiSelectDropdown
-                options={nightsOptions.map((value) => ({ value, label: value }))}
-                placeholder="Select Duration"
-                selected={durationSelection}
-                onChange={setDurationSelection}
-                selectionMode="single"
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:clock-outline" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="Duration"
+                    options={durationSelectOptions}
+                    placeholder="Select Duration"
+                    isClearable
+                    isSearchable
+                    value={getOptionByValue(durationSelectOptions, durationSelection)}
+                    onChange={(selected) => setDurationSelection(selected ? selected.value : "")}
+                  />
+                </div>
+              </div>
               {durationSelection && (
                 <input type="hidden" name="Duration" value={durationSelection} />
               )}
@@ -424,13 +552,22 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="leadSource">
                 Lead Source <sup>*</sup>
               </label>
-              <MultiSelectDropdown
-                options={leadSourceOptions}
-                placeholder="Select Lead Source"
-                selected={leadSourceSelection}
-                onChange={setLeadSourceSelection}
-                selectionMode="single"
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:compass-outline" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="leadSource"
+                    options={leadSourceSelectOptions}
+                    placeholder="Select Lead Source"
+                    isClearable
+                    isSearchable
+                    value={getOptionByValue(leadSourceSelectOptions, leadSourceSelection)}
+                    onChange={(selected) => setLeadSourceSelection(selected ? selected.value : "")}
+                  />
+                </div>
+              </div>
               {leadSourceSelection && (
                 <input type="hidden" name="LeadSource" value={leadSourceSelection} />
               )}
@@ -440,13 +577,22 @@ const AddSingleLeadForm = () => {
               <label className="form-label" htmlFor="leadMedium">
                 Lead Medium <sup>*</sup>
               </label>
-              <MultiSelectDropdown
-                options={leadMediumOptions}
-                placeholder="Select Lead Medium"
-                selected={leadMediumSelection}
-                onChange={setLeadMediumSelection}
-                selectionMode="single"
-              />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:bullhorn-outline" />
+                </span>
+                <div className="form-control p-0 border-0">
+                  <Select
+                    inputId="leadMedium"
+                    options={leadMediumSelectOptions}
+                    placeholder="Select Lead Medium"
+                    isClearable
+                    isSearchable
+                    value={getOptionByValue(leadMediumSelectOptions, leadMediumSelection)}
+                    onChange={(selected) => setLeadMediumSelection(selected ? selected.value : "")}
+                  />
+                </div>
+              </div>
               {leadMediumSelection && (
                 <input type="hidden" name="LeadMedium" value={leadMediumSelection} />
               )}

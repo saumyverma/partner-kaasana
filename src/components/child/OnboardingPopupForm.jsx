@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import MultiSelectDropdown from "./MultiSelectDropdown";
+import React, { useMemo, useState } from "react";
+import Select from "react-select";
 
 const companyTypeOptions = [
   "Private Limited",
@@ -42,6 +42,11 @@ const designationOptions = [
   "Support",
 ];
 
+const mapToOptions = (values) => values.map((value) => ({ value, label: value }));
+
+const getOptionsByValues = (options, values) =>
+  options.filter((option) => values.includes(option.value));
+
 const OnboardingPopupForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -57,6 +62,30 @@ const OnboardingPopupForm = () => {
   const [productsServices, setProductsServices] = useState([]);
   const [bookingMethods, setBookingMethods] = useState([]);
   const [designationSelections, setDesignationSelections] = useState([]);
+
+  const companyTypeSelectOptions = useMemo(
+    () => mapToOptions(companyTypeOptions),
+    []
+  );
+  const countrySelectOptions = useMemo(() => mapToOptions(countryOptions), []);
+  const stateSelectOptions = useMemo(() => mapToOptions(stateOptions), []);
+  const citySelectOptions = useMemo(() => mapToOptions(cityOptions), []);
+  const companySizeSelectOptions = useMemo(
+    () => mapToOptions(companySizeOptions),
+    []
+  );
+  const productServiceSelectOptions = useMemo(
+    () => mapToOptions(productServiceOptions),
+    []
+  );
+  const bookingMethodSelectOptions = useMemo(
+    () => mapToOptions(bookingMethodOptions),
+    []
+  );
+  const designationSelectOptions = useMemo(
+    () => mapToOptions(designationOptions),
+    []
+  );
 
   const stepClass = (step) => {
     if (currentStep === step) return "form-wizard-list__item active";
@@ -135,11 +164,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       Company Type <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={companyTypeOptions}
+                    <Select
+                      inputId="companyType"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={companyTypeSelectOptions}
                       placeholder="Select Company Types"
-                      selected={companyTypes}
-                      onChange={setCompanyTypes}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(companyTypeSelectOptions, companyTypes)}
+                      onChange={(selected) =>
+                        setCompanyTypes(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
 
@@ -171,11 +207,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       Country <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={countryOptions}
+                    <Select
+                      inputId="registeredCountries"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={countrySelectOptions}
                       placeholder="Select Countries"
-                      selected={registeredCountries}
-                      onChange={setRegisteredCountries}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(countrySelectOptions, registeredCountries)}
+                      onChange={(selected) =>
+                        setRegisteredCountries(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
 
@@ -183,11 +226,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       State <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={stateOptions}
+                    <Select
+                      inputId="registeredStates"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={stateSelectOptions}
                       placeholder="Select States"
-                      selected={registeredStates}
-                      onChange={setRegisteredStates}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(stateSelectOptions, registeredStates)}
+                      onChange={(selected) =>
+                        setRegisteredStates(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
 
@@ -195,11 +245,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       City <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={cityOptions}
+                    <Select
+                      inputId="registeredCities"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={citySelectOptions}
                       placeholder="Select Cities"
-                      selected={registeredCities}
-                      onChange={setRegisteredCities}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(citySelectOptions, registeredCities)}
+                      onChange={(selected) =>
+                        setRegisteredCities(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
                 </div>
@@ -250,11 +307,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       Company Size <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={companySizeOptions}
+                    <Select
+                      inputId="companySize"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={companySizeSelectOptions}
                       placeholder="Select Company Size"
-                      selected={companySizes}
-                      onChange={setCompanySizes}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(companySizeSelectOptions, companySizes)}
+                      onChange={(selected) =>
+                        setCompanySizes(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
 
@@ -262,11 +326,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       Location of Operations Country <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={countryOptions}
+                    <Select
+                      inputId="operationsCountry"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={countrySelectOptions}
                       placeholder="Select Countries"
-                      selected={operationsCountries}
-                      onChange={setOperationsCountries}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(countrySelectOptions, operationsCountries)}
+                      onChange={(selected) =>
+                        setOperationsCountries(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
 
@@ -274,11 +345,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       Location of Operations City
                     </label>
-                    <MultiSelectDropdown
-                      options={cityOptions}
+                    <Select
+                      inputId="operationsCity"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={citySelectOptions}
                       placeholder="Select Cities"
-                      selected={operationsCities}
-                      onChange={setOperationsCities}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(citySelectOptions, operationsCities)}
+                      onChange={(selected) =>
+                        setOperationsCities(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
                 </div>
@@ -288,11 +366,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       Products / Services <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={productServiceOptions}
+                    <Select
+                      inputId="productServices"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={productServiceSelectOptions}
                       placeholder="Select Products / Services"
-                      selected={productsServices}
-                      onChange={setProductsServices}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(productServiceSelectOptions, productsServices)}
+                      onChange={(selected) =>
+                        setProductsServices(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
 
@@ -300,11 +385,18 @@ const OnboardingPopupForm = () => {
                     <label className="form-label">
                       Booking Methods <sup>*</sup>
                     </label>
-                    <MultiSelectDropdown
-                      options={bookingMethodOptions}
+                    <Select
+                      inputId="bookingMethods"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={bookingMethodSelectOptions}
                       placeholder="Select Booking Methods"
-                      selected={bookingMethods}
-                      onChange={setBookingMethods}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(bookingMethodSelectOptions, bookingMethods)}
+                      onChange={(selected) =>
+                        setBookingMethods(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
                 </div>
@@ -380,11 +472,18 @@ const OnboardingPopupForm = () => {
                   </div>
                   <div className="col-md-4">
                     <label className="form-label">Designation</label>
-                    <MultiSelectDropdown
-                      options={designationOptions}
+                    <Select
+                      inputId="designation"
+                      isMulti
+                      isClearable
+                      isSearchable
+                      options={designationSelectOptions}
                       placeholder="Select Designations"
-                      selected={designationSelections}
-                      onChange={setDesignationSelections}
+                      closeMenuOnSelect={false}
+                      value={getOptionsByValues(designationSelectOptions, designationSelections)}
+                      onChange={(selected) =>
+                        setDesignationSelections(selected ? selected.map((opt) => opt.value) : [])
+                      }
                     />
                   </div>
                 </div>
