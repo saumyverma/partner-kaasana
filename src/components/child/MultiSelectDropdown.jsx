@@ -36,10 +36,13 @@ const MultiSelectDropdown = ({
   className = "",
   dropdownClassName = "",
   maxDropdownHeight = 200,
+  inputClassName,
+  selectionMode = "multiple",
 }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const containerRef = useRef(null);
+  const isSingle = selectionMode === "single";
 
   const normalizedOptions = useMemo(
     () =>
@@ -49,10 +52,13 @@ const MultiSelectDropdown = ({
     [options, labelKey, valueKey]
   );
 
-  const selectedValues = useMemo(
-    () => (Array.isArray(selected) ? selected : []),
-    [selected]
-  );
+  const selectedIsArray = Array.isArray(selected);
+  const selectedValues = useMemo(() => {
+    if (selectedIsArray) {
+      return selected;
+    }
+    return selected ? [selected] : [];
+  }, [selected, selectedIsArray]);
 
   const selectedOptions = useMemo(
     () =>
@@ -82,6 +88,16 @@ const MultiSelectDropdown = ({
 
   const handleOptionToggle = (value) => {
     if (disabled) return;
+    if (isSingle) {
+      const isSame = selectedValues.includes(value);
+      const nextArray = isSame ? [] : [value];
+      const payload = selectedIsArray ? nextArray : nextArray[0] ?? "";
+      onChange?.(payload);
+      setOpen(false);
+      setSearch("");
+      return;
+    }
+
     const next = selectedValues.includes(value)
       ? selectedValues.filter((item) => item !== value)
       : [...selectedValues, value];
@@ -102,7 +118,7 @@ const MultiSelectDropdown = ({
   };
 
   const filteredOptions = useMemo(() => {
-    if (!searchable || !search.trim()) {
+    if (!searchable || (!search.trim() && !isSingle)) {
       return normalizedOptions;
     }
 
@@ -110,7 +126,11 @@ const MultiSelectDropdown = ({
     return normalizedOptions.filter((option) =>
       option.label.toLowerCase().includes(lowerSearch)
     );
-  }, [normalizedOptions, search, searchable]);
+  }, [normalizedOptions, search, searchable, isSingle]);
+
+  const displayClasses =
+    inputClassName ??
+    "form-control d-flex flex-wrap align-items-center gap-2 py-2 px-3";
 
   return (
     <div
@@ -118,7 +138,7 @@ const MultiSelectDropdown = ({
       ref={containerRef}
     >
       <div
-        className="form-control d-flex flex-wrap align-items-center gap-2 py-2 px-3"
+        className={displayClasses}
         role="button"
         tabIndex={disabled ? -1 : 0}
         onClick={handleToggle}
@@ -133,11 +153,15 @@ const MultiSelectDropdown = ({
       >
         {selectedOptions.length === 0 ? (
           <span className="text-neutral-400">{placeholder}</span>
+        ) : isSingle ? (
+          <span className="text-secondary fw-semibold">
+            {selectedOptions[0]?.label ?? placeholder}
+          </span>
         ) : (
           selectedOptions.map((option) => (
             <span
               key={option.value}
-              className="badge bg-primary-50 text-primary-600 d-inline-flex align-items-center gap-2 px-2 py-1"
+              className="badge bg-primary-50 text-secondary d-inline-flex align-items-center gap-2 px-2 py-1"
             >
               {option.label}
               <button
@@ -180,16 +204,53 @@ const MultiSelectDropdown = ({
             />
           )}
 
-          <div style={{ maxHeight: maxDropdownHeight, overflowY: "auto" }}>
+          <div
+            className="dropdown-options"
+            style={{ maxHeight: maxDropdownHeight, overflowY: "auto" }}
+          >
             {filteredOptions.length === 0 ? (
               <div className="text-neutral-400 text-sm py-2 text-center">
                 {emptyMessage}
               </div>
+            ) : isSingle ? (
+              filteredOptions.map((option) => {
+                const isActive = selectedValues.includes(option.value);
+                return (
+                  <button
+                    type="button"
+                    key={option.value}
+                    className={`w-100 text-start py-2 px-3 mb-1 rounded-2 border-0 ${
+                      isActive
+                        ? "bg-primary-50 text-secondary fw-semibold"
+                        : "bg-transparent text-secondary"
+                    }`}
+                    onClick={() => handleOptionToggle(option.value)}
+                    onMouseEnter={(event) => {
+                      if (!isActive) {
+                        event.currentTarget.style.backgroundColor = "#E2E8F0";
+                      }
+                    }}
+                    onMouseLeave={(event) => {
+                      if (!isActive) {
+                        event.currentTarget.style.backgroundColor = "transparent";
+                      }
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })
             ) : (
               filteredOptions.map((option) => (
                 <label
                   key={option.value}
-                  className="d-flex align-items-center gap-2 py-1 text-sm cursor-pointer"
+                  className="d-flex align-items-center gap-2 py-1 px-2 text-sm cursor-pointer rounded-2"
+                  onMouseEnter={(event) => {
+                    event.currentTarget.classList.add("bg-primary-50");
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.classList.remove("bg-primary-50");
+                  }}
                 >
                   <input
                     type="checkbox"
@@ -197,28 +258,30 @@ const MultiSelectDropdown = ({
                     checked={selectedValues.includes(option.value)}
                     onChange={() => handleOptionToggle(option.value)}
                   />
-                  <span>{option.label}</span>
+                  <span className="text-secondary">{option.label}</span>
                 </label>
               ))
             )}
           </div>
 
-          <div className="d-flex justify-content-between pt-2 mt-2 border-top">
-            <button
-              type="button"
-              className="btn btn-outline-primary btn-sm"
-              onClick={handleClear}
-            >
-              Clear
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              onClick={() => setOpen(false)}
-            >
-              Done
-            </button>
-          </div>
+          {!isSingle && (
+            <div className="d-flex justify-content-between pt-2 mt-2 border-top">
+              <button
+                type="button"
+                className="btn btn-outline-primary btn-sm"
+                onClick={handleClear}
+              >
+                Clear
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={() => setOpen(false)}
+              >
+                Done
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

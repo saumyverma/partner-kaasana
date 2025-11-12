@@ -1,125 +1,445 @@
-import { Icon } from '@iconify/react/dist/iconify.js'
-import React from 'react'
+"use client";
 
-const InputStatus = () => {
-    return (
-        <div className="col-lg-12">
-            <div className="card">
-                <div className="card-header">
-                    <h5 className="card-title mb-0">Input Status</h5>
-                </div>
-                <div className="card-body">
-                    <form className="row gy-3 needs-validation" noValidate="">
-                        <div className="col-md-6">
-                            <label className="form-label">First Name</label>
-                            <div className="icon-field has-validation">
-                                <span className="icon">
-                                    <Icon icon="f7:person" />
-                                </span>
-                                <input
-                                    type="text"
-                                    name="#0"
-                                    className="form-control"
-                                    placeholder="Enter First Name"
-                                    required=""
-                                />
-                                <div className="invalid-feedback">Please provide first name</div>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <label className="form-label">Last Name</label>
-                            <div className="icon-field has-validation">
-                                <span className="icon">
-                                    <Icon icon="f7:person" />
-                                </span>
-                                <input
-                                    type="text"
-                                    name="#0"
-                                    className="form-control"
-                                    placeholder="Enter Last Name"
-                                    required=""
-                                />
-                                <div className="invalid-feedback">Please provide last name</div>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <label className="form-label">Email</label>
-                            <div className="icon-field has-validation">
-                                <span className="icon">
-                                    <Icon icon="mage:email" />
-                                </span>
-                                <input
-                                    type="email"
-                                    name="#0"
-                                    className="form-control"
-                                    placeholder="Enter Email"
-                                    required=""
-                                />
-                                <div className="invalid-feedback">
-                                    Please provide email address
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <label className="form-label">Phone</label>
-                            <div className="icon-field has-validation">
-                                <span className="icon">
-                                    <Icon icon="solar:phone-calling-linear" />
-                                </span>
-                                <input
-                                    type="text"
-                                    name="#0"
-                                    className="form-control"
-                                    placeholder="+1 (555) 000-0000"
-                                    required=""
-                                />
-                                <div className="invalid-feedback">
-                                    Please provide phone number
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <label className="form-label">Password</label>
-                            <div className="icon-field has-validation">
-                                <span className="icon">
-                                    <Icon icon="solar:lock-password-outline" />
-                                </span>
-                                <input
-                                    type="password"
-                                    name="#0"
-                                    className="form-control"
-                                    placeholder="*******"
-                                    required=""
-                                />
-                                <div className="invalid-feedback">Please provide password</div>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <label className="form-label">Confirm Password</label>
-                            <div className="icon-field has-validation">
-                                <span className="icon">
-                                    <Icon icon="solar:lock-password-outline" />
-                                </span>
-                                <input
-                                    type="password"
-                                    name="#0"
-                                    className="form-control"
-                                    placeholder="*******"
-                                    required=""
-                                />
-                                <div className="invalid-feedback">Please confirm password</div>
-                            </div>
-                        </div>
-                        <div className="col-md-12">
-                            <button className="btn btn-primary-600" type="submit">
-                                Submit form
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+import React, { useMemo, useState } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import MultiSelectDropdown from "@/components/child/MultiSelectDropdown";
+
+const companyTypeOptions = [
+  { value: "", label: "Select Your Agent Type" },
+  { value: "DMC", label: "DMC" },
+  { value: "OTA", label: "OTA" },
+  { value: "Retail Agency", label: "Retail Agency" },
+  { value: "Corporate Travel", label: "Corporate Travel" },
+  { value: "Influencer", label: "Influencer" },
+];
+
+const salesPersonOptions = [
+  { value: "", label: "Select Your Sales Person" },
+  { value: "0", label: "Main" },
+  { value: "1", label: "Sara Khan" },
+  { value: "2", label: "Jacob Jones" },
+  { value: "3", label: "Albert Flores" },
+];
+
+const partnerCompanyOptions = [
+  { value: "", label: "Select Your Company Name" },
+  { value: "travel-hub", label: "Travel Hub" },
+  { value: "wanderlust", label: "Wanderlust Inc." },
+  { value: "coastal-journeys", label: "Coastal Journeys" },
+];
+
+const destinationCountryOptions = [
+  { value: "United Arab Emirates", label: "United Arab Emirates" },
+  { value: "India", label: "India" },
+  { value: "Saudi Arabia", label: "Saudi Arabia" },
+  { value: "Qatar", label: "Qatar" },
+  { value: "Oman", label: "Oman" },
+  { value: "Bahrain", label: "Bahrain" },
+];
+
+const destinationCityOptions = [
+  { value: "Dubai", label: "Dubai" },
+  { value: "Abu Dhabi", label: "Abu Dhabi" },
+  { value: "Sharjah", label: "Sharjah" },
+  { value: "Mumbai", label: "Mumbai" },
+  { value: "Bengaluru", label: "Bengaluru" },
+  { value: "Riyadh", label: "Riyadh" },
+];
+
+const paxRanges = ["0-10", "10-20", "20-30", "30-40", "40-50", "50+"];
+
+const holidayTypeOptions = [
+  "GIT",
+  "FIT",
+  "Land Only",
+  "Flight Only",
+  "Cruise",
+  "Lifetime Experiences",
+];
+
+const leadSourceOptions = [
+  { value: "", label: "Select Lead Source" },
+  { value: "online", label: "online" },
+  { value: "offline", label: "offline" },
+  { value: "event", label: "event" },
+  { value: "referral", label: "referral" },
+];
+
+const leadMediumOptions = [
+  { value: "", label: "Select Lead Medium" },
+  { value: "website", label: "Website" },
+  { value: "facebook", label: "Facebook" },
+  { value: "instagram", label: "Instagram" },
+  { value: "email", label: "Email Campaign" },
+  { value: "walk-in", label: "Walk-in" },
+];
+
+const AddSingleLeadForm = () => {
+  const [leadType, setLeadType] = useState("B2C");
+  const [assignedSales, setAssignedSales] = useState("");
+  const [companySelection, setCompanySelection] = useState("");
+  const [leadCategoryType, setLeadCategoryType] = useState("");
+  const [destinationsCountry, setDestinationsCountry] = useState([]);
+  const [destinationsCity, setDestinationsCity] = useState([]);
+  const [holidayTypeSelection, setHolidayTypeSelection] = useState("");
+  const [paxSelection, setPaxSelection] = useState("");
+  const [durationSelection, setDurationSelection] = useState("");
+  const [leadSourceSelection, setLeadSourceSelection] = useState("");
+  const [leadMediumSelection, setLeadMediumSelection] = useState("");
+
+  const nightsOptions = useMemo(
+    () => Array.from({ length: 15 }, (_, index) => `${index + 1} Nights`),
+    []
+  );
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
+  return (
+    <div className="col-lg-12">
+      <div className="card">
+        <div className="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <h5 className="card-title mb-0">Single Lead</h5>
+          <button
+            type="button"
+            id="add_company_b2c"
+            className={`btn btn-outline-danger btn-sm ${leadType === "B2B" ? "" : "d-none"}`}
+          >
+            Add Company
+          </button>
         </div>
-    )
-}
+        <div className="card-body">
+          <form id="addSingleLeadForm" className="row gy-3 needs-validation" onSubmit={handleSubmit}>
+            <div className="col-md-6 d-flex align-items-center gap-3">
+              <label className="form-check form-check-inline mb-0">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  name="default_radio"
+                  value="B2C"
+                  id="b2cRadio"
+                  checked={leadType === "B2C"}
+                  onChange={() => setLeadType("B2C")}
+                />
+                <span className="ms-2">B2C</span>
+              </label>
+              <label className="form-check form-check-inline mb-0">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  name="default_radio"
+                  value="B2B"
+                  id="b2bRadio"
+                  checked={leadType === "B2B"}
+                  onChange={() => setLeadType("B2B")}
+                />
+                <span className="ms-2">B2B</span>
+              </label>
+            </div>
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="AssignedSales">
+                Assigned to Sales
+              </label>
+              <MultiSelectDropdown
+                options={salesPersonOptions}
+                placeholder="Select Sales Person"
+                selected={assignedSales}
+                onChange={setAssignedSales}
+                selectionMode="single"
+              />
+              {assignedSales && (
+                <input type="hidden" name="AssignedSales" value={assignedSales} />
+              )}
+            </div>
 
-export default InputStatus
+            <div className={`col-12 ${leadType === "B2B" ? "" : "d-none"}`}>
+              <div className="row gy-3">
+                <div className="col-md-3">
+                  <label className="form-label" htmlFor="CompanyName">
+                    Company name <sup>*</sup>
+                  </label>
+                  <MultiSelectDropdown
+                    options={partnerCompanyOptions}
+                    placeholder="Select Company"
+                    selected={companySelection}
+                    onChange={setCompanySelection}
+                    selectionMode="single"
+                  />
+                  {companySelection && (
+                    <input type="hidden" name="CompanyName" value={companySelection} />
+                  )}
+                </div>
+
+                <div className="col-md-3">
+                  <label className="form-label" htmlFor="leadCategoryType">
+                    Lead Category Type <sup>*</sup>
+                  </label>
+                  <MultiSelectDropdown
+                    options={companyTypeOptions}
+                    placeholder="Select Agent Type"
+                    selected={leadCategoryType}
+                    onChange={setLeadCategoryType}
+                    selectionMode="single"
+                  />
+                  {leadCategoryType && (
+                    <input type="hidden" name="leadCategoryType" value={leadCategoryType} />
+                  )}
+                </div>
+
+                <div className="col-md-3">
+                  <label className="form-label" htmlFor="email">
+                    Email ID <sup>*</sup>
+                  </label>
+                  <div className="icon-field">
+                    <span className="icon">
+                      <Icon icon="mage:email" />
+                    </span>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-control"
+                      placeholder="Enter Your Email Address"
+                      required
+                    />
+                  </div>
+                  <p id="emailStatus" className="text-sm mt-1 mb-0"></p>
+                </div>
+
+                <div className="col-md-3">
+                  <label className="form-label" htmlFor="contactNumber">
+                    contact number <sup>*</sup>
+                  </label>
+                  <div className="icon-field">
+                    <span className="icon">
+                      <Icon icon="solar:phone-calling-linear" />
+                    </span>
+                    <input
+                      type="text"
+                      id="contactNumber"
+                      name="contactNumber"
+                      className="form-control"
+                      placeholder="Enter Your Number"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="CustomerName">
+                Customer Name
+              </label>
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="f7:person" />
+                </span>
+                <input
+                  type="text"
+                  id="CustomerName"
+                  name="CustomerName"
+                  className="form-control"
+                  placeholder="Enter Customer Name"
+                />
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="CustomercontactNumber">
+                Customer Contact No. <sup>*</sup>
+              </label>
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="solar:phone-calling-linear" />
+                </span>
+                <input
+                  type="text"
+                  id="CustomercontactNumber"
+                  name="CustomercontactNumber"
+                  className="form-control"
+                  placeholder="Enter Customer Number"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="Customeremail">
+                Customer Email ID
+              </label>
+              <input type="hidden" name="customer_id" id="customer_id" value="0" />
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mage:email" />
+                </span>
+                <input
+                  type="email"
+                  id="Customeremail"
+                  name="Customeremail"
+                  className="form-control check_exist_email"
+                  placeholder="Enter Customer Email"
+                />
+              </div>
+              <small className="text-success d-block mt-1 show_email_status d-none">
+                Email is available.
+              </small>
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="TravelDate">
+                Travel Date
+              </label>
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="solar:calendar-linear" />
+                </span>
+                <input type="date" id="TravelDate" name="TravelDate" className="form-control" />
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="HolidayType">
+                Holiday Type <sup>*</sup>
+              </label>
+              <MultiSelectDropdown
+                options={holidayTypeOptions.map((value) => ({ value, label: value }))}
+                placeholder="Select Holiday Type"
+                selected={holidayTypeSelection}
+                onChange={setHolidayTypeSelection}
+                selectionMode="single"
+              />
+              {holidayTypeSelection && (
+                <input type="hidden" name="HolidayType" value={holidayTypeSelection} />
+              )}
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="NoofPax">
+                No of Pax <sup>*</sup>
+              </label>
+              <MultiSelectDropdown
+                options={paxRanges.map((value) => ({ value, label: value }))}
+                placeholder="Select Pax"
+                selected={paxSelection}
+                onChange={setPaxSelection}
+                selectionMode="single"
+              />
+              {paxSelection && (
+                <input type="hidden" name="NoofPax" value={paxSelection} />
+              )}
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="DestinationsCountry">
+                Destinations Country <sup>*</sup>
+              </label>
+              <MultiSelectDropdown
+                options={destinationCountryOptions}
+                placeholder="Select Destinations Country"
+                selected={destinationsCountry}
+                onChange={setDestinationsCountry}
+              />
+              {destinationsCountry.map((value) => (
+                <input key={`DestinationsCountry-${value}`} type="hidden" name="DestinationsCountry[]" value={value} />
+              ))}
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="Destinations">
+                Destinations City <sup>*</sup>
+              </label>
+              <MultiSelectDropdown
+                options={destinationCityOptions}
+                placeholder="Select Destinations City"
+                selected={destinationsCity}
+                onChange={setDestinationsCity}
+              />
+              {destinationsCity.map((value) => (
+                <input key={`Destinations-${value}`} type="hidden" name="Destinations[]" value={value} />
+              ))}
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="Duration">
+                Duration <sup>*</sup>
+              </label>
+              <MultiSelectDropdown
+                options={nightsOptions.map((value) => ({ value, label: value }))}
+                placeholder="Select Duration"
+                selected={durationSelection}
+                onChange={setDurationSelection}
+                selectionMode="single"
+              />
+              {durationSelection && (
+                <input type="hidden" name="Duration" value={durationSelection} />
+              )}
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="Origin">
+                Origin
+              </label>
+              <div className="icon-field">
+                <span className="icon">
+                  <Icon icon="mdi:map-marker-outline" />
+                </span>
+                <input
+                  type="text"
+                  id="Origin"
+                  name="Origin"
+                  className="form-control"
+                  placeholder="Enter Your Origin"
+                />
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="leadSource">
+                Lead Source <sup>*</sup>
+              </label>
+              <MultiSelectDropdown
+                options={leadSourceOptions}
+                placeholder="Select Lead Source"
+                selected={leadSourceSelection}
+                onChange={setLeadSourceSelection}
+                selectionMode="single"
+              />
+              {leadSourceSelection && (
+                <input type="hidden" name="LeadSource" value={leadSourceSelection} />
+              )}
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="leadMedium">
+                Lead Medium <sup>*</sup>
+              </label>
+              <MultiSelectDropdown
+                options={leadMediumOptions}
+                placeholder="Select Lead Medium"
+                selected={leadMediumSelection}
+                onChange={setLeadMediumSelection}
+                selectionMode="single"
+              />
+              {leadMediumSelection && (
+                <input type="hidden" name="LeadMedium" value={leadMediumSelection} />
+              )}
+            </div>
+
+            <div className="col-12 d-flex justify-content-end mt-3">
+              <button type="button" className="btn btn-outline-danger me-2">
+                Cancel
+              </button>
+              <button type="submit" id="addSingleLead" className="btn btn-primary">
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddSingleLeadForm;
