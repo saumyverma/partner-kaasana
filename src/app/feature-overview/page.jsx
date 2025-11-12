@@ -4,29 +4,23 @@ import Breadcrumb from "@/components/Breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export const metadata = {
-  title: "WowDash NEXT JS - Admin Dashboard Multipurpose Bootstrap 5 Template",
+  title: "Feature Overview | Kaasana",
   description:
-    "Wowdash NEXT JS is a developer-friendly, ready-to-use admin template designed for building attractive, scalable, and high-performing web applications.",
+    "Explore all core Kaasana features including profiles, resources, inventory, CRM, financial tools, and bookings.",
 };
 
 const Page = () => {
-     const breadcrumbs = [
-   {  label: "Feature Overview",  href: "/"}
-   
-  ];
-  return (
-    <>
-      {/* MasterLayout */}
-      <ProtectedRoute>
-      <MasterLayout>
-     
-        <Breadcrumb breadcrumbs={breadcrumbs} />
+  const breadcrumbs = [{ label: "Feature Overview", href: "/feature-overview" }];
 
+  return (
+    <ProtectedRoute>
+      <MasterLayout>
+        <Breadcrumb breadcrumbs={breadcrumbs} />
         <FeatureOverview />
       </MasterLayout>
-      </ProtectedRoute>
-    </>
+    </ProtectedRoute>
   );
 };
 
 export default Page;
+

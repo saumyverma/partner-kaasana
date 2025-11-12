@@ -823,6 +823,18 @@ const MasterLayout = ({ children }) => {
                           Inbox
                         </Link>
                       </li>
+                  <li>
+                    <Link
+                      className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3'
+                      href='/feature-overview'
+                    >
+                      <Icon
+                        icon='solar:widget-5-linear'
+                        className='icon text-xl'
+                      />{" "}
+                      Feature Overview
+                    </Link>
+                  </li>
                       <li>
                         <Link
                           className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3'

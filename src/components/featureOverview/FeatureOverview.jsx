@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import CompanyOnboardingModal from "@/components/modal/CompanyOnboardingModal";
 
-export default function ProfileOverview({pageId}) {
+export default function FeatureOverview({pageId}) {
      const { isAuthenticated, user } = useSelector((state) => state.auth);
      const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
 
