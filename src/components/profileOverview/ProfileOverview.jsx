@@ -1,12 +1,46 @@
 "use client"
-import React from 'react'
-import { api } from "@/utils/api";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useMemo, useState } from 'react'
+import { useSelector } from "react-redux";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
+import CompanyOnboardingModal from "@/components/modal/CompanyOnboardingModal";
 
 export default function ProfileOverview({pageId}) {
      const { isAuthenticated, user } = useSelector((state) => state.auth);
+     const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
+
+     const profileSetupComplete = useMemo(
+      () => Boolean(user?.companyDetails?.profile_setup),
+      [user?.companyDetails?.profile_setup]
+    );
+
+    useEffect(() => {
+      if (isAuthenticated && !profileSetupComplete) {
+        setIsOnboardingModalOpen(true);
+      } else {
+        setIsOnboardingModalOpen(false);
+      }
+    }, [isAuthenticated, profileSetupComplete]);
+
+    useEffect(() => {
+      if (isOnboardingModalOpen) {
+        const previousOverflow = document.body.style.overflow;
+        document.body.classList.add("modal-open");
+        document.body.style.overflow = "hidden";
+        return () => {
+          document.body.classList.remove("modal-open");
+          document.body.style.overflow = previousOverflow;
+        };
+      }
+
+      document.body.classList.remove("modal-open");
+      document.body.style.overflow = "";
+
+      return () => {
+        document.body.classList.remove("modal-open");
+        document.body.style.overflow = "";
+      };
+    }, [isOnboardingModalOpen]);
 
   // Feature sections configuration - ORDERED as requested with consistent primary theme
   const featureSections = [
@@ -221,7 +255,12 @@ export default function ProfileOverview({pageId}) {
   ];
 
   return (
-    <div className="container-fluid py-24">
+    <>
+      <CompanyOnboardingModal
+        isOpen={isOnboardingModalOpen}
+        companyDetails={user?.companyDetails}
+      />
+      <div className="container-fluid py-24">
       {/* Hero Section */}
       <section className="mb-48">
         <div className="text-center mb-40">
@@ -496,5 +535,6 @@ export default function ProfileOverview({pageId}) {
         </div>
       </section>
     </div>
+    </>
   )
 }
