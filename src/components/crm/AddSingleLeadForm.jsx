@@ -111,31 +111,56 @@ const AddSingleLeadForm = () => {
         </div>
         <div className="card-body">
           <form id="addSingleLeadForm" className="row gy-3 needs-validation" onSubmit={handleSubmit}>
-            <div className="col-md-6 d-flex align-items-center gap-3">
-              <label className="form-check form-check-inline mb-0">
-                <input
-                  type="radio"
-                  className="form-check-input"
-                  name="default_radio"
-                  value="B2C"
-                  id="b2cRadio"
-                  checked={leadType === "B2C"}
-                  onChange={() => setLeadType("B2C")}
-                />
-                <span className="ms-2">B2C</span>
-              </label>
-              <label className="form-check form-check-inline mb-0">
-                <input
-                  type="radio"
-                  className="form-check-input"
-                  name="default_radio"
-                  value="B2B"
-                  id="b2bRadio"
-                  checked={leadType === "B2B"}
-                  onChange={() => setLeadType("B2B")}
-                />
-                <span className="ms-2">B2B</span>
-              </label>
+            <div className="col-md-6">
+              <div className="d-flex flex-wrap gap-3">
+                <div
+                  className={`bg-neutral-100 px-20 py-12 radius-8 ${
+                    leadType === "B2C" ? "border border-primary" : "border border-transparent"
+                  }`}
+                >
+                  <span className="form-check checked-success d-flex align-items-center gap-2">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="default_radio"
+                      id="leadTypeB2C"
+                      value="B2C"
+                      checked={leadType === "B2C"}
+                      onChange={() => setLeadType("B2C")}
+                    />
+                    <label
+                      className="form-check-label line-height-1 fw-medium text-secondary-light"
+                      htmlFor="leadTypeB2C"
+                    >
+                      B2C
+                    </label>
+                  </span>
+                </div>
+
+                <div
+                  className={`bg-neutral-100 px-20 py-12 radius-8 ${
+                    leadType === "B2B" ? "border border-primary" : "border border-transparent"
+                  }`}
+                >
+                  <span className="form-check checked-success d-flex align-items-center gap-2">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="default_radio"
+                      id="leadTypeB2B"
+                      value="B2B"
+                      checked={leadType === "B2B"}
+                      onChange={() => setLeadType("B2B")}
+                    />
+                    <label
+                      className="form-check-label line-height-1 fw-medium text-secondary-light"
+                      htmlFor="leadTypeB2B"
+                    >
+                      B2B
+                    </label>
+                  </span>
+                </div>
+              </div>
             </div>
             <div className="col-md-6">
               <label className="form-label" htmlFor="AssignedSales">
