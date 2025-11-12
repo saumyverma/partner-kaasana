@@ -811,18 +811,7 @@ const MasterLayout = ({ children }) => {
                           My Profile
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                          className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3'
-                          href='/email'
-                        >
-                          <Icon
-                            icon='tabler:message-check'
-                            className='icon text-xl'
-                          />{" "}
-                          Inbox
-                        </Link>
-                      </li>
+                     
                   <li>
                     <Link
                       className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3'
@@ -832,21 +821,9 @@ const MasterLayout = ({ children }) => {
                         icon='solar:widget-5-linear'
                         className='icon text-xl'
                       />{" "}
-                      Feature Overview
+                      What’s Inside
                     </Link>
                   </li>
-                      <li>
-                        <Link
-                          className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3'
-                          href='/company'
-                        >
-                          <Icon
-                            icon='icon-park-outline:setting-two'
-                            className='icon text-xl'
-                          />
-                          Setting
-                        </Link>
-                      </li>
                       <li>
                         <Link
                           className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3'

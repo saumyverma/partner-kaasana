@@ -10,17 +10,14 @@ export const metadata = {
 };
 
 const Page = () => {
-     const breadcrumbs = [
-   {  label: "Feature Overview",  href: "/"}
-   
-  ];
+  const breadcrumbs = [{ label: "Feature Overview" }];
   return (
     <>
       {/* MasterLayout */}
       <ProtectedRoute>
       <MasterLayout>
      
-        <Breadcrumb breadcrumbs={breadcrumbs} />
+        <Breadcrumb title='Feature Overview' breadcrumbs={breadcrumbs} />
 
         <FeatureOverview />
       </MasterLayout>

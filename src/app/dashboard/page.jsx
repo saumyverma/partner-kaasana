@@ -1,6 +1,6 @@
 import DashBoardLayerOne from "@/components/DashBoardLayerOne";
 import MasterLayout from "@/masterLayout/MasterLayout";
-import { Breadcrumb } from "react-bootstrap";
+import Breadcrumb from "@/components/Breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export const metadata = {
@@ -16,7 +16,7 @@ const Page = () => {
       <ProtectedRoute>
       <MasterLayout>
         {/* Breadcrumb */}
-        <Breadcrumb title={[]} />
+        <Breadcrumb title='Dashboard' />
 
         {/* DashBoardLayerOne */}
         <DashBoardLayerOne />
