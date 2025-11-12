@@ -6,7 +6,7 @@ import OnboardingPopupForm from "@/components/child/OnboardingPopupForm";
 const CompanyOnboardingModal = ({ isOpen, companyDetails }) => {
   const contactEmail = companyDetails?.email || "your team";
 
-  if (isOpen) {
+  if (!isOpen) {
     return null;
   }
 
