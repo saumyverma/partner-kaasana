@@ -1,0 +1,564 @@
+"use client";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useState } from "react";
+
+const ViewCompanyProfileLayer = () => {
+  const [imagePreview, setImagePreview] = useState(
+    "/assets/images/user-grid/user-grid-img13.png"
+  );
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  // Toggle function for password field
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  // Toggle function for confirm password field
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
+  };
+
+  const readURL = (input) => {
+    if (input.target.files && input.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(input.target.files[0]);
+    }
+  };
+  return (
+    <div className='row gy-4'>
+    {/* company profile section  */}
+      <div className='col-lg-4'>
+        <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
+          <img
+            src='/assets/img/coverimages.jpg'
+            alt=''
+            className='w-100 object-fit-cover'
+          />
+          <div className='pb-24 ms-16 mb-24 me-16  mt--100'>
+            <div className='text-center border border-top-0 border-start-0 border-end-0'>
+              <img
+                src='/assets/img/user.png'
+                alt=''
+                className='border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover'
+              />
+              <h6 className='mb-0 mt-16'>Travel Agency Inc.</h6>
+              <span className='text-secondary-light mb-16'>
+                Agency Code : KT2025118243C
+              </span>
+            </div>
+            <div className='mt-24'>
+              <div className='d-flex align-items-center justify-content-between mb-16'>
+                <h6 className='text-xl mb-0'>Company Info</h6>
+                <button
+                  type='button'
+                  className='btn p-0 border-0 bg-transparent'
+                  data-bs-toggle='modal'
+                  data-bs-target='#editCompanyInfoModal'
+                  aria-label='Edit Company Info'
+                >
+                  <Icon icon='solar:pen-bold' className='text-primary-600 text-lg cursor-pointer' />
+                </button>
+              </div>
+              <ul>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Name
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    Travel Agency Inc.
+                  </span>
+                </li>
+                <li className='d-flex align-items-start mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Address
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <div className='flex-grow-1'>
+                    <div className='d-flex align-items-start gap-2 flex-wrap'>
+                      <span className='text-secondary-light fw-medium'>
+                        123 Business Street, Suite 100, New York, NY 10001
+                      </span>
+                      <span className='badge bg-primary-50 text-primary-600 fw-medium'>
+                        <Icon icon='solar:home-bold' className='text-xs me-1' />
+                        Headquarter
+                      </span>
+                    </div>
+                  </div>
+                </li>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Company Type
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    Travel Agency
+                  </span>
+                </li>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Tax Trade Number
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    TAX-2024-123456
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div className='mt-24 border-top pt-24'>
+              <div className='d-flex align-items-center justify-content-between mb-16'>
+                <h6 className='text-xl mb-0'>Operational Information</h6>
+                <button
+                  type='button'
+                  className='btn p-0 border-0 bg-transparent'
+                  data-bs-toggle='modal'
+                  data-bs-target='#editOperationalInfoModal'
+                  aria-label='Edit Operational Information'
+                >
+                  <Icon icon='solar:pen-bold' className='text-primary-600 text-lg cursor-pointer' />
+                </button>
+              </div>
+              <ul>
+                <li className='d-flex align-items-start mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Product and Services
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    Hotels, Flights, Packages, Transportation, Visa Services
+                  </span>
+                </li>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Company Size
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    50-100 Employees
+                  </span>
+                </li>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Booking Method
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    Online & Offline
+                  </span>
+                </li>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-190-px flex-shrink-0'>
+                    Location of Operation
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-3 flex-shrink-0'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    United States, New York
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    {/* company branches section  */}
+    <div className='col-lg-4'>
+        <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
+          <img
+            src='/assets/images/user-grid/user-grid-bg1.png'
+            alt=''
+            className='w-100 object-fit-cover'
+          />
+          <div className='pb-24 ms-16 mb-24 me-16  mt--100'>
+            <div className='text-center border border-top-0 border-start-0 border-end-0'>
+              <img
+                src='/assets/images/user-grid/user-grid-img14.png'
+                alt=''
+                className='border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover'
+              />
+              <h6 className='mb-0 mt-16'>Jacob Jones</h6>
+              <span className='text-secondary-light mb-16'>
+                ifrandom@gmail.com
+              </span>
+            </div>
+            <div className='mt-24'>
+              <h6 className='text-xl mb-16'>Personal Info</h6>
+              <ul>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    Full Name
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : Will Jonto
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Email
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : willjontoax@gmail.com
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Phone Number
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : (1) 2536 2561 2365
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Department
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : Design
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Designation
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : UI UX Designer
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Languages
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : English
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Bio
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : Lorem Ipsum&nbsp;is simply dummy text of the printing and
+                    typesetting industry.
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* company contact details section  */}
+
+      <div className='col-lg-4'>
+        <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
+          <img
+            src='/assets/images/user-grid/user-grid-bg1.png'
+            alt=''
+            className='w-100 object-fit-cover'
+          />
+          <div className='pb-24 ms-16 mb-24 me-16  mt--100'>
+            <div className='text-center border border-top-0 border-start-0 border-end-0'>
+              <img
+                src='/assets/images/user-grid/user-grid-img14.png'
+                alt=''
+                className='border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover'
+              />
+              <h6 className='mb-0 mt-16'>Jacob Jones</h6>
+              <span className='text-secondary-light mb-16'>
+                ifrandom@gmail.com
+              </span>
+            </div>
+            <div className='mt-24'>
+              <h6 className='text-xl mb-16'>Personal Info</h6>
+              <ul>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    Full Name
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : Will Jonto
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Email
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : willjontoax@gmail.com
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Phone Number
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : (1) 2536 2561 2365
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Department
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : Design
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Designation
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : UI UX Designer
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1 mb-12'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Languages
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : English
+                  </span>
+                </li>
+                <li className='d-flex align-items-center gap-1'>
+                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                    {" "}
+                    Bio
+                  </span>
+                  <span className='w-70 text-secondary-light fw-medium'>
+                    : Lorem Ipsum&nbsp;is simply dummy text of the printing and
+                    typesetting industry.
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Company Info Modal */}
+      <div
+        className='modal fade'
+        id='editCompanyInfoModal'
+        tabIndex={-1}
+        aria-labelledby='editCompanyInfoModalLabel'
+        aria-hidden='true'
+      >
+        <div className='modal-dialog modal-lg modal-dialog-centered'>
+          <div className='modal-content border radius-16 bg-base'>
+            <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
+              <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='editCompanyInfoModalLabel'>
+                Edit Company Info
+              </h1>
+              <button
+                type='button'
+                className='btn-close'
+                data-bs-dismiss='modal'
+                aria-label='Close'
+              />
+            </div>
+            <div className='modal-body p-24'>
+              <form action='#'>
+                <div className='row'>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Name <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Company Name'
+                      defaultValue='Travel Agency Inc.'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Company Type <span className='text-danger-600'>*</span>
+                    </label>
+                    <select className='form-control radius-8 form-select' defaultValue='Travel Agency'>
+                      <option value='Travel Agency'>Travel Agency</option>
+                      <option value='Tour Operator'>Tour Operator</option>
+                      <option value='Hotel Chain'>Hotel Chain</option>
+                      <option value='Transportation'>Transportation</option>
+                    </select>
+                  </div>
+                  <div className='col-12 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Address <span className='text-danger-600'>*</span>
+                    </label>
+                    <textarea
+                      className='form-control radius-8'
+                      rows={3}
+                      placeholder='Enter Company Address'
+                      defaultValue='123 Business Street, Suite 100, New York, NY 10001'
+                    />
+                  </div>
+                  <div className='col-12 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Tax Trade Number <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Tax Trade Number'
+                      defaultValue='TAX-2024-123456'
+                    />
+                  </div>
+                </div>
+                <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
+                  <button
+                    type='button'
+                    className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
+                    data-bs-dismiss='modal'
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type='submit'
+                    className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Operational Information Modal */}
+      <div
+        className='modal fade'
+        id='editOperationalInfoModal'
+        tabIndex={-1}
+        aria-labelledby='editOperationalInfoModalLabel'
+        aria-hidden='true'
+      >
+        <div className='modal-dialog modal-lg modal-dialog-centered'>
+          <div className='modal-content border radius-16 bg-base'>
+            <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
+              <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='editOperationalInfoModalLabel'>
+                Edit Operational Information
+              </h1>
+              <button
+                type='button'
+                className='btn-close'
+                data-bs-dismiss='modal'
+                aria-label='Close'
+              />
+            </div>
+            <div className='modal-body p-24'>
+              <form action='#'>
+                <div className='row'>
+                  <div className='col-12 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Product and Services <span className='text-danger-600'>*</span>
+                    </label>
+                    <textarea
+                      className='form-control radius-8'
+                      rows={3}
+                      placeholder='Enter Products and Services'
+                      defaultValue='Hotels, Flights, Packages, Transportation, Visa Services'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Company Size <span className='text-danger-600'>*</span>
+                    </label>
+                    <select className='form-control radius-8 form-select' defaultValue='50-100'>
+                      <option value='1-10'>1-10 Employees</option>
+                      <option value='11-50'>11-50 Employees</option>
+                      <option value='50-100'>50-100 Employees</option>
+                      <option value='100-500'>100-500 Employees</option>
+                      <option value='500+'>500+ Employees</option>
+                    </select>
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Booking Method <span className='text-danger-600'>*</span>
+                    </label>
+                    <select className='form-control radius-8 form-select' defaultValue='Online & Offline'>
+                      <option value='Online'>Online Only</option>
+                      <option value='Offline'>Offline Only</option>
+                      <option value='Online & Offline'>Online & Offline</option>
+                    </select>
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Country <span className='text-danger-600'>*</span>
+                    </label>
+                    <select className='form-control radius-8 form-select' defaultValue='United States'>
+                      <option value='United States'>United States</option>
+                      <option value='Canada'>Canada</option>
+                      <option value='United Kingdom'>United Kingdom</option>
+                      <option value='Australia'>Australia</option>
+                    </select>
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      City <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter City'
+                      defaultValue='New York'
+                    />
+                  </div>
+                </div>
+                <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
+                  <button
+                    type='button'
+                    className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
+                    data-bs-dismiss='modal'
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type='submit'
+                    className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  );
+};
+
+export default ViewCompanyProfileLayer;
