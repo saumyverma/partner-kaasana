@@ -8,6 +8,11 @@ const ViewCompanyProfileLayer = () => {
   );
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [contactSections, setContactSections] = useState([
+    { id: 1, fullName: 'The Article Guru', email: 'anshrajgkp8765@gmail.com', designation: 'Customer Service Representative', contactNumber: '+918765867589', whatsappNumber: '+919936396851' },
+    { id: 2, fullName: 'John Smith', email: 'john.smith@example.com', designation: 'Sales Manager', contactNumber: '+919876543210', whatsappNumber: '+919876543210' },
+    { id: 3, fullName: 'Sarah Johnson', email: 'sarah.johnson@example.com', designation: 'Operations Manager', contactNumber: '+919988776655', whatsappNumber: '+919988776655' },
+  ]);
 
   // Toggle function for password field
   const togglePasswordVisibility = () => {
@@ -26,6 +31,22 @@ const ViewCompanyProfileLayer = () => {
         setImagePreview(e.target.result);
       };
       reader.readAsDataURL(input.target.files[0]);
+    }
+  };
+
+  // Add new contact section
+  const addContactSection = () => {
+    const newId = contactSections.length > 0 ? Math.max(...contactSections.map(c => c.id)) + 1 : 1;
+    setContactSections([
+      ...contactSections,
+      { id: newId, fullName: '', email: '', designation: '', contactNumber: '', whatsappNumber: '' }
+    ]);
+  };
+
+  // Remove contact section
+  const removeContactSection = (id) => {
+    if (contactSections.length > 1) {
+      setContactSections(contactSections.filter(contact => contact.id !== id));
     }
   };
   return (
@@ -815,61 +836,90 @@ const ViewCompanyProfileLayer = () => {
             </div>
             <div className='modal-body p-24'>
               <form action='#'>
-                <div className='row'>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Full Name <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control radius-8'
-                      placeholder='Enter Full Name'
-                      defaultValue='The Article Guru'
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Email <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='email'
-                      className='form-control radius-8'
-                      placeholder='Enter Email'
-                      defaultValue='anshrajgkp8765@gmail.com'
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Designation <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control radius-8'
-                      placeholder='Enter Designation'
-                      defaultValue='Customer Service Representative'
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Contact Number <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='tel'
-                      className='form-control radius-8'
-                      placeholder='Enter Contact Number'
-                      defaultValue='+918765867589'
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      WhatsApp Number <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='tel'
-                      className='form-control radius-8'
-                      placeholder='Enter WhatsApp Number'
-                      defaultValue='+919936396851'
-                    />
+                <div className='overflow-y-auto' style={{ maxHeight: '60vh' }}>
+                  {contactSections.map((contact, index) => (
+                    <div key={contact.id} className='border radius-8 p-16 mb-16'>
+                      <div className='d-flex align-items-center justify-content-between mb-16'>
+                        <h6 className='text-lg mb-0 text-primary-light'>Contact Details {index + 1}</h6>
+                        <button
+                          type='button'
+                          className='btn p-0 border-0 bg-transparent'
+                          onClick={() => removeContactSection(contact.id)}
+                          aria-label='Remove Contact'
+                        >
+                          <Icon icon='solar:trash-bin-trash-bold' className='text-danger-600 text-md cursor-pointer' />
+                        </button>
+                      </div>
+                      <div className='row'>
+                        <div className='col-6 mb-20'>
+                          <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                            Full Name <span className='text-danger-600'>*</span>
+                          </label>
+                          <input
+                            type='text'
+                            className='form-control radius-8'
+                            placeholder='Enter Full Name'
+                            defaultValue={contact.fullName}
+                          />
+                        </div>
+                        <div className='col-6 mb-20'>
+                          <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                            Email <span className='text-danger-600'>*</span>
+                          </label>
+                          <input
+                            type='email'
+                            className='form-control radius-8'
+                            placeholder='Enter Email'
+                            defaultValue={contact.email}
+                          />
+                        </div>
+                        <div className='col-6 mb-20'>
+                          <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                            Designation <span className='text-danger-600'>*</span>
+                          </label>
+                          <input
+                            type='text'
+                            className='form-control radius-8'
+                            placeholder='Enter Designation'
+                            defaultValue={contact.designation}
+                          />
+                        </div>
+                        <div className='col-6 mb-20'>
+                          <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                            Contact Number <span className='text-danger-600'>*</span>
+                          </label>
+                          <input
+                            type='tel'
+                            className='form-control radius-8'
+                            placeholder='Enter Contact Number'
+                            defaultValue={contact.contactNumber}
+                          />
+                        </div>
+                        <div className='col-6 mb-20'>
+                          <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                            WhatsApp Number <span className='text-danger-600'>*</span>
+                          </label>
+                          <input
+                            type='tel'
+                            className='form-control radius-8'
+                            placeholder='Enter WhatsApp Number'
+                            defaultValue={contact.whatsappNumber}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Add New Contact Button */}
+                  <div className='text-center mb-16'>
+                    <button
+                      type='button'
+                      className='btn btn-outline-primary border border-primary-600 text-primary-600 text-sm px-24 py-10 radius-8 d-inline-flex align-items-center gap-2'
+                      onClick={addContactSection}
+                    >
+                      <Icon icon='solar:add-circle-bold' className='text-primary-600 text-lg' />
+                      Add Another Contact
+                    </button>
                   </div>
                 </div>
                 <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
