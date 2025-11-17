@@ -6,9 +6,18 @@ const ViewProfileLayer = () => {
   const [imagePreview, setImagePreview] = useState(
     "assets/images/user-grid/user-grid-img13.png"
   );
+  const [coverImagePreview, setCoverImagePreview] = useState(
+    "assets/img/coverimages.jpg"
+  );
+  const [profileImagePreview, setProfileImagePreview] = useState(
+    "assets/img/user.png"
+  );
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [modalCurrentPasswordVisible, setModalCurrentPasswordVisible] = useState(false);
+  const [modalNewPasswordVisible, setModalNewPasswordVisible] = useState(false);
+  const [modalConfirmPasswordVisible, setModalConfirmPasswordVisible] = useState(false);
 
   const toggleCurrentPasswordVisibility = () => {
     setCurrentPasswordVisible(!currentPasswordVisible);
@@ -22,11 +31,43 @@ const ViewProfileLayer = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
+  const toggleModalCurrentPasswordVisibility = () => {
+    setModalCurrentPasswordVisible(!modalCurrentPasswordVisible);
+  };
+
+  const toggleModalNewPasswordVisibility = () => {
+    setModalNewPasswordVisible(!modalNewPasswordVisible);
+  };
+
+  const toggleModalConfirmPasswordVisibility = () => {
+    setModalConfirmPasswordVisible(!modalConfirmPasswordVisible);
+  };
+
   const readURL = (input) => {
     if (input.target.files && input.target.files[0]) {
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(input.target.files[0]);
+    }
+  };
+
+  const readCoverImage = (input) => {
+    if (input.target.files && input.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCoverImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(input.target.files[0]);
+    }
+  };
+
+  const readProfileImage = (input) => {
+    if (input.target.files && input.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileImagePreview(e.target.result);
       };
       reader.readAsDataURL(input.target.files[0]);
     }
@@ -38,14 +79,14 @@ const ViewProfileLayer = () => {
       <div className='col-lg-4'>
         <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
           <img
-            src='assets/images/user-grid/user-grid-bg1.png'
+            src='assets/img/coverimages.jpg'
             alt=''
             className='w-100 object-fit-cover'
           />
           <div className='pb-24 ms-16 mb-24 me-16  mt--100'>
-            <div className='text-center border border-top-0 border-start-0 border-end-0'>
+            <div className='text-center border border-top-0   border-start-0 border-end-0'>
               <img
-                src='assets/images/user-grid/user-grid-img14.png'
+                src='assets/img/user.png'
                 alt=''
                 className='border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover'
               />
@@ -55,66 +96,110 @@ const ViewProfileLayer = () => {
               </span>
             </div>
             <div className='mt-24'>
-              <h6 className='text-xl mb-16'>Personal Info</h6>
+              <div className='d-flex align-items-center justify-content-between mb-16'>
+                <h6 className='text-xl mb-0'>Personal Info</h6>
+                <button
+                  type='button'
+                  className='btn p-0 border-0 bg-transparent'
+                  data-bs-toggle='modal'
+                  data-bs-target='#editPersonalInfoModal'
+                  aria-label='Edit Personal Info'
+                >
+                  <Icon icon='solar:pen-bold' className='text-primary-600 text-lg cursor-pointer' />
+                </button>
+              </div>
               <ul>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    Full Name
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px'>
+                    Name
                   </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : Will Jonto
+                  <span className='text-md fw-semibold text-primary-light px-2'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    Jacob Jones
                   </span>
                 </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px'>
                     Email
                   </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : willjontoax@gmail.com
+                  <span className='text-md fw-semibold text-primary-light px-2'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    ifrandom@gmail.com
                   </span>
                 </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    Phone Number
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px'>
+                    Phone
                   </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : (1) 2536 2561 2365
+                  <span className='text-md fw-semibold text-primary-light px-2'>
+                    :
                   </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    Department
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : Design
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    (1) 2536 2561 2365
                   </span>
                 </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px'>
                     Designation
                   </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : UI UX Designer
+                  <span className='text-md fw-semibold text-primary-light px-2'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    UI UX Designer
                   </span>
                 </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    Languages
+                <li className='d-flex align-items-start mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px'>
+                    Reporting Manager
                   </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : English
+                  <span className='text-md fw-semibold text-primary-light px-2'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    John Smith
                   </span>
                 </li>
-                <li className='d-flex align-items-center gap-1'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    Bio
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px'>
+                    Branch
                   </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
+                  <span className='text-md fw-semibold text-primary-light px-2'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    New York Office
+                  </span>
+                </li>
+                <li className='d-flex align-items-center mb-12'>
+                  <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px'>
+                    Assigned Roles
+                  </span>
+                  <span className='text-md fw-semibold text-primary-light px-2'>
+                    :
+                  </span>
+                  <span className='text-secondary-light fw-medium flex-grow-1'>
+                    Admin, Manager
                   </span>
                 </li>
               </ul>
+              <div className='border-top pt-16 mt-16'>
+                <h6 className='text-md text-primary-light mb-12 fw-semibold'>
+                  Password Reset
+                </h6>
+                <button
+                  type='button'
+                  className='btn btn-primary border border-primary-600 text-sm px-24 py-10 radius-8 w-100'
+                  data-bs-toggle='modal'
+                  data-bs-target='#passwordResetModal'
+                >
+                  Reset Password
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -320,12 +405,12 @@ const ViewProfileLayer = () => {
               <h6 className='text-md text-primary-light mb-16 fw-semibold'>
                 Login History
               </h6>
-              <div className='overflow-y-auto flex-grow-1'>
+              <div className='overflow-y-auto flex-grow-1 max-h-400-px'>
                 <ul className='list-unstyled mb-0'>
-                  <li className='border radius-8 mb-8 p-12'>
-                    <div className='d-flex align-items-center justify-content-between'>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
                       <div className='flex-grow-1'>
-                        <div className='d-flex align-items-center gap-2 mb-6'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
                           <span className='fw-medium text-primary-light text-sm'>
                             Jan 15, 2024
                           </span>
@@ -335,15 +420,15 @@ const ViewProfileLayer = () => {
                         </div>
                         <div className='d-flex flex-wrap gap-2'>
                           <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
-                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            <Icon icon='solar:monitor-bold' className='text-xs me-1' />
                             Desktop
                           </span>
                           <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
-                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            <Icon icon='solar:browser-bold' className='text-xs me-1' />
                             Chrome 120.0
                           </span>
                           <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
-                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            <Icon icon='solar:router-bold' className='text-xs me-1' />
                             192.168.1.105
                           </span>
                         </div>
@@ -353,10 +438,10 @@ const ViewProfileLayer = () => {
                       </span>
                     </div>
                   </li>
-                  <li className='border radius-8 mb-8 p-12'>
-                    <div className='d-flex align-items-center justify-content-between'>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
                       <div className='flex-grow-1'>
-                        <div className='d-flex align-items-center gap-2 mb-6'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
                           <span className='fw-medium text-primary-light text-sm'>
                             Jan 14, 2024
                           </span>
@@ -366,28 +451,28 @@ const ViewProfileLayer = () => {
                         </div>
                         <div className='d-flex flex-wrap gap-2'>
                           <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
-                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            <Icon icon='solar:monitor-bold' className='text-xs me-1' />
                             Desktop
                           </span>
                           <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
-                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            <Icon icon='solar:browser-bold' className='text-xs me-1' />
                             Chrome 120.0
                           </span>
                           <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
-                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            <Icon icon='solar:router-bold' className='text-xs me-1' />
                             192.168.1.105
                           </span>
                         </div>
                       </div>
                       <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
-                        Logged Out
+                        Inactive
                       </span>
                     </div>
                   </li>
-                  <li className='border radius-8 mb-8 p-12'>
-                    <div className='d-flex align-items-center justify-content-between'>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
                       <div className='flex-grow-1'>
-                        <div className='d-flex align-items-center gap-2 mb-6'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
                           <span className='fw-medium text-primary-light text-sm'>
                             Jan 14, 2024
                           </span>
@@ -411,14 +496,14 @@ const ViewProfileLayer = () => {
                         </div>
                       </div>
                       <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
-                        Logged Out
+                        Inactive
                       </span>
                     </div>
                   </li>
-                  <li className='border radius-8 mb-8 p-12'>
-                    <div className='d-flex align-items-center justify-content-between'>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
                       <div className='flex-grow-1'>
-                        <div className='d-flex align-items-center gap-2 mb-6'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
                           <span className='fw-medium text-primary-light text-sm'>
                             Jan 13, 2024
                           </span>
@@ -442,14 +527,14 @@ const ViewProfileLayer = () => {
                         </div>
                       </div>
                       <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
-                        Logged Out
+                        Inactive
                       </span>
                     </div>
                   </li>
-                  <li className='border radius-8 mb-0 p-12'>
-                    <div className='d-flex align-items-center justify-content-between'>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
                       <div className='flex-grow-1'>
-                        <div className='d-flex align-items-center gap-2 mb-6'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
                           <span className='fw-medium text-primary-light text-sm'>
                             Jan 12, 2024
                           </span>
@@ -473,12 +558,487 @@ const ViewProfileLayer = () => {
                         </div>
                       </div>
                       <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
-                        Logged Out
+                        Inactive
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 11, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            03:45 PM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Edge 120.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.108
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Inactive
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 10, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            01:20 PM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:smartphone-bold' className='text-xs me-2' />
+                            Mobile
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Safari 17.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.110
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Inactive
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 9, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            07:15 AM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-1' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-1' />
+                            Chrome 120.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-1' />
+                            192.168.1.105
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Inactive
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 8, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            05:30 PM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:tablet-bold' className='text-xs me-2' />
+                            Tablet
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Chrome 119.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.112
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Inactive
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-12 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 7, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            12:00 PM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Firefox 121.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.105
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Inactive
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-0 p-16'>
+                    <div className='d-flex align-items-center justify-content-between gap-3'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-8'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 6, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            10:10 AM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Chrome 118.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.105
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Inactive
                       </span>
                     </div>
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Password Reset Modal */}
+      <div
+        className='modal fade'
+        id='passwordResetModal'
+        tabIndex={-1}
+        aria-labelledby='passwordResetModalLabel'
+        aria-hidden='true'
+      >
+        <div className='modal-dialog modal-dialog-centered'>
+          <div className='modal-content border radius-16 bg-base'>
+            <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
+              <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='passwordResetModalLabel'>
+                Reset Password
+              </h1>
+              <button
+                type='button'
+                className='btn-close'
+                data-bs-dismiss='modal'
+                aria-label='Close'
+              />
+            </div>
+            <div className='modal-body p-24'>
+              <form action='#'>
+                <div className='mb-20'>
+                  <label
+                    htmlFor='modal-email'
+                    className='form-label fw-semibold text-primary-light text-sm mb-8'
+                  >
+                    Email
+                  </label>
+                  <input
+                    type='email'
+                    className='form-control radius-8'
+                    id='modal-email'
+                    defaultValue='ifrandom@gmail.com'
+                    disabled
+                    readOnly
+                  />
+                </div>
+                <div className='mb-20'>
+                  <label
+                    htmlFor='modal-current-password'
+                    className='form-label fw-semibold text-primary-light text-sm mb-8'
+                  >
+                    Current Password <span className='text-danger-600'>*</span>
+                  </label>
+                  <div className='position-relative'>
+                    <input
+                      type={modalCurrentPasswordVisible ? "text" : "password"}
+                      className='form-control radius-8'
+                      id='modal-current-password'
+                      placeholder='Enter Current Password'
+                    />
+                    <span
+                      className={`toggle-password ${
+                        modalCurrentPasswordVisible ? "ri-eye-off-line" : "ri-eye-line"
+                      } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
+                      onClick={toggleModalCurrentPasswordVisibility}
+                    ></span>
+                  </div>
+                </div>
+                <div className='mb-20'>
+                  <label
+                    htmlFor='modal-new-password'
+                    className='form-label fw-semibold text-primary-light text-sm mb-8'
+                  >
+                    New Password <span className='text-danger-600'>*</span>
+                  </label>
+                  <div className='position-relative'>
+                    <input
+                      type={modalNewPasswordVisible ? "text" : "password"}
+                      className='form-control radius-8'
+                      id='modal-new-password'
+                      placeholder='Enter New Password'
+                    />
+                    <span
+                      className={`toggle-password ${
+                        modalNewPasswordVisible ? "ri-eye-off-line" : "ri-eye-line"
+                      } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
+                      onClick={toggleModalNewPasswordVisibility}
+                    ></span>
+                  </div>
+                </div>
+                <div className='mb-20'>
+                  <label
+                    htmlFor='modal-confirm-password'
+                    className='form-label fw-semibold text-primary-light text-sm mb-8'
+                  >
+                    Confirm Password <span className='text-danger-600'>*</span>
+                  </label>
+                  <div className='position-relative'>
+                    <input
+                      type={modalConfirmPasswordVisible ? "text" : "password"}
+                      className='form-control radius-8'
+                      id='modal-confirm-password'
+                      placeholder='Confirm New Password'
+                    />
+                    <span
+                      className={`toggle-password ${
+                        modalConfirmPasswordVisible
+                          ? "ri-eye-off-line"
+                          : "ri-eye-line"
+                      } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
+                      onClick={toggleModalConfirmPasswordVisibility}
+                    ></span>
+                  </div>
+                </div>
+                <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
+                  <button
+                    type='button'
+                    className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-sm px-24 py-10 radius-8'
+                    data-bs-dismiss='modal'
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type='submit'
+                    className='btn btn-primary border border-primary-600 text-sm px-24 py-10 radius-8'
+                  >
+                    Update Password
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Personal Info Modal */}
+      <div
+        className='modal fade'
+        id='editPersonalInfoModal'
+        tabIndex={-1}
+        aria-labelledby='editPersonalInfoModalLabel'
+        aria-hidden='true'
+      >
+        <div className='modal-dialog modal-lg modal-dialog-centered'>
+          <div className='modal-content border radius-16 bg-base'>
+            <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
+              <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='editPersonalInfoModalLabel'>
+                Edit Personal Info
+              </h1>
+              <button
+                type='button'
+                className='btn-close'
+                data-bs-dismiss='modal'
+                aria-label='Close'
+              />
+            </div>
+            <div className='modal-body p-24'>
+              <form action='#'>
+                <div className='row'>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Cover Image
+                    </label>
+                    <div className='position-relative'>
+                      <img
+                        src={coverImagePreview}
+                        alt='Cover Preview'
+                        className='w-100 h-120-px border radius-8 object-fit-cover mb-8'
+                      />
+                      <input
+                        type='file'
+                        className='form-control radius-8'
+                        accept='image/*'
+                        onChange={readCoverImage}
+                      />
+                    </div>
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Profile Image
+                    </label>
+                    <div className='position-relative'>
+                      <div className='d-flex justify-content-center mb-8'>
+                        <img
+                          src={profileImagePreview}
+                          alt='Profile Preview'
+                          className='w-120-px h-120-px border radius-8 rounded-circle object-fit-cover'
+                        />
+                      </div>
+                      <input
+                        type='file'
+                        className='form-control radius-8'
+                        accept='image/*'
+                        onChange={readProfileImage}
+                      />
+                    </div>
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Name <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Name'
+                      defaultValue='Jacob Jones'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Email <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='email'
+                      className='form-control radius-8'
+                      placeholder='Enter Email'
+                      defaultValue='ifrandom@gmail.com'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Phone
+                    </label>
+                    <input
+                      type='tel'
+                      className='form-control radius-8'
+                      placeholder='Enter Phone Number'
+                      defaultValue='(1) 2536 2561 2365'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Designation <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Designation'
+                      defaultValue='UI UX Designer'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Reporting Manager
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Reporting Manager'
+                      defaultValue='John Smith'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Branch
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Branch'
+                      defaultValue='New York Office'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Assigned Roles
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Assigned Roles'
+                      defaultValue='Admin, Manager'
+                    />
+                  </div>
+                </div>
+                <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
+                  <button
+                    type='button'
+                    className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
+                    data-bs-dismiss='modal'
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type='submit'
+                    className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
