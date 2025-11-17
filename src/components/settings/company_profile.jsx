@@ -274,93 +274,202 @@ const ViewCompanyProfileLayer = () => {
       </div>
 
       {/* company contact details section  */}
-
       <div className='col-lg-4'>
-        <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
-          <img
-            src='/assets/images/user-grid/user-grid-bg1.png'
-            alt=''
-            className='w-100 object-fit-cover'
-          />
-          <div className='pb-24 ms-16 mb-24 me-16  mt--100'>
-            <div className='text-center border border-top-0 border-start-0 border-end-0'>
-              <img
-                src='/assets/images/user-grid/user-grid-img14.png'
-                alt=''
-                className='border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover'
-              />
-              <h6 className='mb-0 mt-16'>Jacob Jones</h6>
-              <span className='text-secondary-light mb-16'>
-                ifrandom@gmail.com
-              </span>
+        <div className='card border radius-16 bg-base h-100'>
+          <div className='card-body p-24 d-flex flex-column'>
+            <div className='d-flex align-items-center justify-content-between mb-20'>
+              <h6 className='text-xl mb-0'>Contact Details</h6>
+              <button
+                type='button'
+                className='btn p-0 border-0 bg-transparent'
+                data-bs-toggle='modal'
+                data-bs-target='#updateContactDetailsModal'
+                aria-label='Edit Contact Details'
+              >
+                <Icon icon='solar:pen-bold' className='text-primary-600 text-lg cursor-pointer' />
+              </button>
             </div>
-            <div className='mt-24'>
-              <h6 className='text-xl mb-16'>Personal Info</h6>
-              <ul>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    Full Name
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : Will Jonto
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Email
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : willjontoax@gmail.com
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Phone Number
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : (1) 2536 2561 2365
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Department
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : Design
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Designation
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : UI UX Designer
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1 mb-12'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Languages
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : English
-                  </span>
-                </li>
-                <li className='d-flex align-items-center gap-1'>
-                  <span className='w-30 text-md fw-semibold text-primary-light'>
-                    {" "}
-                    Bio
-                  </span>
-                  <span className='w-70 text-secondary-light fw-medium'>
-                    : Lorem Ipsum&nbsp;is simply dummy text of the printing and
-                    typesetting industry.
-                  </span>
-                </li>
-              </ul>
+            <div className='flex-grow-1 overflow-y-auto'>
+              {/* Contact 1 */}
+              <div className='border radius-8 p-16 mb-16'>
+                <ul className='list-unstyled mb-0'>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Full Name
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      The Article Guru
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Email
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      anshrajgkp8765@gmail.com
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Designation
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      Customer Service Representative
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Contact Number
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      +918765867589
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-0'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap                                                                      flex-shrink-0'>
+                      WhatsApp Number
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      +919936396851
+                    </span>
+                  </li>
+                </ul>
+              </div>
+              {/* Contact 2 */}
+              <div className='border radius-8 p-16 mb-16'>
+                <ul className='list-unstyled mb-0'>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Full Name
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      John Smith
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Email
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      john.smith@example.com
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Designation
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      Sales Manager
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Contact Number
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      +919876543210
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-0'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      WhatsApp Number
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      +919876543210
+                    </span>
+                  </li>
+                </ul>
+              </div>
+              {/* Contact 3 */}
+              <div className='border radius-8 p-16 mb-0'>
+                <ul className='list-unstyled mb-0'>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Full Name
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      Sarah Johnson
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Email
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      sarah.johnson@example.com
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Designation
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      Operations Manager
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-12'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      Contact Number
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      +919988776655
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center mb-0'>
+                    <span className='text-md fw-semibold text-primary-light text-nowrap w-160-px flex-shrink-0'>
+                      WhatsApp Number
+                    </span>
+                    <span className='text-md fw-semibold text-primary-light flex-shrink-0'>
+                      :
+                    </span>
+                    <span className='text-secondary-light fw-medium flex-grow-1 ps-2'>
+                      +919988776655
+                    </span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -549,6 +658,107 @@ const ViewCompanyProfileLayer = () => {
                     className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
                   >
                     Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Update Contact Details Modal */}
+      <div
+        className='modal fade'
+        id='updateContactDetailsModal'
+        tabIndex={-1}
+        aria-labelledby='updateContactDetailsModalLabel'
+        aria-hidden='true'
+      >
+        <div className='modal-dialog modal-lg modal-dialog-centered'>
+          <div className='modal-content border radius-16 bg-base'>
+            <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
+              <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='updateContactDetailsModalLabel'>
+                Update Contact Details
+              </h1>
+              <button
+                type='button'
+                className='btn-close'
+                data-bs-dismiss='modal'
+                aria-label='Close'
+              />
+            </div>
+            <div className='modal-body p-24'>
+              <form action='#'>
+                <div className='row'>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Full Name <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Full Name'
+                      defaultValue='The Article Guru'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Email <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='email'
+                      className='form-control radius-8'
+                      placeholder='Enter Email'
+                      defaultValue='anshrajgkp8765@gmail.com'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Designation <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      className='form-control radius-8'
+                      placeholder='Enter Designation'
+                      defaultValue='Customer Service Representative'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      Contact Number <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='tel'
+                      className='form-control radius-8'
+                      placeholder='Enter Contact Number'
+                      defaultValue='+918765867589'
+                    />
+                  </div>
+                  <div className='col-6 mb-20'>
+                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
+                      WhatsApp Number <span className='text-danger-600'>*</span>
+                    </label>
+                    <input
+                      type='tel'
+                      className='form-control radius-8'
+                      placeholder='Enter WhatsApp Number'
+                      defaultValue='+919936396851'
+                    />
+                  </div>
+                </div>
+                <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
+                  <button
+                    type='button'
+                    className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
+                    data-bs-dismiss='modal'
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type='submit'
+                    className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
+                  >
+                    Update
                   </button>
                 </div>
               </form>
