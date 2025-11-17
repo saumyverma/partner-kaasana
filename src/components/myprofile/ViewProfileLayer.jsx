@@ -34,6 +34,7 @@ const ViewProfileLayer = () => {
 
   return (
     <div className='row gy-4'>
+      {/* user pofile section */}
       <div className='col-lg-4'>
         <div className='user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100'>
           <img
@@ -118,1058 +119,371 @@ const ViewProfileLayer = () => {
           </div>
         </div>
       </div>
-      <div className='col-lg-8'>
-        <div className='card h-100'>
-          <div className='card-body p-24'>
-            <ul
-              className='nav border-gradient-tab nav-pills mb-20 d-inline-flex'
-              id='pills-tab'
-              role='tablist'
-            >
-              <li className='nav-item' role='presentation'>
-                <button
-                  className='nav-link d-flex align-items-center px-24 active'
-                  id='pills-role-access-tab'
-                  data-bs-toggle='pill'
-                  data-bs-target='#pills-role-access'
-                  type='button'
-                  role='tab'
-                  aria-controls='pills-role-access'
-                  aria-selected='true'
-                >
-                  Role and Access
-                </button>
-              </li>
-              <li className='nav-item' role='presentation'>
-                <button
-                  className='nav-link d-flex align-items-center px-24'
-                  id='pills-security-password-tab'
-                  data-bs-toggle='pill'
-                  data-bs-target='#pills-security-password'
-                  type='button'
-                  role='tab'
-                  aria-controls='pills-security-password'
-                  aria-selected='false'
-                  tabIndex={-1}
-                >
-                  Account settings
-                </button>
-              </li>
-              <li className='nav-item' role='presentation'>
-                <button
-                  className='nav-link d-flex align-items-center px-24'
-                  id='pills-notification-tab'
-                  data-bs-toggle='pill'
-                  data-bs-target='#pills-notification'
-                  type='button'
-                  role='tab'
-                  aria-controls='pills-notification'
-                  aria-selected='false'
-                  tabIndex={-1}
-                >
-                  My preferences
-                </button>
-              </li>
-              <li className='nav-item' role='presentation'>
-                <button
-                  className='nav-link d-flex align-items-center px-24'
-                  id='pills-edit-profile-tab'
-                  data-bs-toggle='pill'
-                  data-bs-target='#pills-edit-profile'
-                  type='button'
-                  role='tab'
-                  aria-controls='pills-edit-profile'
-                  aria-selected='false'
-                  tabIndex={-1}
-                >
-                  General Info
-                </button>
-              </li>
-              <li className='nav-item' role='presentation'>
-                <button
-                  className='nav-link d-flex align-items-center px-24'
-                  id='pills-system-info-tab'
-                  data-bs-toggle='pill'
-                  data-bs-target='#pills-system-info'
-                  type='button'
-                  role='tab'
-                  aria-controls='pills-system-info'
-                  aria-selected='false'
-                  tabIndex={-1}
-                >
-                  System Info
-                </button>
-              </li>
-            </ul>
-            <div className='tab-content' id='pills-tabContent'>
-              <div
-                className='tab-pane fade show active'
-                id='pills-role-access'
-                role='tabpanel'
-                aria-labelledby='pills-role-access-tab'
-                tabIndex={0}
-              >
-                <h6 className='text-md text-primary-light mb-16'>
-                  Role and Access Information
-                </h6>
-                <div className='row'>
-                  <div className='col-sm-6'>
-                    <div className='mb-20'>
-                      <label
-                        htmlFor='user-role-display'
-                        className='form-label fw-semibold text-primary-light text-sm mb-8'
-                      >
-                        User Role
-                      </label>
-                      <input
-                        type='text'
-                        className='form-control radius-8'
-                        id='user-role-display'
-                        defaultValue='Admin'
-                        disabled
-                      />
+    {/* Roles and Access section */}
+    <div className='col-lg-4'>
+        <div className='card border radius-16 bg-base h-100'>
+          <div className='card-body p-24 d-flex flex-column'>
+            <h6 className='text-xl mb-20'>Roles and Access</h6>
+            <div className='row g-3 mb-24'>
+              <div className='col-12'>
+                <div className='border radius-8 p-16 bg-primary-50'>
+                  <div className='d-flex align-items-center gap-3'>
+                    <div className='w-40-px h-40-px d-flex align-items-center justify-content-center bg-primary-600 rounded-circle'>
+                      <Icon icon='solar:case-bold' className='text-white text-lg' />
                     </div>
-                  </div>
-                  <div className='col-sm-6'>
-                    <div className='mb-20'>
-                      <label
-                        htmlFor='access-level-display'
-                        className='form-label fw-semibold text-primary-light text-sm mb-8'
-                      >
-                        Access Level
-                      </label>
-                      <input
-                        type='text'
-                        className='form-control radius-8'
-                        id='access-level-display'
-                        defaultValue='Full Access'
-                        disabled
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className='mb-24'>
-                  <h6 className='text-md text-primary-light mb-16'>
-                    Permissions
-                  </h6>
-                  <div className='py-12 px-16 border radius-8 mb-16'>
-                    <div className='d-flex align-items-center gap-3 justify-content-between'>
-                      <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                        Dashboard Access
-                      </span>
-                      <span className='badge bg-success-50 text-success-600'>
-                        Enabled
-                      </span>
-                    </div>
-                  </div>
-                  <div className='py-12 px-16 border radius-8 mb-16'>
-                    <div className='d-flex align-items-center gap-3 justify-content-between'>
-                      <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                        User Management
-                      </span>
-                      <span className='badge bg-success-50 text-success-600'>
-                        Enabled
-                      </span>
-                    </div>
-                  </div>
-                  <div className='py-12 px-16 border radius-8 mb-16'>
-                    <div className='d-flex align-items-center gap-3 justify-content-between'>
-                      <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                        Reports Access
-                      </span>
-                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium'>
-                        Disabled
-                      </span>
-                    </div>
-                  </div>
-                  <div className='py-12 px-16 border radius-8 mb-16'>
-                    <div className='d-flex align-items-center gap-3 justify-content-between'>
-                      <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                        Settings Access
-                      </span>
-                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium'>
-                        Disabled
+                    <div className='flex-grow-1'>
+                      <h6 className='text-xs text-secondary-light mb-2 fw-medium'>
+                        Job Title
+                      </h6>
+                      <span className='text-md text-primary-light fw-semibold'>
+                        UI UX Designer
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div
-                className='tab-pane fade'
-                id='pills-security-password'
-                role='tabpanel'
-                aria-labelledby='pills-security-password-tab'
-                tabIndex={0}
-              >
-                <div className='mb-24'>
-                  <h6 className='text-md text-primary-light mb-8'>
-                    Change Password
-                  </h6>
-                  <p className='text-secondary-light text-sm mb-0'>
-                    Update your password to keep your account secure
-                  </p>
-                </div>
-                <div className='border radius-16 p-24 mb-24 bg-base'>
-                  <div className='row'>
-                    <div className='col-sm-12'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='current-password'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Current Password <span className='text-danger-600'>*</span>
-                        </label>
-                        <div className='position-relative'>
-                          <input
-                            type={currentPasswordVisible ? "text" : "password"}
-                            className='form-control radius-8'
-                            id='current-password'
-                            placeholder='Enter Current Password'
-                          />
-                          <span
-                            className={`toggle-password ${
-                              currentPasswordVisible ? "ri-eye-off-line" : "ri-eye-line"
-                            } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
-                            onClick={toggleCurrentPasswordVisibility}
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='new-password'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          New Password <span className='text-danger-600'>*</span>
-                        </label>
-                        <div className='position-relative'>
-                          <input
-                            type={passwordVisible ? "text" : "password"}
-                            className='form-control radius-8'
-                            id='new-password'
-                            placeholder='Enter New Password'
-                          />
-                          <span
-                            className={`toggle-password ${
-                              passwordVisible ? "ri-eye-off-line" : "ri-eye-line"
-                            } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
-                            onClick={togglePasswordVisibility}
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='confirm-password'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Confirm Password <span className='text-danger-600'>*</span>
-                        </label>
-                        <div className='position-relative'>
-                          <input
-                            type={confirmPasswordVisible ? "text" : "password"}
-                            className='form-control radius-8'
-                            id='confirm-password'
-                            placeholder='Confirm New Password'
-                          />
-                          <span
-                            className={`toggle-password ${
-                              confirmPasswordVisible
-                                ? "ri-eye-off-line"
-                                : "ri-eye-line"
-                            } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
-                            onClick={toggleConfirmPasswordVisibility}
-                          ></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='d-flex align-items-center justify-content-end gap-3 mt-16'>
-                    <button
-                      type='button'
-                      className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary border border-primary-600 text-md px-40 py-12 radius-8'
-                    >
-                      Update Password
-                    </button>
-                  </div>
-                </div>
-                <div className='mb-24'>
-                  <h6 className='text-md text-primary-light mb-8'>
-                    Security Features
-                  </h6>
-                  <p className='text-secondary-light text-sm mb-0'>
-                    Manage additional security options for your account
-                  </p>
-                </div>
-                <div className='border radius-16 p-24 bg-base'>
-                  <div className='form-switch switch-primary py-16 px-16 border radius-8 position-relative mb-0'>
-                    <label
-                      htmlFor='two-factor'
-                      className='position-absolute w-100 h-100 start-0 top-0'
-                    />
-                    <div className='d-flex align-items-center gap-3 justify-content-between'>
-                      <div className='d-flex flex-column'>
-                        <span className='form-check-label line-height-1 fw-semibold text-primary-light mb-4'>
-                          Two-Factor Authentication
-                        </span>
-                        <span className='text-secondary-light text-sm'>
-                          Add an extra layer of security to your account
-                        </span>
-                      </div>
-                      <input
-                        className='form-check-input'
-                        type='checkbox'
-                        role='switch'
-                        id='two-factor'
-                      />
-                    </div>
+              <div className='col-6'>
+                <div className='border radius-8 p-16 bg-base'>
+                  <div className='text-center'>
+                    <h6 className='text-xs text-secondary-light mb-8 fw-medium'>
+                      Roles
+                    </h6>
+                    <span className='badge bg-primary-600 text-white fw-medium px-12 py-6'>
+                      Admin
+                    </span>
                   </div>
                 </div>
               </div>
-              <div
-                className='tab-pane fade'
-                id='pills-notification'
-                role='tabpanel'
-                aria-labelledby='pills-notification-tab'
-                tabIndex={0}
-              >
-                <h6 className='text-md text-primary-light mb-16'>
-                  Notification Preferences
-                </h6>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='companzNew'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Company News
+              <div className='col-6'>
+                <div className='border radius-8 p-16 bg-base'>
+                  <div className='text-center'>
+                    <h6 className='text-xs text-secondary-light mb-8 fw-medium'>
+                      Department
+                    </h6>
+                    <span className='text-md text-primary-light fw-semibold'>
+                      Design
                     </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='companzNew'
-                    />
                   </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='pushNotifcation'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Push Notification
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='pushNotifcation'
-                      defaultChecked=''
-                    />
-                  </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='weeklyLetters'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Weekly News Letters
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='weeklyLetters'
-                      defaultChecked=''
-                    />
-                  </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='meetUp'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Meetups Near you
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='meetUp'
-                    />
-                  </div>
-                </div>
-                <div className='form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16'>
-                  <label
-                    htmlFor='orderNotification'
-                    className='position-absolute w-100 h-100 start-0 top-0'
-                  />
-                  <div className='d-flex align-items-center gap-3 justify-content-between'>
-                    <span className='form-check-label line-height-1 fw-medium text-secondary-light'>
-                      Orders Notifications
-                    </span>
-                    <input
-                      className='form-check-input'
-                      type='checkbox'
-                      role='switch'
-                      id='orderNotification'
-                      defaultChecked=''
-                    />
-                  </div>
-                </div>
-                <div className='d-flex align-items-center justify-content-center gap-3'>
-                  <button
-                    type='button'
-                    className='border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8'
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type='button'
-                    className='btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8'
-                  >
-                    Save Settings
-                  </button>
                 </div>
               </div>
-              <div
-                className='tab-pane fade'
-                id='pills-edit-profile'
-                role='tabpanel'
-                aria-labelledby='pills-edit-profile-tab'
-                tabIndex={0}
-              >
-                <h6 className='text-md text-primary-light mb-16'>
-                  Profile Image
-                </h6>
-                <div className='mb-24 mt-16'>
-                  <div className='avatar-upload'>
-                    <div className='avatar-edit position-absolute bottom-0 end-0 me-24 mt-16 z-1 cursor-pointer'>
-                      <input
-                        type='file'
-                        id='imageUpload'
-                        accept='.png, .jpg, .jpeg'
-                        hidden
-                        onChange={readURL}
-                      />
-                      <label
-                        htmlFor='imageUpload'
-                        className='w-32-px h-32-px d-flex justify-content-center align-items-center bg-primary-50 text-primary-600 border border-primary-600 bg-hover-primary-100 text-lg rounded-circle'
-                      >
-                        <Icon
-                          icon='solar:camera-outline'
-                          className='icon'
-                        ></Icon>
-                      </label>
-                    </div>
-                    <div className='avatar-preview'>
-                      <div
-                        id='imagePreview'
-                        style={{
-                          backgroundImage: `url(${imagePreview})`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <form action='#'>
-                  <div className='row'>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='name'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Full Name
-                          <span className='text-danger-600'>*</span>
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='name'
-                          placeholder='Enter Full Name'
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='email'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Email <span className='text-danger-600'>*</span>
-                        </label>
-                        <input
-                          type='email'
-                          className='form-control radius-8'
-                          id='email'
-                          placeholder='Enter email address'
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='number'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Phone
-                        </label>
-                        <input
-                          type='tel'
-                          className='form-control radius-8'
-                          id='number'
-                          placeholder='Enter phone number'
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='depart'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Department
-                          <span className='text-danger-600'>*</span>{" "}
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='depart'
-                          defaultValue='Select Department'
-                        >
-                          <option value='Select Department' disabled>
-                            Select Department
-                          </option>
-                          <option value='Design'>Design</option>
-                          <option value='Development'>Development</option>
-                          <option value='Marketing'>Marketing</option>
-                          <option value='Sales'>Sales</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='desig'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Designation
-                          <span className='text-danger-600'>*</span>{" "}
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='desig'
-                          defaultValue='Select Designation'
-                        >
-                          <option value='Select Designation' disabled>
-                            Select Designation
-                          </option>
-                          <option value='UI UX Designer'>UI UX Designer</option>
-                          <option value='Frontend Developer'>
-                            Frontend Developer
-                          </option>
-                          <option value='Backend Developer'>
-                            Backend Developer
-                          </option>
-                          <option value='Product Manager'>
-                            Product Manager
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='gender'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Gender
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='gender'
-                          defaultValue='Select Gender'
-                        >
-                          <option value='Select Gender' disabled>
-                            Select Gender
-                          </option>
-                          <option value='Male'>Male</option>
-                          <option value='Female'>Female</option>
-                          <option value='Other'>Other</option>
-                          <option value='Prefer not to say'>
-                            Prefer not to say
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='dob'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Date of Birth
-                        </label>
-                        <input
-                          type='date'
-                          className='form-control radius-8'
-                          id='dob'
-                          placeholder='Select Date of Birth'
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='country'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Country
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='country'
-                          defaultValue='Select Country'
-                        >
-                          <option value='Select Country' disabled>
-                            Select Country
-                          </option>
-                          <option value='United States'>United States</option>
-                          <option value='United Kingdom'>United Kingdom</option>
-                          <option value='Canada'>Canada</option>
-                          <option value='Australia'>Australia</option>
-                          <option value='India'>India</option>
-                          <option value='Bangladesh'>Bangladesh</option>
-                          <option value='Pakistan'>Pakistan</option>
-                          <option value='UAE'>UAE</option>
-                          <option value='Saudi Arabia'>Saudi Arabia</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='state'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          State
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='state'
-                          defaultValue='Select State'
-                        >
-                          <option value='Select State' disabled>
-                            Select State
-                          </option>
-                          <option value='California'>California</option>
-                          <option value='New York'>New York</option>
-                          <option value='Texas'>Texas</option>
-                          <option value='Florida'>Florida</option>
-                          <option value='Illinois'>Illinois</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='city'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          City
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='city'
-                          defaultValue='Select City'
-                        >
-                          <option value='Select City' disabled>
-                            Select City
-                          </option>
-                          <option value='New York'>New York</option>
-                          <option value='Los Angeles'>Los Angeles</option>
-                          <option value='Chicago'>Chicago</option>
-                          <option value='Houston'>Houston</option>
-                          <option value='Phoenix'>Phoenix</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='gov-id-type'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Government ID Type
-                        </label>
-                        <select
-                          className='form-control radius-8 form-select'
-                          id='gov-id-type'
-                          defaultValue='Select ID Type'
-                        >
-                          <option value='Select ID Type' disabled>
-                            Select ID Type
-                          </option>
-                          <option value='Passport'>Passport</option>
-                          <option value='National ID'>National ID</option>
-                          <option value='Driving License'>Driving License</option>
-                          <option value='Social Security Number'>
-                            Social Security Number
-                          </option>
-                          <option value='Aadhaar'>Aadhaar</option>
-                          <option value='Other'>Other</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='gov-id-number'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Government ID Number
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='gov-id-number'
-                          placeholder='Enter ID Number'
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-12'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='desc'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Profile Highlights
-                        </label>
-                        <textarea
-                          name='#0'
-                          className='form-control radius-8'
-                          id='desc'
-                          placeholder='Write profile highlights and description...'
-                          rows='4'
-                          defaultValue={""}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className='d-flex align-items-center justify-content-center gap-3'>
-                    <button
-                      type='button'
-                      className='border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8'
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type='button'
-                      className='btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8'
-                    >
-                      Save
-                    </button>
-                  </div>
-                </form>
-              </div>
-              <div
-                className='tab-pane fade'
-                id='pills-system-info'
-                role='tabpanel'
-                aria-labelledby='pills-system-info-tab'
-                tabIndex={0}
-              >
-                <div className='mb-24'>
-                  <h6 className='text-md text-primary-light mb-8'>
-                    Current Session Information
-                  </h6>
-                  <p className='text-secondary-light text-sm mb-0'>
-                    Details about your current active session
-                  </p>
-                </div>
-                <div className='border radius-16 p-24 mb-24 bg-base'>
-                  <div className='row'>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='system-version'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          System Version
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='system-version'
-                          defaultValue='v2.1.0'
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='timezone'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Timezone
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='timezone'
-                          defaultValue='UTC+5:30 (IST)'
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='ip-address'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          IP Address
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='ip-address'
-                          defaultValue='192.168.1.105'
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='browser'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Browser
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='browser'
-                          defaultValue='Chrome 120.0.6099.129'
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='device'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Device Type
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='device'
-                          defaultValue='Desktop (Windows 11)'
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div className='col-sm-6'>
-                      <div className='mb-20'>
-                        <label
-                          htmlFor='session-start'
-                          className='form-label fw-semibold text-primary-light text-sm mb-8'
-                        >
-                          Session Started
-                        </label>
-                        <input
-                          type='text'
-                          className='form-control radius-8'
-                          id='session-start'
-                          defaultValue='2024-01-15 10:30 AM'
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='mb-24'>
-                  <h6 className='text-md text-primary-light mb-8'>
-                    Recent Login History
-                  </h6>
-                  <p className='text-secondary-light text-sm mb-0'>
-                    Last 5 login attempts and sessions
-                  </p>
-                </div>
-                <div className='border radius-16 overflow-hidden bg-base'>
-                  <div className='table-responsive'>
-                    <table className='table table-hover mb-0'>
-                      <thead className='bg-base'>
-                        <tr>
-                          <th className='fw-semibold text-primary-light text-sm py-16 px-24 border-bottom'>
-                            Date & Time
-                          </th>
-                          <th className='fw-semibold text-primary-light text-sm py-16 px-24 border-bottom'>
-                            IP Address
-                          </th>
-                          <th className='fw-semibold text-primary-light text-sm py-16 px-24 border-bottom'>
-                            Browser
-                          </th>
-                          <th className='fw-semibold text-primary-light text-sm py-16 px-24 border-bottom'>
-                            Device
-                          </th>
-                          <th className='fw-semibold text-primary-light text-sm py-16 px-24 border-bottom'>
-                            Status
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            <div className='fw-medium text-primary-light mb-4'>
-                              Jan 15, 2024
-                            </div>
-                            <div className='text-secondary-light text-xs'>
-                              10:30 AM
-                            </div>
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            192.168.1.105
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Chrome 120.0
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Desktop
-                          </td>
-                          <td className='py-16 px-24 border-bottom'>
-                            <span className='badge bg-success-50 text-success-600'>
-                              Active
-                            </span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            <div className='fw-medium text-primary-light mb-4'>
-                              Jan 14, 2024
-                            </div>
-                            <div className='text-secondary-light text-xs'>
-                              08:45 PM
-                            </div>
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            192.168.1.105
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Chrome 120.0
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Desktop
-                          </td>
-                          <td className='py-16 px-24 border-bottom'>
-                            <span className='badge bg-light border border-secondary-300 text-dark fw-medium'>
-                              Logged Out
-                            </span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            <div className='fw-medium text-primary-light mb-4'>
-                              Jan 14, 2024
-                            </div>
-                            <div className='text-secondary-light text-xs'>
-                              02:15 PM
-                            </div>
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            192.168.1.102
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Firefox 121.0
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Desktop
-                          </td>
-                          <td className='py-16 px-24 border-bottom'>
-                            <span className='badge bg-light border border-secondary-300 text-dark fw-medium'>
-                              Logged Out
-                            </span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            <div className='fw-medium text-primary-light mb-4'>
-                              Jan 13, 2024
-                            </div>
-                            <div className='text-secondary-light text-xs'>
-                              11:20 AM
-                            </div>
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            192.168.1.105
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Chrome 119.0
-                          </td>
-                          <td className='py-16 px-24 border-bottom text-secondary-light text-sm'>
-                            Mobile
-                          </td>
-                          <td className='py-16 px-24 border-bottom'>
-                            <span className='badge bg-light border border-secondary-300 text-dark fw-medium'>
-                              Logged Out
-                            </span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className='py-16 px-24 text-secondary-light text-sm'>
-                            <div className='fw-medium text-primary-light mb-4'>
-                              Jan 12, 2024
-                            </div>
-                            <div className='text-secondary-light text-xs'>
-                              09:00 AM
-                            </div>
-                          </td>
-                          <td className='py-16 px-24 text-secondary-light text-sm'>
-                            192.168.1.105
-                          </td>
-                          <td className='py-16 px-24 text-secondary-light text-sm'>
-                            Chrome 119.0
-                          </td>
-                          <td className='py-16 px-24 text-secondary-light text-sm'>
-                            Desktop
-                          </td>
-                          <td className='py-16 px-24'>
-                            <span className='badge bg-light border border-secondary-300 text-dark fw-medium'>
-                              Logged Out
-                            </span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+            </div>
+            <div className='flex-grow-1 d-flex flex-column min-h-0'>
+              <h6 className='text-md text-primary-light mb-16 fw-semibold'>
+                Assigned Permissions
+              </h6>
+              <div className='overflow-y-auto flex-grow-1'>
+                <ul className='list-unstyled mb-0'>
+                  <li className='d-flex align-items-center justify-content-between py-12 px-16 border radius-8 mb-12'>
+                    <span className='text-secondary-light fw-medium text-sm'>
+                      Dashboard Access
+                    </span>
+                    <span className='d-flex align-items-center gap-2 text-success-600 fw-medium'>
+                      <Icon icon='solar:check-circle-bold' className='text-lg' />
+                      Enabled
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center justify-content-between py-12 px-16 border radius-8 mb-12'>
+                    <span className='text-secondary-light fw-medium text-sm'>
+                      User Management
+                    </span>
+                    <span className='d-flex align-items-center gap-2 text-success-600 fw-medium'>
+                      <Icon icon='solar:check-circle-bold' className='text-lg' />
+                      Enabled
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center justify-content-between py-12 px-16 border radius-8 mb-12'>
+                    <span className='text-secondary-light fw-medium text-sm'>
+                      Content Management
+                    </span>
+                    <span className='d-flex align-items-center gap-2 text-success-600 fw-medium'>
+                      <Icon icon='solar:check-circle-bold' className='text-lg' />
+                      Enabled
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center justify-content-between py-12 px-16 border radius-8 mb-12'>
+                    <span className='text-secondary-light fw-medium text-sm'>
+                      Analytics Access
+                    </span>
+                    <span className='d-flex align-items-center gap-2 text-success-600 fw-medium'>
+                      <Icon icon='solar:check-circle-bold' className='text-lg' />
+                      Enabled
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center justify-content-between py-12 px-16 border radius-8 mb-12'>
+                    <span className='text-secondary-light fw-medium text-sm'>
+                      Reports Access
+                    </span>
+                    <span className='d-flex align-items-center gap-2 text-success-600 fw-medium'>
+                      <Icon icon='solar:check-circle-bold' className='text-lg' />
+                      Enabled
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center justify-content-between py-12 px-16 border radius-8 mb-12'>
+                    <span className='text-secondary-light fw-medium text-sm'>
+                      Settings Access
+                    </span>
+                    <span className='d-flex align-items-center gap-2 text-success-600 fw-medium'>
+                      <Icon icon='solar:check-circle-bold' className='text-lg' />
+                      Enabled
+                    </span>
+                  </li>
+                  <li className='d-flex align-items-center justify-content-between py-12 px-16 border radius-8 mb-0'>
+                    <span className='text-secondary-light fw-medium text-sm'>
+                      API Access
+                    </span>
+                    <span className='d-flex align-items-center gap-2 text-success-600 fw-medium'>
+                      <Icon icon='solar:check-circle-bold' className='text-lg' />
+                      Enabled
+                    </span>                                   
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {/* user system access info section */}
+      <div className='col-lg-4'>
+        <div className='card border radius-16 bg-base h-100'>
+          <div className='card-body p-24 d-flex flex-column'>
+            <h6 className='text-xl mb-20'>System Information</h6>
+            <div className='mb-24'>
+              <div className='row g-3'>
+                <div className='col-12'>
+                  <div className='border radius-8 p-16 bg-base'>
+                    <div className='d-flex align-items-center gap-3'>
+                      <div className='w-40-px h-40-px d-flex align-items-center justify-content-center bg-success-50 rounded-circle'>
+                        <Icon icon='solar:server-path-bold' className='text-success-600 text-lg' />
+                      </div>
+                      <div className='flex-grow-1'>
+                        <h6 className='text-xs text-secondary-light mb-2 fw-medium'>
+                          System Version
+                        </h6>
+                        <span className='text-md text-primary-light fw-semibold'>
+                          v2.1.0
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className='col-6'>
+                  <div className='border radius-8 p-16 bg-base'>
+                    <div className='text-center'>
+                      <h6 className='text-xs text-secondary-light mb-8 fw-medium'>
+                        IP Address
+                      </h6>
+                      <span className='text-sm text-primary-light fw-semibold'>
+                        192.168.1.105
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className='col-6'>
+                  <div className='border radius-8 p-16 bg-base'>
+                    <div className='text-center'>
+                      <h6 className='text-xs text-secondary-light mb-8 fw-medium'>
+                        Timezone
+                      </h6>
+                      <span className='text-sm text-primary-light fw-semibold'>
+                        UTC+5:30
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className='col-6'>
+                  <div className='border radius-8 p-16 bg-base'>
+                    <div className='text-center'>
+                      <h6 className='text-xs text-secondary-light mb-8 fw-medium'>
+                        Browser
+                      </h6>
+                      <span className='text-sm text-primary-light fw-semibold'>
+                        Chrome 120.0
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className='col-6'>
+                  <div className='border radius-8 p-16 bg-base'>
+                    <div className='text-center'>
+                      <h6 className='text-xs text-secondary-light mb-8 fw-medium'>
+                        Device
+                      </h6>
+                      <span className='text-sm text-primary-light fw-semibold'>
+                        Desktop
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='flex-grow-1 d-flex flex-column min-h-0'>
+              <h6 className='text-md text-primary-light mb-16 fw-semibold'>
+                Login History
+              </h6>
+              <div className='overflow-y-auto flex-grow-1'>
+                <ul className='list-unstyled mb-0'>
+                  <li className='border radius-8 mb-8 p-12'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-6'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 15, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            10:30 AM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Chrome 120.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.105
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-success-50 text-success-600 ms-12'>
+                        Active
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-8 p-12'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-6'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 14, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            08:45 PM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Chrome 120.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.105
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Logged Out
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-8 p-12'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-6'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 14, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            02:15 PM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Firefox 121.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.102
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Logged Out
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-8 p-12'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-6'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 13, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            11:20 AM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:smartphone-bold' className='text-xs me-2' />
+                            Mobile
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Chrome 119.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.105
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Logged Out
+                      </span>
+                    </div>
+                  </li>
+                  <li className='border radius-8 mb-0 p-12'>
+                    <div className='d-flex align-items-center justify-content-between'>
+                      <div className='flex-grow-1'>
+                        <div className='d-flex align-items-center gap-2 mb-6'>
+                          <span className='fw-medium text-primary-light text-sm'>
+                            Jan 12, 2024
+                          </span>
+                          <span className='text-secondary-light text-xs'>
+                            09:00 AM
+                          </span>
+                        </div>
+                        <div className='d-flex flex-wrap gap-2'>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:monitor-bold' className='text-xs me-2' />
+                            Desktop
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:browser-bold' className='text-xs me-2' />
+                            Chrome 119.0
+                          </span>
+                          <span className='badge bg-light border border-secondary-300 text-dark text-xs px-6 py-2'>
+                            <Icon icon='solar:router-bold' className='text-xs me-2' />
+                            192.168.1.105
+                          </span>
+                        </div>
+                      </div>
+                      <span className='badge bg-light border border-secondary-300 text-dark fw-medium ms-12'>
+                        Logged Out
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 };
