@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumb from "@/components/Breadcrumb";
-import ViewCompanyProfileLayer from "@/components/settings/company_profile";
+import ViewCompanyProfileLayer from "@/components/settings/company-profiles";
 import MasterLayout from "@/masterLayout/MasterLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
