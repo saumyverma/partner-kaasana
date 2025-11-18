@@ -2,7 +2,7 @@ import React from 'react'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
 import RolesLayer from '@/components/Resources/RolesLayer';
-import UsersLayer from '@/components/Resources/UsersLayer';
+import UsersLayer from '@/components/Resources/user/UsersLayer';
 import BranchesLayer from '@/components/Resources/BranchesLayer';
 import SuppliersLayer from '@/components/Resources/SuppliersLayer';
 import ProtectedRoute from "@/components/ProtectedRoute";
