@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function ShowRoles({ departments, jobRoles }) {
+export default function ShowRoles({ departmentsList, jobRolesList, permissionsList }) {
     return (
         <>
             {/* Modal Start */}
@@ -11,7 +11,7 @@ export default function ShowRoles({ departments, jobRoles }) {
                 aria-labelledby='ShowRoles'
                 aria-hidden='true'
             >
-                <div className='modal-dialog modal-lg modal-dialog modal-dialog-centered'>
+                <div className='modal-dialog modal-xl modal-dialog modal-dialog-centered'>
                     <div className='modal-content radius-16 bg-base'>
                         <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
                             <h1 className='modal-title fs-5' id='ShowRoles'>
@@ -27,7 +27,7 @@ export default function ShowRoles({ departments, jobRoles }) {
                         <div className='modal-body p-24'>
                             <form action='#'>
                                 <div className='row'>
-                                    <div className='col-12 mb-20'>
+                                    <div className='col-4 mb-20'>
                                         <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                                             Department
                                         </label>
@@ -37,14 +37,14 @@ export default function ShowRoles({ departments, jobRoles }) {
                                             disabled
                                             defaultValue="1"
                                         >
-                                            {departments.map((department) => (
+                                            {departmentsList.map((department) => (
                                                 <option key={department.value} value={department.value}>{department.label}</option>
                                             ))}
 
 
                                         </select>
                                     </div>
-                                    <div className='col-12 mb-20'>
+                                    <div className='col-4 mb-20'>
                                         <label
                                             htmlFor='desc'
                                             className='form-label fw-semibold text-primary-light text-sm mb-8'
@@ -57,12 +57,12 @@ export default function ShowRoles({ departments, jobRoles }) {
                                             disabled
                                             defaultValue="Admin"
                                         >
-                                            {jobRoles.map((jobRole) => (
+                                            {jobRolesList.map((jobRole) => (
                                                 <option key={jobRole.value} value={jobRole.value}>{jobRole.label}</option>
                                             ))}
                                         </select>
                                     </div>
-                                    <div className='col-12 mb-20'>
+                                    <div className='col-4 mb-20'>
                                         <label
                                             htmlFor='jobTitle'
                                             className='form-label fw-semibold text-primary-light text-sm mb-8'
@@ -77,43 +77,24 @@ export default function ShowRoles({ departments, jobRoles }) {
                                             defaultValue="Marketing"
                                         />
                                     </div>
+
                                     <div className='col-12 mb-20'>
-                                        <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                                            Status{" "}
+                                        <label
+                                            htmlFor='jobTitle'
+                                            className='form-label fw-semibold text-primary-light text-sm mb-8'
+                                        >
+                                            Permissions
                                         </label>
-                                        <div className='d-flex align-items-center flex-wrap gap-28'>
-                                            <div className='form-check checked-success d-flex align-items-center gap-2'>
-                                                <input
-                                                    className='form-check-input'
-                                                    type='radio'
-                                                    name='label'
-                                                    id='Personal'
-                                                />
-                                                <label
-                                                    className='form-check-label line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-1'
-                                                    htmlFor='Personal'
-                                                >
-                                                    <span className='w-8-px h-8-px bg-success-600 rounded-circle' />
-                                                    Active
-                                                </label>
-                                            </div>
-                                            <div className='form-check checked-danger d-flex align-items-center gap-2'>
-                                                <input
-                                                    className='form-check-input'
-                                                    type='radio'
-                                                    name='label'
-                                                    id='Holiday'
-                                                />
-                                                <label
-                                                    className='form-check-label line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-1'
-                                                    htmlFor='Holiday'
-                                                >
-                                                    <span className='w-8-px h-8-px bg-danger-600 rounded-circle' />
-                                                    Inactive
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <input
+                                            type='text'
+                                            className='form-control radius-8'
+                                            placeholder='Enter Job Title'
+                                            disabled
+                                            defaultValue="Marketing"
+                                        />
                                     </div>
+
+
                                     <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
                                         <button
                                             type='reset'
