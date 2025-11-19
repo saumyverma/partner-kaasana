@@ -13222,7 +13222,7 @@ select option {
 /* Pill Tab Css End */
 /* Gradient Tab Css Start */
 .border-gradient-tab {
-  border-top: 1px solid var(--input-form-light);
+  border-bottom: 1px solid var(--input-form-light);
 }
 
 .border-gradient-tab .nav-link {

@@ -2,9 +2,9 @@ import React from 'react'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
 import RolesLayer from '@/components/Resources/RolesLayer';
-import UsersLayer from '@/components/Resources/UsersLayer';
+import UsersLayer from '@/components/Resources/user/UsersLayer';
 import BranchesLayer from '@/components/Resources/BranchesLayer';
-import SuppliersLayer from '@/components/Resources/SuppliersLayer';
+import SuppliersLayer from '@/components/Resources/suplier/SuppliersLayer';
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default async function Page({params}) {
@@ -18,7 +18,7 @@ export default async function Page({params}) {
   return (
      <ProtectedRoute>
      <MasterLayout>
-       <Breadcrumb breadcrumbs={breadcrumbs} />
+       <Breadcrumb title={pageId === "roles" ? "Roles" : pageId === "users" ? "Users" : pageId === "branches" ? "Branches" : pageId === "suppliers" ? "Suppliers" : ""} breadcrumbs={breadcrumbs} />
 
        {pageId === "roles" ? (
          <RolesLayer/>
