@@ -14,6 +14,7 @@ async function request(url, method = "GET", data = null, customHeaders = {},opti
     // ✅ token handling (after login)
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      console.log("token", token);
 
     const headers = {
       "Content-Type": "application/json",
