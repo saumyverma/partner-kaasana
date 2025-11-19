@@ -7,6 +7,7 @@ import AddAndUpdateRoles from '@/components/modal/AddAndUpdateRoles';
 export default function RolesLayer() {
 
   const [search, setSearch] = useState('');
+  const [ShowRolesModal, setShowRolesModal] = useState(false);
   const [departmentsList, setDepartmentsList] = useState( [
     { "value": "1", "label": "Accounting & Finance" },
     { "value": "2", "label": "Administrative" },
@@ -744,7 +745,7 @@ const [permissionsList, setPermissionsList] = useState([
 
   return (
     <>
-      <ShowRoles departmentsList={departmentsList} jobRolesList={jobRolesList} permissionsList={permissionsList} />
+      {ShowRolesModal && <ShowRoles departmentsList={departmentsList} jobRolesList={jobRolesList} permissionsList={permissionsList} />}
       {/* <AddAndUpdateRoles departments={departments} jobRoles={jobRoles} /> */}
       <div className='card h-100 p-0 radius-12'>
         <div className='card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between'>
@@ -856,6 +857,7 @@ const [permissionsList, setPermissionsList] = useState([
                         className='bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
                         data-bs-toggle='modal'
                         data-bs-target='#ShowRoles'
+                        onClick={() => setShowRolesModal(true)}
                       >
                         <Icon icon='lucide:eye' className='menu-icon' />
                       </button>
@@ -897,11 +899,8 @@ const [permissionsList, setPermissionsList] = useState([
                   <td>Marketing</td>
                   <td>30 April 2024</td>
 
-                  <td className='text-center'>
-                    <span className='bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm'>
-                      Active
-                    </span>
-                  </td>
+                  <td className="text-center">
+                    <span className="bg-danger-focus text-danger-600 border border-danger-main px-24 py-4 radius-4 fw-medium text-sm">Inactive</span></td>
                   <td className='text-center'>
                     <div className='d-flex align-items-center gap-10 justify-content-center'>
                       <button
@@ -909,6 +908,7 @@ const [permissionsList, setPermissionsList] = useState([
                         className='bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
                         data-bs-toggle='modal'
                         data-bs-target='#ShowRoles'
+                        onClick={() => setShowRolesModal(true)}
                       >
                         <Icon icon='lucide:eye' className='menu-icon' />
                       </button>
