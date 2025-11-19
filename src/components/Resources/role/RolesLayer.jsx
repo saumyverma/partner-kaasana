@@ -2,12 +2,13 @@
 import  {useState, useEffect} from 'react'
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
-import ShowRoles from '@/components/modal/ShowRoles';
-import AddAndUpdateRoles from '@/components/modal/AddAndUpdateRoles';
+import ShowRolesModal from '@/components/Resources/role/ShowRolesModel';
+import AddAndUpdateRolesModal from '@/components/Resources/role/AddAndUpdateRolesModel';
 export default function RolesLayer() {
 
   const [search, setSearch] = useState('');
-  const [ShowRolesModal, setShowRolesModal] = useState(false);
+  const [showRolesModal, setShowRolesModal] = useState(false);
+  const [showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal] = useState(false);
   const [departmentsList, setDepartmentsList] = useState( [
     { "value": "1", "label": "Accounting & Finance" },
     { "value": "2", "label": "Administrative" },
@@ -745,32 +746,15 @@ const [permissionsList, setPermissionsList] = useState([
 
   return (
     <>
-      {ShowRolesModal && <ShowRoles departmentsList={departmentsList} jobRolesList={jobRolesList} permissionsList={permissionsList} />}
-      {/* <AddAndUpdateRoles departments={departments} jobRoles={jobRoles} /> */}
+      {showRolesModal && <ShowRolesModal showRolesModal={showRolesModal} setShowRolesModal={setShowRolesModal} departmentsList={departmentsList} jobRolesList={jobRolesList} permissionsList={permissionsList} />}
+
+      {showAddAndUpdateRolesModal && <AddAndUpdateRolesModal showAddAndUpdateRolesModal={showAddAndUpdateRolesModal} setShowAddAndUpdateRolesModal={setShowAddAndUpdateRolesModal} departments={departmentsList} jobRoles={jobRolesList} />}
+
+      
       <div className='card h-100 p-0 radius-12'>
         <div className='card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between'>
           <div className='d-flex align-items-center flex-wrap gap-3'>
-            {/* <span className='text-md fw-medium text-secondary-light mb-0'>
-              Show
-            </span>
-            <select
-              className='form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px'
-              defaultValue='Select Number'
-            >
-              <option value='Select Number' disabled>
-                Select Number
-              </option>
-              <option value='1'>1</option>
-              <option value='2'>2</option>
-              <option value='3'>3</option>
-              <option value='4'>4</option>
-              <option value='5'>5</option>
-              <option value='6'>6</option>
-              <option value='7'>7</option>
-              <option value='8'>8</option>
-              <option value='9'>9</option>
-              <option value='10'>10</option>
-            </select> */}
+            
             <form className='navbar-search'>
               <input
                 type='text'
@@ -780,17 +764,18 @@ const [permissionsList, setPermissionsList] = useState([
               />
               <Icon icon='ion:search-outline' className='icon' />
             </form>
-            {/* <select
-              className='form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px'
-              defaultValue='Select Status'
-            >
-              <option value='Select Status' disabled>
-                Select Status
-              </option>
-              <option value='Active'>Active</option>
-              <option value='Inactive'>Inactive</option>
-            </select> */}
           </div>
+          <button
+            type='button'
+            className='btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2'
+           onClick={() => setShowAddAndUpdateRolesModal(true)}
+          >
+            <Icon
+              icon='ic:baseline-plus'
+              className='icon text-xl line-height-1'
+            />
+            Add New Role
+          </button>
 
         </div>
         <div className='card-body p-24'>
@@ -855,8 +840,6 @@ const [permissionsList, setPermissionsList] = useState([
                       <button
                         type='button'
                         className='bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                        data-bs-toggle='modal'
-                        data-bs-target='#ShowRoles'
                         onClick={() => setShowRolesModal(true)}
                       >
                         <Icon icon='lucide:eye' className='menu-icon' />
@@ -864,8 +847,7 @@ const [permissionsList, setPermissionsList] = useState([
                       <button
                         type='button'
                         className='bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                        data-bs-toggle='modal'
-                        data-bs-target='#AddAndUpdateRoles'
+                        onClick={() => setShowAddAndUpdateRolesModal(true)}
                       >
                         <Icon icon='lucide:edit' className='menu-icon' />
                       </button>
@@ -906,8 +888,6 @@ const [permissionsList, setPermissionsList] = useState([
                       <button
                         type='button'
                         className='bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                        data-bs-toggle='modal'
-                        data-bs-target='#ShowRoles'
                         onClick={() => setShowRolesModal(true)}
                       >
                         <Icon icon='lucide:eye' className='menu-icon' />
@@ -915,8 +895,7 @@ const [permissionsList, setPermissionsList] = useState([
                       <button
                         type='button'
                         className='bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                        data-bs-toggle='modal'
-                        data-bs-target='#AddAndUpdateRoles'
+                        onClick={() => setShowAddAndUpdateRolesModal(true)}
                       >
                         <Icon icon='lucide:edit' className='menu-icon' />
                       </button>
