@@ -2,11 +2,16 @@
 
 import React from 'react';
 import { Icon } from "@iconify/react/dist/iconify.js";
-import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddSupplierModal from "./AddSupplierModal";
 import ViewSupplierModal from "./ViewSupplierModal";
 import EditSupplierModal from "./EditSupplierModal";
+
+const loadJQueryAndDataTables = async () => {
+  const $ = (await import("jquery")).default;
+  await import("datatables.net-dt/js/dataTables.dataTables.js");
+  return $;
+};
 
 export default function SuppliersLayer() {
   const [selectedSupplier, setSelectedSupplier] = useState(null);
@@ -96,51 +101,60 @@ export default function SuppliersLayer() {
     },
   ];
 
+  const openModal = (modalId) => {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
+        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
+        modal.show();
+      } else {
+        // Fallback: manual modal opening
+        modalElement.classList.add('show');
+        modalElement.style.display = 'block';
+        modalElement.setAttribute('aria-hidden', 'false');
+        modalElement.setAttribute('aria-modal', 'true');
+        document.body.classList.add('modal-open');
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade show';
+        backdrop.id = `${modalId}Backdrop`;
+        document.body.appendChild(backdrop);
+      }
+    }
+  };
+
   const handleViewSupplier = (supplier) => {
     setSelectedSupplier(supplier);
-    setTimeout(() => {
-      const modalElement = document.getElementById('viewSupplierModal');
-      if (modalElement) {
-        if (typeof window !== 'undefined' && window.bootstrap) {
-          const modal = new window.bootstrap.Modal(modalElement);
-          modal.show();
-        } else if (typeof window !== 'undefined' && window.$) {
-          window.$(modalElement).modal('show');
-        } else {
-          modalElement.classList.add('show');
-          modalElement.style.display = 'block';
-          document.body.classList.add('modal-open');
-          const backdrop = document.createElement('div');
-          backdrop.className = 'modal-backdrop fade show';
-          backdrop.id = 'viewSupplierModalBackdrop';
-          document.body.appendChild(backdrop);
-        }
-      }
-    }, 100);
+    setTimeout(() => openModal('viewSupplierModal'), 50);
   };
 
   const handleEditSupplier = (supplier) => {
     setEditSupplier(supplier);
-    setTimeout(() => {
-      const modalElement = document.getElementById('editSupplierModal');
-      if (modalElement) {
-        if (typeof window !== 'undefined' && window.bootstrap) {
-          const modal = new window.bootstrap.Modal(modalElement);
-          modal.show();
-        } else if (typeof window !== 'undefined' && window.$) {
-          window.$(modalElement).modal('show');
-        } else {
-          modalElement.classList.add('show');
-          modalElement.style.display = 'block';
-          document.body.classList.add('modal-open');
-          const backdrop = document.createElement('div');
-          backdrop.className = 'modal-backdrop fade show';
-          backdrop.id = 'editSupplierModalBackdrop';
-          document.body.appendChild(backdrop);
-        }
-      }
-    }, 100);
+    setTimeout(() => openModal('editSupplierModal'), 50);
   };
+
+  const handleAddSupplier = () => {
+    setTimeout(() => openModal('addSupplierModal'), 50);
+  };
+
+  useEffect(() => {
+    let table;
+    loadJQueryAndDataTables()
+      .then(($) => {
+        window.$ = window.jQuery = $;
+        // Initialize DataTable
+        table = $("#dataTable").DataTable({
+          pageLength: 10,
+        });
+      })
+      .catch((error) => {
+        console.error("Error loading jQuery or DataTables:", error);
+      });
+
+    return () => {
+      // Cleanup DataTable instance
+      if (table) table.destroy(true);
+    };
+  }, []);
 
   return (
     <div className='row gy-4'>
@@ -243,55 +257,13 @@ export default function SuppliersLayer() {
         </div>
       </div>
       <div className='col-xxl-9'>
-        <div className='card h-100 p-0 radius-12'>
+        <div className='card basic-data-table'>
           <div className='card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between'>
-            <div className='d-flex align-items-center flex-wrap gap-3'>
-              <span className='text-md fw-medium text-secondary-light mb-0'>
-                Show
-              </span>
-              <select
-                className='form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px'
-                defaultValue='Select Number'
-              >
-                <option value='Select Number' disabled>
-                  Select Number
-                </option>
-                <option value='1'>1</option>
-                <option value='2'>2</option>
-                <option value='3'>3</option>
-                <option value='4'>4</option>
-                <option value='5'>5</option>
-                <option value='6'>6</option>
-                <option value='7'>7</option>
-                <option value='8'>8</option>
-                <option value='9'>9</option>
-                <option value='10'>10</option>
-              </select>
-              <form className='navbar-search'>
-                <input
-                  type='text'
-                  className='bg-base h-40-px w-auto'
-                  name='search'
-                  placeholder='Search'
-                />
-                <Icon icon='ion:search-outline' className='icon' />
-              </form>
-              <select
-                className='form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px'
-                defaultValue='Select Status'
-              >
-                <option value='Select Status' disabled>
-                  Select Status
-                </option>
-                <option value='Active'>Active</option>
-                <option value='Inactive'>Inactive</option>
-              </select>
-            </div>
+            <h5 className='card-title mb-0 text-lg fw-semibold text-primary-light'>Supplier List</h5>
             <button
               type='button'
               className='btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2'
-              data-bs-toggle='modal'
-              data-bs-target='#addSupplierModal'
+              onClick={handleAddSupplier}
             >
               <Icon
                 icon='ic:baseline-plus'
@@ -300,160 +272,96 @@ export default function SuppliersLayer() {
               Add New Supplier
             </button>
           </div>
-          <div className='card-body p-24'>
-            <div className='table-responsive scroll-sm'>
-              <table className='table bordered-table sm-table mb-0'>
-                <thead>
-                  <tr>
-                    <th scope='col'>Company Name</th>
-                    <th scope='col'>Country</th>
-                    <th scope='col'>State</th>
-                    <th scope='col'>City</th>
-                    <th scope='col'>Product Services</th>
-                    <th scope='col' className='text-center'>
-                      Status
-                    </th>
-                    <th scope='col' className='text-center'>
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {suppliers.map((supplier) => (
-                    <tr key={supplier.id}>
-                      <td>
-                        <span className='text-md mb-0 fw-normal text-primary-light'>
-                          {supplier.companyName}
-                        </span>
-                      </td>
-                      <td>
-                        <span className='text-md mb-0 fw-normal text-secondary-light'>
-                          {supplier.country}
-                        </span>
-                      </td>
-                      <td>
-                        <span className='text-md mb-0 fw-normal text-secondary-light'>
-                          {supplier.state}
-                        </span>
-                      </td>
-                      <td>
-                        <span className='text-md mb-0 fw-normal text-secondary-light'>
-                          {supplier.city}
-                        </span>
-                      </td>
-                      <td>
-                        <span className='text-md mb-0 fw-normal text-secondary-light'>
-                          {supplier.productServices}
-                        </span>
-                      </td>
-                      <td className='text-center'>
-                        <span
-                          className={`${
-                            supplier.status === 'Active'
-                              ? 'bg-success-focus text-success-600 border border-success-main'
-                              : 'bg-neutral-200 text-neutral-600 border border-neutral-400'
-                          } px-24 py-4 radius-4 fw-medium text-sm`}
+          <div className='card-body'>
+            <table
+              className='table bordered-table mb-0'
+              id='dataTable'
+              data-page-length={10}
+            >
+              <thead>
+                <tr>
+                  <th scope='col'>Company Name</th>
+                  <th scope='col'>Country</th>
+                  <th scope='col'>State</th>
+                  <th scope='col'>City</th>
+                  <th scope='col'>Product Services</th>
+                  <th scope='col' className='text-center'>Status</th>
+                  <th scope='col' className='text-center'>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {suppliers.map((supplier) => (
+                  <tr key={supplier.id}>
+                    <td>
+                      <span className='text-md mb-0 fw-normal text-primary-light'>
+                        {supplier.companyName}
+                      </span>
+                    </td>
+                    <td>
+                      <span className='text-md mb-0 fw-normal text-secondary-light'>
+                        {supplier.country}
+                      </span>
+                    </td>
+                    <td>
+                      <span className='text-md mb-0 fw-normal text-secondary-light'>
+                        {supplier.state}
+                      </span>
+                    </td>
+                    <td>
+                      <span className='text-md mb-0 fw-normal text-secondary-light'>
+                        {supplier.city}
+                      </span>
+                    </td>
+                    <td>
+                      <span className='text-md mb-0 fw-normal text-secondary-light'>
+                        {supplier.productServices}
+                      </span>
+                    </td>
+                    <td className='text-center'>
+                      <span
+                        className={`${
+                          supplier.status === 'Active'
+                            ? 'bg-success-focus text-success-600 border border-success-main'
+                            : 'bg-neutral-200 text-neutral-600 border border-neutral-400'
+                        } px-24 py-4 radius-4 fw-medium text-sm`}
+                      >
+                        {supplier.status}
+                      </span>
+                    </td>
+                    <td className='text-center'>
+                      <div className='d-flex align-items-center gap-10 justify-content-center'>
+                        <button
+                          type='button'
+                          className='bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
+                          onClick={() => handleViewSupplier(supplier)}
                         >
-                          {supplier.status}
-                        </span>
-                      </td>
-                      <td className='text-center'>
-                        <div className='d-flex align-items-center gap-10 justify-content-center'>
-                          <button
-                            type='button'
-                            className='bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                            onClick={() => handleViewSupplier(supplier)}
-                          >
-                            <Icon
-                              icon='majesticons:eye-line'
-                              className='icon text-xl'
-                            />
-                          </button>
-                          <button
-                            type='button'
-                            className='bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                            onClick={() => handleEditSupplier(supplier)}
-                          >
-                            <Icon icon='lucide:edit' className='menu-icon' />
-                          </button>
-                          <button
-                            type='button'
-                            className='remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                          >
-                            <Icon
-                              icon='fluent:delete-24-regular'
-                              className='menu-icon'
-                            />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className='d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24'>
-              <span>Showing 1 to {Math.min(10, suppliers.length)} of {suppliers.length} entries</span>
-              <ul className='pagination d-flex flex-wrap align-items-center gap-2 justify-content-center'>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px text-md'
-                    href='#'
-                  >
-                    <Icon icon='ep:d-arrow-left' className='' />
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md bg-primary-600 text-white'
-                    href='#'
-                  >
-                    1
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px'
-                    href='#'
-                  >
-                    2
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md'
-                    href='#'
-                  >
-                    3
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md'
-                    href='#'
-                  >
-                    4
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md'
-                    href='#'
-                  >
-                    5
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px text-md'
-                    href='#'
-                  >
-                    {" "}
-                    <Icon icon='ep:d-arrow-right' className='' />{" "}
-                  </Link>
-                </li>
-              </ul>
-            </div>
+                          <Icon
+                            icon='majesticons:eye-line'
+                            className='icon text-xl'
+                          />
+                        </button>
+                        <button
+                          type='button'
+                          className='bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
+                          onClick={() => handleEditSupplier(supplier)}
+                        >
+                          <Icon icon='lucide:edit' className='menu-icon' />
+                        </button>
+                        <button
+                          type='button'
+                          className='remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
+                        >
+                          <Icon
+                            icon='fluent:delete-24-regular'
+                            className='menu-icon'
+                          />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 

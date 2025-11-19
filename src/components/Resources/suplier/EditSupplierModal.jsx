@@ -89,21 +89,18 @@ const EditSupplierModal = ({ supplier }) => {
   const handleClose = () => {
     const modalElement = document.getElementById('editSupplierModal');
     if (modalElement) {
-      if (typeof window !== 'undefined' && window.bootstrap) {
-        const modal = window.bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-          modal.hide();
-        } else {
-          const newModal = new window.bootstrap.Modal(modalElement);
-          newModal.hide();
-        }
-      } else if (typeof window !== 'undefined' && window.$) {
-        window.$(modalElement).modal('hide');
+      if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
+        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
+        modal.hide();
       } else {
         // Manual cleanup
         modalElement.classList.remove('show');
         modalElement.style.display = 'none';
+        modalElement.setAttribute('aria-hidden', 'true');
+        modalElement.setAttribute('aria-modal', 'false');
         document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
         const backdrops = document.querySelectorAll('.modal-backdrop');
         backdrops.forEach((backdrop) => backdrop.remove());
       }

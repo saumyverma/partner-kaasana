@@ -1,7 +1,7 @@
 import React from 'react'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
-import HotelsLayer from '@/components/Inventory/HotelsLayer';
+import HotelsLayer from '@/components/Inventory/hotels/HotelsLayer';
 import PackagesLayer from '@/components/Inventory/PackagesLayer';
 import TransportationsLayer from '@/components/Inventory/TransportationsLayer';
 import VisaLayer from '@/components/Inventory/VisaLayer';
@@ -33,7 +33,7 @@ export default async function Page({params}) {
   return (
      <ProtectedRoute>
      <MasterLayout>
-       <Breadcrumb breadcrumbs={breadcrumbs} />
+       <Breadcrumb title={pageId === "hotels" ? "Hotels List" : pageId === "packages" ? "Packages List" : pageId === "transportations" ? "Transportation List" : pageId === "visa" ? "Visa List" : pageId === "activities" ? "Activities List" : ""} breadcrumbs={breadcrumbs} />
 
        {pageId === "hotels" ? (
          <HotelsLayer/>
