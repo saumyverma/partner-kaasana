@@ -1,765 +1,1282 @@
-import React from 'react'
-import { Icon } from "@iconify/react/dist/iconify.js";
+"use client";
+import { useEffect } from "react";
 import Link from "next/link";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import AddHotelModal from "./AddHotelModal";
 
+const loadJQueryAndDataTables = async () => {
+  const $ = (await import("jquery")).default;
+  await import("datatables.net-dt/js/dataTables.dataTables.js");
+  return $;
+};
 
 export default function HotelsLayer() {
+  const openModal = (modalId) => {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
+        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
+        modal.show();
+      } else {
+        // Fallback: manual modal opening
+        modalElement.classList.add('show');
+        modalElement.style.display = 'block';
+        modalElement.setAttribute('aria-hidden', 'false');
+        modalElement.setAttribute('aria-modal', 'true');
+        document.body.classList.add('modal-open');
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade show';
+        backdrop.id = `${modalId}Backdrop`;
+        document.body.appendChild(backdrop);
+      }
+    }
+  };
+
+  const handleAddHotel = () => {
+    setTimeout(() => openModal('addHotelModal'), 50);
+  };
+    useEffect(() => {
+    let table;
+    loadJQueryAndDataTables()
+      .then(($) => {
+        window.$ = window.jQuery = $;
+        // Initialize DataTable
+        table = $("#dataTable").DataTable({
+          pageLength: 10,
+        });
+      })
+      .catch((error) => {
+        console.error("Error loading jQuery or DataTables:", error);
+      });
+
+    return () => {
+      // Cleanup DataTable instance
+      if (table) table.destroy(true);
+    };
+  }, []);
   return (
     <div className='row gy-4'>
       <div className='col-xxl-3'>
-        <div className='card h-100 p-0'>
+        <div className='card h-100 p-0 radius-12 border shadow-sm'>
+          <div className='card-header border-bottom bg-primary-50 py-20 px-24'>
+            <div className='d-flex align-items-center gap-10'>
+              <Icon icon='solar:filter-bold' className='text-primary-600 text-xl' />
+              <h6 className='text-lg fw-bold text-primary-light mb-0'>
+                Filters
+              </h6>
+            </div>
+          </div>
           <div className='card-body p-24'>
-            <button
-              type='button'
-              className='btn btn-primary text-sm btn-sm px-12 py-12 w-100 radius-8 d-flex align-items-center gap-2 mb-16'
-              data-bs-toggle='modal'
-              data-bs-target='#exampleModal'
-            >
-              <Icon
-                icon='fa6-regular:square-plus'
-                className='icon text-lg line-height-1'
-              />
-              Compose
-            </button>
-            <div className='mt-16'>
-              <ul>
-                <li className='item-active mb-4'>
-                  <Link
-                    href='/email'
-                    className='bg-hover-primary-50 px-12 py-8 w-100 radius-8 text-secondary-light'
-                  >
-                    <span className='d-flex align-items-center gap-10 justify-content-between w-100'>
-                      <span className='d-flex align-items-center gap-10'>
-                        <span className='icon text-xxl line-height-1 d-flex'>
-                          <Icon
-                            icon='uil:envelope'
-                            className='icon line-height-1'
-                          />
-                        </span>
-                        <span className='fw-semibold'>Inbox</span>
-                      </span>
-                      <span className='fw-medium'>800</span>
-                    </span>
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link
-                    href='/starred'
-                    className='bg-hover-primary-50 px-12 py-8 w-100 radius-8 text-secondary-light'
-                  >
-                    <span className='d-flex align-items-center gap-10 justify-content-between w-100'>
-                      <span className='d-flex align-items-center gap-10'>
-                        <span className='icon text-xxl line-height-1 d-flex'>
-                          <Icon
-                            icon='ph:star-bold'
-                            className='icon line-height-1'
-                          />
-                        </span>
-                        <span className='fw-semibold'>Starred</span>
-                      </span>
-                      <span className='fw-medium'>250</span>
-                    </span>
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link
-                    href='/email'
-                    className='bg-hover-primary-50 px-12 py-8 w-100 radius-8 text-secondary-light'
-                  >
-                    <span className='d-flex align-items-center gap-10 justify-content-between w-100'>
-                      <span className='d-flex align-items-center gap-10'>
-                        <span className='icon text-xxl line-height-1 d-flex'>
-                          <Icon
-                            icon='ion:paper-plane-outline'
-                            className='icon line-height-1'
-                          />
-                        </span>
-                        <span className='fw-semibold'>Sent</span>
-                      </span>
-                      <span className='fw-medium'>80</span>
-                    </span>
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link
-                    href='/email'
-                    className='bg-hover-primary-50 px-12 py-8 w-100 radius-8 text-secondary-light'
-                  >
-                    <span className='d-flex align-items-center gap-10 justify-content-between w-100'>
-                      <span className='d-flex align-items-center gap-10'>
-                        <span className='icon text-xxl line-height-1 d-flex'>
-                          <Icon
-                            icon='lucide:pencil'
-                            className='icon line-height-1'
-                          />
-                        </span>
-                        <span className='fw-semibold'>Draft</span>
-                      </span>
-                      <span className='fw-medium'>50</span>
-                    </span>
-                  </Link>
-                </li>
-                <li className='mb-4'>
-                  <Link
-                    href='/email'
-                    className='bg-hover-primary-50 px-12 py-8 w-100 radius-8 text-secondary-light'
-                  >
-                    <span className='d-flex align-items-center gap-10 justify-content-between w-100'>
-                      <span className='d-flex align-items-center gap-10'>
-                        <span className='icon text-xxl line-height-1 d-flex'>
-                          <Icon
-                            icon='ph:warning-bold'
-                            className='icon line-height-1'
-                          />
-                        </span>
-                        <span className='fw-semibold'>Spam</span>
-                      </span>
-                      <span className='fw-medium'>30</span>
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href='/email'
-                    className='bg-hover-primary-50 px-12 py-8 w-100 radius-8 text-secondary-light'
-                  >
-                    <span className='d-flex align-items-center gap-10 justify-content-between w-100'>
-                      <span className='d-flex align-items-center gap-10'>
-                        <span className='icon text-xxl line-height-1 d-flex'>
-                          <Icon
-                            icon='material-symbols:delete-outline'
-                            className='icon line-height-1'
-                          />
-                        </span>
-                        <span className='fw-semibold'>Bin</span>
-                      </span>
-                      <span className='fw-medium'>20</span>
-                    </span>
-                  </Link>
-                </li>
-              </ul>
-              <div className='mt-24'>
-                <h6 className='text-lg fw-semibold text-primary-light mb-16'>
-                  TAGS
-                </h6>
-                <ul>
-                  <li className='mb-20'>
-                    <span className='line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-10'>
-                      <span className='w-8-px h-8-px bg-primary-600 rounded-circle' />
-                      Personal
-                    </span>
-                  </li>
-                  <li className='mb-20'>
-                    <span className='line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-10'>
-                      <span className='w-8-px h-8-px bg-lilac-600 rounded-circle' />
-                      Social
-                    </span>
-                  </li>
-                  <li className='mb-20'>
-                    <span className='line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-10'>
-                      <span className='w-8-px h-8-px bg-success-600 rounded-circle' />
-                      Promotions
-                    </span>
-                  </li>
-                  <li className='mb-20'>
-                    <span className='line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-10'>
-                      <span className='w-8-px h-8-px bg-warning-600 rounded-circle' />
-                      Business
-                    </span>
-                  </li>
-                </ul>
+            <div className='d-flex flex-column gap-20'>
+              {/* Country Filter */}
+              <div>
+                <div className='d-flex align-items-center gap-8 mb-12'>
+                  <Icon icon='solar:global-bold' className='text-primary-600 text-lg' />
+                  <label className='form-label fw-bold text-primary-light text-sm mb-0'>
+                    Country
+                  </label>
+                </div>
+                <select className='form-select radius-8 border h-44-px'>
+                  <option value=''>All Countries</option>
+                  <option value='usa'>USA</option>
+                  <option value='uk'>UK</option>
+                  <option value='india'>India</option>
+                  <option value='canada'>Canada</option>
+                  <option value='australia'>Australia</option>
+                  <option value='germany'>Germany</option>
+                  <option value='france'>France</option>
+                </select>
+              </div>
+
+              {/* State Filter */}
+              <div>
+                <div className='d-flex align-items-center gap-8 mb-12'>
+                  <Icon icon='solar:map-point-bold' className='text-primary-600 text-lg' />
+                  <label className='form-label fw-bold text-primary-light text-sm mb-0'>
+                    State
+                  </label>
+                </div>
+                <select className='form-select radius-8 border h-44-px'>
+                  <option value=''>All States</option>
+                  <option value='california'>California</option>
+                  <option value='new-york'>New York</option>
+                  <option value='texas'>Texas</option>
+                  <option value='florida'>Florida</option>
+                  <option value='london'>London</option>
+                  <option value='maharashtra'>Maharashtra</option>
+                  <option value='karnataka'>Karnataka</option>
+                </select>
+              </div>
+
+              {/* City Filter */}
+              <div>
+                <div className='d-flex align-items-center gap-8 mb-12'>
+                  <Icon icon='solar:city-bold' className='text-primary-600 text-lg' />
+                  <label className='form-label fw-bold text-primary-light text-sm mb-0'>
+                    City
+                  </label>
+                </div>
+                <select className='form-select radius-8 border h-44-px'>
+                  <option value=''>All Cities</option>
+                  <option value='los-angeles'>Los Angeles</option>
+                  <option value='new-york-city'>New York City</option>
+                  <option value='miami'>Miami</option>
+                  <option value='san-francisco'>San Francisco</option>
+                  <option value='london'>London</option>
+                  <option value='mumbai'>Mumbai</option>
+                  <option value='bangalore'>Bangalore</option>
+                  <option value='delhi'>Delhi</option>
+                </select>
+              </div>
+
+              {/* Rating Filter */}
+              <div>
+                <div className='d-flex align-items-center gap-8 mb-12'>
+                  <Icon icon='solar:star-bold' className='text-primary-600 text-lg' />
+                  <label className='form-label fw-bold text-primary-light text-sm mb-0'>
+                    Rating
+                  </label>
+                </div>
+                <select className='form-select radius-8 border h-44-px'>
+                  <option value=''>All Ratings</option>
+                  <option value='5'>5 Stars</option>
+                  <option value='4'>4 Stars</option>
+                  <option value='3'>3 Stars</option>
+                  <option value='2'>2 Stars</option>
+                  <option value='1'>1 Star</option>
+                </select>
+              </div>
+
+              {/* Action Buttons */}
+              <div className='d-flex flex-column gap-12 mt-8'>
+                <button
+                  type='button'
+                  className='btn btn-primary w-100 py-12 radius-8 fw-semibold text-sm d-flex align-items-center justify-content-center gap-8'
+                >
+                  <Icon icon='solar:filter-bold' className='text-lg' />
+                  Apply Filters
+                </button>
+                <button
+                  type='button'
+                  className='btn btn-outline-secondary w-100 py-12 radius-8 fw-semibold text-sm d-flex align-items-center justify-content-center gap-8'
+                >
+                  <Icon icon='solar:refresh-bold' className='text-lg' />
+                  Reset
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className='col-xxl-9'>
-        <div className='card h-100 p-0 email-card'>
-          <div className='card-header border-bottom bg-base py-16 px-24'>
-            <div className='d-flex flex-wrap align-items-center justify-content-between gap-4'>
-              <div className='d-flex align-items-center gap-3'>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border input-form-dark'
-                    type='checkbox'
-                    name='checkbox'
-                    id='selectAll'
-                  />
-                  <div className='dropdown line-height-1'>
-                    <button
-                      type='button'
-                      data-bs-toggle='dropdown'
-                      aria-expanded='false'
-                      className='line-height-1 d-flex'
-                    >
-                      <Icon
-                        icon='typcn:arrow-sorted-down'
-                        className='icon line-height-1'
-                      />
-                    </button>
-                    <ul className='dropdown-menu p-12 border bg-base shadow'>
-                      <li>
-                        <button
-                          type='button'
-                          className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900'
-                          data-bs-toggle='modal'
-                          data-bs-target='#exampleModalView'
-                        >
-                          All
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          type='button'
-                          className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900'
-                          data-bs-toggle='modal'
-                          data-bs-target='#exampleModalEdit'
-                        >
-                          None
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          type='button'
-                          className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900'
-                          data-bs-toggle='modal'
-                          data-bs-target='#exampleModalEdit'
-                        >
-                          Read
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          type='button'
-                          className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900'
-                          data-bs-toggle='modal'
-                          data-bs-target='#exampleModalEdit'
-                        >
-                          Unread
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          type='button'
-                          className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900'
-                          data-bs-toggle='modal'
-                          data-bs-target='#exampleModalEdit'
-                        >
-                          Starred
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          type='button'
-                          className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900'
-                          data-bs-toggle='modal'
-                          data-bs-target='#exampleModalEdit'
-                        >
-                          Unstarred
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <button
-                  type='button'
-                  className='delete-button d-none text-secondary-light text-xl d-flex'
-                >
-                  <Icon
-                    icon='material-symbols:delete-outline'
-                    className='icon line-height-1'
-                  />
-                </button>
-                <button
-                  type='button'
-                  className='reload-button text-secondary-light text-xl d-flex'
-                >
-                  <Icon icon='tabler:reload' className='icon' />
-                </button>
-                <div className='dropdown'>
-                  <button
-                    type='button'
-                    data-bs-toggle='dropdown'
-                    aria-expanded='false'
-                    className=' d-flex'
-                  >
-                    <Icon
-                      icon='entypo:dots-three-vertical'
-                      className='icon text-secondary-light'
-                    />
-                  </button>
-                  <ul className='dropdown-menu dropdown-menu-lg p-12 border bg-base shadow'>
-                    <li>
-                      <button
-                        type='button'
-                        className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900 d-flex align-items-center gap-10'
-                        data-bs-toggle='modal'
-                        data-bs-target='#exampleModalView'
-                      >
-                        <Icon
-                          icon='gravity-ui:envelope-open'
-                          className='icon text-lg line-height-1'
-                        />
-                        Mark all as read
-                      </button>
-                    </li>
-                    <li>
-                      <p className='ms-40 mt-8 text-secondary-light mb-0'>
-                        Select messages to see more actions
-                      </p>
-                    </li>
-                  </ul>
-                </div>
-                <form className='navbar-search d-lg-block d-none'>
-                  <input
-                    type='text'
-                    className='bg-base h-40-px w-auto'
-                    name='search'
-                    placeholder='Search'
-                  />
-                  <Icon icon='ion:search-outline' className='icon' />
-                </form>
-              </div>
-              <div className='d-flex align-items-center gap-3'>
-                <span className='text-secondary-light line-height-1'>
-                  1-12 of 1,253
-                </span>
-                <nav aria-label='Page navigation example'>
-                  <ul className='pagination'>
-                    <li className='page-item'>
-                      <Link
-                        className='page-link d-flex bg-base border text-secondary-light text-xl'
-                        href='#'
-                      >
-                        <Icon icon='iconamoon:arrow-left-2' className='icon' />{" "}
-                      </Link>
-                    </li>
-                    <li className='page-item'>
-                      <Link
-                        className='page-link d-flex bg-base border text-secondary-light text-xl'
-                        href='#'
-                      >
-                        <Icon icon='iconamoon:arrow-right-2' className='icon' />{" "}
-                      </Link>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            </div>
+        <div className='card basic-data-table'>
+          <div className='card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between'>
+            <h5 className='card-title mb-0 text-lg fw-semibold text-primary-light'>Hotels List</h5>
+            <button
+              type='button'
+              className='btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2'
+              onClick={handleAddHotel}
+            >
+              <Icon
+                icon='ic:baseline-plus'
+                className='icon text-xl line-height-1'
+              />
+              Add New Hotel
+            </button>
           </div>
-          <div className='card-body p-0'>
-            <ul className='overflow-x-auto'>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Jerome Bell
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Kristin Watson
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Cody Fisher
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Dianne Russell
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Floyd Miles
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Devon Lane
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Dianne Russell
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Annette Black
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Bessie Cooper
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Courtney Henry
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-              <li className='email-item px-24 py-16 d-flex gap-4 align-items-center border-bottom cursor-pointer bg-hover-neutral-200 min-w-max-content '>
-                <div className='form-check style-check d-flex align-items-center'>
-                  <input
-                    className='form-check-input radius-4 border border-neutral-400'
-                    type='checkbox'
-                    name='checkbox'
-                  />
-                </div>
-                <button
-                  type='button'
-                  className='starred-button icon text-xl text-secondary-light line-height-1 d-flex'
-                >
-                  <Icon icon='ph:star' className='icon-outline line-height-1' />
-                  <Icon
-                    icon='ph:star-fill'
-                    className='icon-fill line-height-1 text-warning-600'
-                  />
-                </button>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium text-md text-line-1 w-190-px'
-                >
-                  Wade Warren
-                </Link>
-                <Link
-                  href='/view-details'
-                  className='text-primary-light fw-medium mb-0 text-line-1 max-w-740-px'
-                >
-                  Aliquam pulvinar vestibulum blandit. Donec sed nisl libero.
-                  Fusce dignissim luctus sem eu dapibus. Aliquam pulvinar
-                  vestibulum blandit. Donec sed nisl libero. Fusce dignissim
-                  luctus sem eu dapibus
-                </Link>
-                <span className='text-primary-light fw-medium min-w-max-content ms-auto'>
-                  6:07 AM
-                </span>
-              </li>
-            </ul>
+          <div className='card-body'>
+            <table
+              className='table bordered-table mb-0'
+              id='dataTable'
+              data-page-length={10}
+            >
+              <thead>
+                <tr>
+                  <th scope='col'>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>S.L</label>
+                    </div>
+                  </th>
+                  <th scope='col'>Invoice</th>
+                  <th scope='col'>Name</th>
+                  <th scope='col'>Issued Date</th>
+                  <th scope='col' className='dt-orderable-asc dt-orderable-desc'>
+                    Amount
+                  </th>
+                  <th scope='col'>Status</th>
+                  <th scope='col'>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>01</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526534
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list1.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Kathryn Murphy
+                      </h6>
+                    </div>
+                  </td>
+                  <td>25 Jan 2024</td>
+                  <td>$200.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>02</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #696589
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list2.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Annette Black
+                      </h6>
+                    </div>
+                  </td>
+                  <td>25 Jan 2024</td>
+                  <td>$200.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>03</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #256584
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list3.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Ronald Richards
+                      </h6>
+                    </div>
+                  </td>
+                  <td>10 Feb 2024</td>
+                  <td>$200.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>04</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526587
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list4.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Eleanor Pena
+                      </h6>
+                    </div>
+                  </td>
+                  <td>10 Feb 2024</td>
+                  <td>$150.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>05</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #105986
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list5.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Leslie Alexander
+                      </h6>
+                    </div>
+                  </td>
+                  <td>15 March 2024</td>
+                  <td>$150.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-warning-focus text-warning-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Pending
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>06</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526589
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list6.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Albert Flores
+                      </h6>
+                    </div>
+                  </td>
+                  <td>15 March 2024</td>
+                  <td>$150.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>07</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526520
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list7.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Jacob Jones
+                      </h6>
+                    </div>
+                  </td>
+                  <td>27 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>08</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #256584
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list8.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Jerome Bell
+                      </h6>
+                    </div>
+                  </td>
+                  <td>27 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-warning-focus text-warning-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Pending
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>09</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #200257
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list9.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Marvin McKinney
+                      </h6>
+                    </div>
+                  </td>
+                  <td>30 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>10</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526525
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list10.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Cameron Williamson
+                      </h6>
+                    </div>
+                  </td>
+                  <td>30 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>01</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526534
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list1.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Kathryn Murphy
+                      </h6>
+                    </div>
+                  </td>
+                  <td>25 Jan 2024</td>
+                  <td>$200.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>02</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #696589
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list2.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Annette Black
+                      </h6>
+                    </div>
+                  </td>
+                  <td>25 Jan 2024</td>
+                  <td>$200.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>03</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #256584
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list3.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Ronald Richards
+                      </h6>
+                    </div>
+                  </td>
+                  <td>10 Feb 2024</td>
+                  <td>$200.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>04</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526587
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list4.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Eleanor Pena
+                      </h6>
+                    </div>
+                  </td>
+                  <td>10 Feb 2024</td>
+                  <td>$150.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>05</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #105986
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list5.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Leslie Alexander
+                      </h6>
+                    </div>
+                  </td>
+                  <td>15 March 2024</td>
+                  <td>$150.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-warning-focus text-warning-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Pending
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>06</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526589
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list6.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Albert Flores
+                      </h6>
+                    </div>
+                  </td>
+                  <td>15 March 2024</td>
+                  <td>$150.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>07</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526520
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list7.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Jacob Jones
+                      </h6>
+                    </div>
+                  </td>
+                  <td>27 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>08</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #256584
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list8.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Jerome Bell
+                      </h6>
+                    </div>
+                  </td>
+                  <td>27 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-warning-focus text-warning-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Pending
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>09</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #200257
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list9.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Marvin McKinney
+                      </h6>
+                    </div>
+                  </td>
+                  <td>30 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className='form-check style-check d-flex align-items-center'>
+                      <input className='form-check-input' type='checkbox' />
+                      <label className='form-check-label'>10</label>
+                    </div>
+                  </td>
+                  <td>
+                    <Link href='#' className='text-primary-600'>
+                      #526525
+                    </Link>
+                  </td>
+                  <td>
+                    <div className='d-flex align-items-center'>
+                      <img
+                        src='assets/images/user-list/user-list10.png'
+                        alt=''
+                        className='flex-shrink-0 me-12 radius-8'
+                      />
+                      <h6 className='text-md mb-0 fw-medium flex-grow-1'>
+                        Cameron Williamson
+                      </h6>
+                    </div>
+                  </td>
+                  <td>30 April 2024</td>
+                  <td>$250.00</td>
+                  <td>
+                    {" "}
+                    <span className='bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm'>
+                      Paid
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-primary-light text-primary-600 rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='iconamoon:eye-light' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-success-focus text-success-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='lucide:edit' />
+                    </Link>
+                    <Link
+                      href='#'
+                      className='w-32-px h-32-px me-8 bg-danger-focus text-danger-main rounded-circle d-inline-flex align-items-center justify-content-center'
+                    >
+                      <Icon icon='mingcute:delete-2-line' />
+                    </Link>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
+
+        {/* Modals */}
+        <AddHotelModal />
       </div>
     </div>
-  )
+  );
 }
