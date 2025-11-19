@@ -97,135 +97,171 @@ export default function ShowRolesModal({ showRolesModal, setShowRolesModal, depa
                                     <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                                         Permissions
                                     </label>
-                                    <div className='card border radius-8'>
-                                        <div className='card-body p-0'>
-                                            <div className='table-responsive'>
-                                                <table className='table table-hover mb-0'>
-                                                    <thead className='bg-neutral-100'>
-                                                        <tr>
-                                                            <th className='fw-semibold text-primary-light text-sm py-12 px-16 border-bottom'>
-                                                                Module
-                                                            </th>
-                                                            <th className='fw-semibold text-primary-light text-sm py-12 px-16 border-bottom text-center'>
-                                                                <div className='d-flex align-items-center justify-content-center gap-2'>
-                                                                    <div className='form-check d-flex justify-content-center align-items-center'>
-                                                                        <input
-                                                                            className='form-check-input'
-                                                                            type='checkbox'
-                                                                            id='select-all-read'
-                                                                            disabled
-                                                                        />
-                                                                    </div>
-                                                                    <span className='fw-semibold'>Read</span>
-                                                                </div>
-                                                            </th>
-                                                            <th className='fw-semibold text-primary-light text-sm py-12 px-16 border-bottom text-center'>
-                                                                <div className='d-flex align-items-center justify-content-center gap-2'>
-                                                                    <div className='form-check d-flex justify-content-center align-items-center'>
-                                                                        <input
-                                                                            className='form-check-input'
-                                                                            type='checkbox'
-                                                                            id='select-all-write'
-                                                                            disabled
-                                                                        />
-                                                                    </div>
-                                                                    <span className='fw-semibold'>Write</span>
-                                                                </div>
-                                                            </th>
-                                                            <th className='fw-semibold text-primary-light text-sm py-12 px-16 border-bottom text-center'>
-                                                                <div className='d-flex align-items-center justify-content-center gap-2'>
-                                                                    <div className='form-check d-flex justify-content-center align-items-center'>
-                                                                        <input
-                                                                            className='form-check-input'
-                                                                            type='checkbox'
-                                                                            id='select-all-both'
-                                                                            disabled
-                                                                        />
-                                                                    </div>
-                                                                    <span className='fw-semibold'>Both</span>
-                                                                </div>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {permissionsList && permissionsList.length > 0 ? (() => {
-                                                            // Group permissions: parent modules first, then their children
-                                                            const parentModules = permissionsList.filter(p => p.parent_id === 0).sort((a, b) => a.menu_order - b.menu_order);
-                                                            const childModules = permissionsList.filter(p => p.parent_id !== 0);
+                                    <div className='row g-3'>
+                                        {permissionsList && permissionsList.length > 0 ? (() => {
+                                            // Finance modules to group together
+                                            const financeModules = ['Cost Sheet', 'Quotes', 'Invoices'];
+                                            
+                                            // Group permissions: parent modules first, then their children
+                                            const allParentModules = permissionsList.filter(p => p.parent_id === 0 && p.features !== 'Dashboard').sort((a, b) => a.menu_order - b.menu_order);
+                                            
+                                            // Separate finance modules from other modules
+                                            const financeParentModules = allParentModules.filter(p => financeModules.includes(p.features));
+                                            const otherParentModules = allParentModules.filter(p => !financeModules.includes(p.features));
+                                            
+                                            const childModules = permissionsList.filter(p => p.parent_id !== 0);
 
-                                                            // Create a flat list: parent followed by its children
-                                                            const orderedList = [];
-                                                            parentModules.forEach(parent => {
-                                                                orderedList.push(parent);
-                                                                const children = childModules
-                                                                    .filter(child => child.parent_id === parent.id)
-                                                                    .sort((a, b) => a.menu_order - b.menu_order);
-                                                                orderedList.push(...children);
-                                                            });
+                                            // Create Finance card if finance modules exist
+                                            const financeCard = financeParentModules.length > 0 ? (
+                                                <div key="finance" className='col-12 col-md-6 col-lg-4'>
+                                                    <div className='card border radius-8 h-100'>
+                                                        <div className='card-body p-16'>
+                                                            {/* Finance Header */}
+                                                            <div className='d-flex align-items-center justify-content-between mb-3 border-bottom pb-12'>
+                                                                <h6 className='fw-bold text-primary-light text-sm mb-0'>
+                                                                    Finance
+                                                                </h6>
+                                                            </div>
+                                                            
+                                                            {/* Finance Modules as Children */}
+                                                            <div className='d-flex flex-column gap-2 mt-3' style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                                                                {financeParentModules.map((financeModule) => (
+                                                                    <div key={financeModule.id} className='d-flex align-items-center justify-content-between py-8 px-12 bg-neutral-50 radius-8'>
+                                                                        <span className='text-sm text-secondary-light'>
+                                                                            {financeModule.features}
+                                                                        </span>
+                                                                        <div className='d-flex align-items-center gap-2'>
+                                                                            <div className='d-flex align-items-center gap-1'>
+                                                                                <div className='d-flex justify-content-center align-items-center'>
+                                                                                    <Icon 
+                                                                                        icon="solar:check-circle-bold" 
+                                                                                        className="text-primary-600"
+                                                                                        width="14"
+                                                                                        height="14"
+                                                                                    />
+                                                                                </div>
+                                                                                <span className='text-xs text-secondary-light'>R</span>
+                                                                            </div>
+                                                                            <div className='d-flex align-items-center gap-1'>
+                                                                                <div className='d-flex justify-content-center align-items-center'>
+                                                                                    <Icon 
+                                                                                        icon="solar:check-circle-bold" 
+                                                                                        className="text-primary-600"
+                                                                                        width="14"
+                                                                                        height="14"
+                                                                                    />
+                                                                                </div>
+                                                                                <span className='text-xs text-secondary-light'>W</span>
+                                                                            </div>
+                                                                            <div className='d-flex align-items-center gap-1'>
+                                                                                <div className='d-flex justify-content-center align-items-center'>
+                                                                                    <Icon 
+                                                                                        icon="solar:check-circle-bold" 
+                                                                                        className="text-primary-600"
+                                                                                        width="14"
+                                                                                        height="14"
+                                                                                    />
+                                                                                </div>
+                                                                                <span className='text-xs text-secondary-light'>B</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : null;
 
-                                                            return orderedList.map((permission) => {
-                                                                const isParentModule = permission.parent_id === 0;
-                                                                // Modules that should have checkboxes even if they are parent modules
-                                                                const modulesWithCheckboxes = ['Dashboard', 'Cost Sheet', 'Quotes', 'Invoices'];
-                                                                const shouldShowCheckboxes = !isParentModule || modulesWithCheckboxes.includes(permission.features);
+                                            // Map other parent modules
+                                            const otherCards = otherParentModules.map((parent) => {
+                                                const children = childModules
+                                                    .filter(child => child.parent_id === parent.id)
+                                                    .sort((a, b) => a.menu_order - b.menu_order);
 
-                                                                return (
-                                                                    <tr key={permission.id} className='border-bottom'>
-                                                                        <td className='py-12 px-16'>
-                                                                            <span className={`text-sm ${isParentModule ? 'fw-bold text-primary-light' : 'text-secondary-light'}`} style={!isParentModule ? { paddingLeft: '16px' } : {}}>
-                                                                                {permission.features}
-                                                                            </span>
-                                                                        </td>
-                                                                        {shouldShowCheckboxes ? (
-                                                                            <>
-                                                                                <td className='py-12 px-16 text-center'>
-                                                                                    <div className='form-check d-flex justify-content-center align-items-center'>
-                                                                                        <input
-                                                                                            className='form-check-input'
-                                                                                            type='checkbox'
-                                                                                            id={`read-${permission.id}`}
-                                                                                            disabled
-                                                                                        />
+                                                // Cards that should not have scrolling
+                                                const noScrollCards = ['Masters', 'Setting'];
+                                                const shouldHaveScroll = !noScrollCards.includes(parent.features);
+
+                                                return (
+                                                    <div key={parent.id} className='col-12 col-md-6 col-lg-4'>
+                                                        <div className='card border radius-8 h-100'>
+                                                            <div className='card-body p-16'>
+                                                                {/* Parent Module Header */}
+                                                                <div className={`d-flex align-items-center justify-content-between mb-3 ${children.length > 0 ? 'border-bottom pb-12' : ''}`}>
+                                                                    <h6 className='fw-bold text-primary-light text-sm mb-0'>
+                                                                        {parent.features}
+                                                                    </h6>
+                                                                </div>
+                                                                
+                                                                {/* Child Modules */}
+                                                                {children.length > 0 && (
+                                                                    <div className='d-flex flex-column gap-2 mt-3' style={shouldHaveScroll ? { maxHeight: '300px', overflowY: 'auto' } : {}}>
+                                                                        {children.map((child) => (
+                                                                            <div key={child.id} className='d-flex align-items-center justify-content-between py-8 px-12 bg-neutral-50 radius-8'>
+                                                                                <span className='text-sm text-secondary-light'>
+                                                                                    {child.features}
+                                                                                </span>
+                                                                                <div className='d-flex align-items-center gap-2'>
+                                                                                    <div className='d-flex align-items-center gap-1'>
+                                                                                        <div className='d-flex justify-content-center align-items-center'>
+                                                                                            <Icon 
+                                                                                                icon="solar:check-circle-bold" 
+                                                                                                className="text-primary-600"
+                                                                                                width="14"
+                                                                                                height="14"
+                                                                                            />
+                                                                                        </div>
+                                                                                        <span className='text-xs text-secondary-light'>R</span>
                                                                                     </div>
-                                                                                </td>
-                                                                                <td className='py-12 px-16 text-center'>
-                                                                                    <div className='form-check d-flex justify-content-center align-items-center'>
-                                                                                        <input
-                                                                                            className='form-check-input'
-                                                                                            type='checkbox'
-                                                                                            id={`write-${permission.id}`}
-                                                                                            disabled
-                                                                                        />
+                                                                                    <div className='d-flex align-items-center gap-1'>
+                                                                                        <div className='d-flex justify-content-center align-items-center'>
+                                                                                            <Icon 
+                                                                                                icon="solar:check-circle-bold" 
+                                                                                                className="text-primary-600"
+                                                                                                width="14"
+                                                                                                height="14"
+                                                                                            />
+                                                                                        </div>
+                                                                                        <span className='text-xs text-secondary-light'>W</span>
                                                                                     </div>
-                                                                                </td>
-                                                                                <td className='py-12 px-16 text-center'>
-                                                                                    <div className='form-check d-flex justify-content-center align-items-center'>
-                                                                                        <input
-                                                                                            className='form-check-input'
-                                                                                            type='checkbox'
-                                                                                            id={`both-${permission.id}`}
-                                                                                            checked
-                                                                                        />
+                                                                                    <div className='d-flex align-items-center gap-1'>
+                                                                                        <div className='d-flex justify-content-center align-items-center'>
+                                                                                            <Icon 
+                                                                                                icon="solar:check-circle-bold" 
+                                                                                                className="text-primary-600"
+                                                                                                width="14"
+                                                                                                height="14"
+                                                                                            />
+                                                                                        </div>
+                                                                                        <span className='text-xs text-secondary-light'>B</span>
                                                                                     </div>
-                                                                                </td>
-                                                                            </>
-                                                                        ) : (
-                                                                            <td colSpan={3} className='py-12 px-16'></td>
-                                                                        )}
-                                                                    </tr>
-                                                                );
-                                                            });
-                                                        })() : (
-                                                            <tr>
-                                                                <td colSpan={4} className='py-12 px-16 text-center text-secondary-light'>
-                                                                    No permissions available
-                                                                </td>
-                                                            </tr>
-                                                        )}
-                                                    </tbody>
-                                                </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            });
+
+                                            return (
+                                                <>
+                                                    {financeCard}
+                                                    {otherCards}
+                                                </>
+                                            );
+                                        })() : (
+                                            <div className='col-12'>
+                                                <div className='card border radius-8'>
+                                                    <div className='card-body p-24 text-center'>
+                                                        <span className='text-secondary-light'>No permissions available</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
                                 </div>
 
