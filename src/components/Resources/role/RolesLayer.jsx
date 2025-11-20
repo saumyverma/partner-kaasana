@@ -9,6 +9,7 @@ export default function RolesLayer() {
   const [search, setSearch] = useState('');
   const [showRolesModal, setShowRolesModal] = useState(false);
   const [showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal] = useState(false);
+  const [addAndUpadeType, setAddAndUpadeType] = useState('add');
   const [departmentsList, setDepartmentsList] = useState( [
     { "value": "1", "label": "Accounting & Finance" },
     { "value": "2", "label": "Administrative" },
@@ -748,7 +749,7 @@ const [permissionsList, setPermissionsList] = useState([
     <>
       {showRolesModal && <ShowRolesModal showRolesModal={showRolesModal} setShowRolesModal={setShowRolesModal} departmentsList={departmentsList} jobRolesList={jobRolesList} permissionsList={permissionsList} />}
 
-      {showAddAndUpdateRolesModal && <AddAndUpdateRolesModal showAddAndUpdateRolesModal={showAddAndUpdateRolesModal} setShowAddAndUpdateRolesModal={setShowAddAndUpdateRolesModal} departments={departmentsList} jobRoles={jobRolesList} permissionsList={permissionsList} />}
+      {showAddAndUpdateRolesModal && <AddAndUpdateRolesModal showAddAndUpdateRolesModal={showAddAndUpdateRolesModal} setShowAddAndUpdateRolesModal={setShowAddAndUpdateRolesModal} departments={departmentsList} jobRoles={jobRolesList} permissionsList={permissionsList} addAndUpadeType={addAndUpadeType} />}
 
       
       <div className='card h-100 p-0 radius-12'>
@@ -768,7 +769,7 @@ const [permissionsList, setPermissionsList] = useState([
           <button
             type='button'
             className='btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2'
-           onClick={() => setShowAddAndUpdateRolesModal(true)}
+           onClick={() =>{setAddAndUpadeType('add'); setShowAddAndUpdateRolesModal(true)}}
           >
             <Icon
               icon='ic:baseline-plus'
@@ -847,7 +848,7 @@ const [permissionsList, setPermissionsList] = useState([
                       <button
                         type='button'
                         className='bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle'
-                        onClick={() => setShowAddAndUpdateRolesModal(true)}
+                        onClick={() => {setAddAndUpadeType('update'); setShowAddAndUpdateRolesModal(true)}}
                       >
                         <Icon icon='lucide:edit' className='menu-icon' />
                       </button>

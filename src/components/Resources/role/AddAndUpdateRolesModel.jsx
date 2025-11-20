@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import styles from './AddAndUpdateRoles.module.css';
 import AddDepartmentAndRoleModal from './AddDepartmentAndRole';
 
-export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal, departments, jobRoles, permissionsList }) {
+export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal, departments, jobRoles, permissionsList, addAndUpadeType }) {
     const [showAddDepartmentAndRoleModal, setShowAddDepartmentAndRoleModal] = useState(false);
     const [type, setType] = useState('Department');
     const [isDepartmentDropdownOpen, setIsDepartmentDropdownOpen] = useState(false);
@@ -156,7 +156,7 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
             >
                 <div className={styles.modalHeader}>
                     <h1  className="modal-title fs-5" id='AddAndUpdateRoles'>
-                        Add New Role
+                        {addAndUpadeType === 'add' ? 'Add New Role' : 'Update Role'}
                     </h1>
                     <button
                         type='button'
@@ -388,7 +388,7 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
                                     type='submit'
                                     className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
                                 >
-                                    Save
+                                    {addAndUpadeType === 'add' ? 'Add Role' : 'Update Role'}
                                 </button>
                             </div>
                         </div>
