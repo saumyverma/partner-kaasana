@@ -259,46 +259,20 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
                                     type='text'
                                     className='form-control radius-8'
                                     placeholder='Enter Job Title'
-                                    defaultValue="Marketing"
+                                   
                                 />
                             </div>
+                            
                             <div className='col-12 mb-20'>
-                                <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                                    Status{" "}
-                                </label>
-                                <div className='d-flex align-items-center flex-wrap gap-28'>
-                                    <div className='form-check checked-success d-flex align-items-center gap-2'>
-                                        <input
-                                            className='form-check-input'
-                                            type='radio'
-                                            name='label'
-                                            id='Personal'
-                                        />
-                                        <label
-                                            className='form-check-label line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-1'
-                                            htmlFor='Personal'
-                                        >
-                                            <span className='w-8-px h-8-px bg-success-600 rounded-circle' />
-                                            Active
-                                        </label>
+                                {permissionsList.map((permission) => (
+                                    <div key={permission.value}>
+                                        <input type='checkbox' name={permission.value} id={permission.value} />
+                                        <label htmlFor={permission.value}>{permission.label}</label>
                                     </div>
-                                    <div className='form-check checked-danger d-flex align-items-center gap-2'>
-                                        <input
-                                            className='form-check-input'
-                                            type='radio'
-                                            name='label'
-                                            id='Holiday'
-                                        />
-                                        <label
-                                            className='form-check-label line-height-1 fw-medium text-secondary-light text-sm d-flex align-items-center gap-1'
-                                            htmlFor='Holiday'
-                                        >
-                                            <span className='w-8-px h-8-px bg-danger-600 rounded-circle' />
-                                            Inactive
-                                        </label>
-                                    </div>
-                                </div>
+                               ))} 
                             </div>
+
+
                             <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
                                 <button
                                     type='button'
