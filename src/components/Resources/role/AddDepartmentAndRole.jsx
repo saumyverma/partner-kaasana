@@ -31,7 +31,7 @@ export default function AddDepartmentAndRoleModal({ type, showAddDepartmentAndRo
             >
                 <div className={styles.modalHeader}>
                     <h1  className="modal-title fs-5" id='AddDepartmentAndRole'>
-                        Add Department and Role
+                        {type === 'Department' ? 'Add Department' : 'Add Job Role'}
                     </h1>
                     <button
                         type='button'
@@ -46,7 +46,7 @@ export default function AddDepartmentAndRoleModal({ type, showAddDepartmentAndRo
                     <form action='#' onSubmit={(e) => { e.preventDefault(); handleClose(); }}>
                         <div className='row'>
                             {type === 'Department' && (
-                            <div className='col-4 mb-20'>
+                            <div className='col-12 mb-20'>
                                 <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                                     Department
                                 </label>
@@ -54,12 +54,12 @@ export default function AddDepartmentAndRoleModal({ type, showAddDepartmentAndRo
                                     type='text'
                                     className='form-control radius-8'
                                     placeholder='Enter Department'
-                                    defaultValue="Marketing"
+                                 
                                 />
                             </div>
                             )}
                             {type === 'Job Role' && (
-                            <div className='col-4 mb-20'>
+                            <div className='col-12 mb-20'>
                                 <label
                                     htmlFor='desc'
                                     className='form-label fw-semibold text-primary-light text-sm mb-8'
@@ -70,7 +70,7 @@ export default function AddDepartmentAndRoleModal({ type, showAddDepartmentAndRo
                                     type='text'
                                     className='form-control radius-8'
                                     placeholder='Enter Job Roles'
-                                    defaultValue="Admin"
+                                  
                                 />
                             </div>
                             )}

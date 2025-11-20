@@ -748,7 +748,7 @@ const [permissionsList, setPermissionsList] = useState([
     <>
       {showRolesModal && <ShowRolesModal showRolesModal={showRolesModal} setShowRolesModal={setShowRolesModal} departmentsList={departmentsList} jobRolesList={jobRolesList} permissionsList={permissionsList} />}
 
-      {showAddAndUpdateRolesModal && <AddAndUpdateRolesModal showAddAndUpdateRolesModal={showAddAndUpdateRolesModal} setShowAddAndUpdateRolesModal={setShowAddAndUpdateRolesModal} departments={departmentsList} jobRoles={jobRolesList} />}
+      {showAddAndUpdateRolesModal && <AddAndUpdateRolesModal showAddAndUpdateRolesModal={showAddAndUpdateRolesModal} setShowAddAndUpdateRolesModal={setShowAddAndUpdateRolesModal} departments={departmentsList} jobRoles={jobRolesList} permissionsList={permissionsList} />}
 
       
       <div className='card h-100 p-0 radius-12'>

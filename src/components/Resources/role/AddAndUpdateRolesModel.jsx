@@ -4,13 +4,17 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import styles from './AddAndUpdateRoles.module.css';
 import AddDepartmentAndRoleModal from './AddDepartmentAndRole';
 
-export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal, departments, jobRoles }) {
+export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal, departments, jobRoles, permissionsList }) {
     const [showAddDepartmentAndRoleModal, setShowAddDepartmentAndRoleModal] = useState(false);
     const [type, setType] = useState('Department');
     const [isDepartmentDropdownOpen, setIsDepartmentDropdownOpen] = useState(false);
     const [departmentSearchTerm, setDepartmentSearchTerm] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState(null);
     const departmentDropdownRef = useRef(null);
+    const [isJobRoleDropdownOpen, setIsJobRoleDropdownOpen] = useState(false);
+    const [jobRoleSearchTerm, setJobRoleSearchTerm] = useState('');
+    const [selectedJobRole, setSelectedJobRole] = useState(null);
+    const jobRoleDropdownRef = useRef(null);
 
 
     if (!showAddAndUpdateRolesModal) return null;
@@ -35,6 +39,11 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
                 setIsDepartmentDropdownOpen(false);
                 setDepartmentSearchTerm('');
             }
+            
+            if (jobRoleDropdownRef.current && !jobRoleDropdownRef.current.contains(event.target)) {
+                setIsJobRoleDropdownOpen(false);
+                setJobRoleSearchTerm('');
+            }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
@@ -48,16 +57,34 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
         department.label.toLowerCase().includes(departmentSearchTerm.toLowerCase())
     ) || [];
 
+    // Filter job roles based on search term
+    const filteredJobRoles = jobRoles?.filter((jobRole) =>
+        jobRole.label.toLowerCase().includes(jobRoleSearchTerm.toLowerCase())
+    ) || [];
+
     const handleDepartmentSelect = (department) => {
         setSelectedDepartment(department);
         setIsDepartmentDropdownOpen(false);
         setDepartmentSearchTerm('');
     };
 
+    const handleJobRoleSelect = (jobRole) => {
+        setSelectedJobRole(jobRole);
+        setIsJobRoleDropdownOpen(false);
+        setJobRoleSearchTerm('');
+    };
+
     const handleAddNewDepartment = () => {
         setType('Department');
         setIsDepartmentDropdownOpen(false);
         setDepartmentSearchTerm('');
+        setShowAddDepartmentAndRoleModal(true);
+    };
+
+    const handleAddNewJobRole = () => {
+        setType('Job Role');
+        setIsJobRoleDropdownOpen(false);
+        setJobRoleSearchTerm('');
         setShowAddDepartmentAndRoleModal(true);
     };
 
@@ -164,15 +191,62 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
                                 >
                                     Job Roles
                                 </label>
-                                <select
-                                    className="form-control radius-8 form-select"
-                                    id="jobRoles"
-                                    defaultValue="Admin"
-                                >
-                                    {jobRoles && jobRoles.map((jobRole) => (
-                                        <option key={jobRole.value} value={jobRole.value}>{jobRole.label}</option>
-                                    ))}
-                                </select>
+                                <div className={styles.dropdownContainer} ref={jobRoleDropdownRef}>
+                                    <button
+                                        type="button"
+                                        className={`form-control radius-8 ${styles.dropdownButton}`}
+                                        onClick={() => setIsJobRoleDropdownOpen(!isJobRoleDropdownOpen)}
+                                    >
+                                        <span className={selectedJobRole ? '' : 'text-secondary-light'}>
+                                            {selectedJobRole ? selectedJobRole.label : 'Select Job Role'}
+                                        </span>
+                                        <Icon 
+                                            icon={isJobRoleDropdownOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'} 
+                                            className="text-secondary-light"
+                                        />
+                                    </button>
+                                    {isJobRoleDropdownOpen && (
+                                        <div className={styles.dropdownMenu}>
+                                            <input
+                                                type="text"
+                                                className={styles.dropdownSearch}
+                                                placeholder="Search job roles..."
+                                                value={jobRoleSearchTerm}
+                                                onChange={(e) => setJobRoleSearchTerm(e.target.value)}
+                                                autoFocus
+                                            />
+                                            <div className={styles.dropdownList}>
+                                                {filteredJobRoles.length > 0 ? (
+                                                    filteredJobRoles.map((jobRole) => (
+                                                        <div
+                                                            key={jobRole.value}
+                                                            className={styles.dropdownItem}
+                                                            onClick={() => handleJobRoleSelect(jobRole)}
+                                                        >
+                                                            {jobRole.label}
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className={styles.dropdownNoResults}>
+                                                        No job roles found
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div
+                                                className={styles.dropdownAddNew}
+                                                onClick={handleAddNewJobRole}
+                                            >
+                                                <Icon icon="ic:baseline-plus" className={styles.addIcon} />
+                                                Add new job role
+                                            </div>
+                                        </div>
+                                    )}
+                                    <input
+                                        type="hidden"
+                                        name="jobRole"
+                                        value={selectedJobRole?.value || ''}
+                                    />
+                                </div>
                             </div>
                             <div className='col-4 mb-20'>
                                 <label
