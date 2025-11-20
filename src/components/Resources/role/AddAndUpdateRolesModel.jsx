@@ -15,6 +15,7 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
     const [jobRoleSearchTerm, setJobRoleSearchTerm] = useState('');
     const [selectedJobRole, setSelectedJobRole] = useState(null);
     const jobRoleDropdownRef = useRef(null);
+    const [permissions, setPermissions] = useState({});
 
 
     if (!showAddAndUpdateRolesModal) return null;
@@ -86,6 +87,52 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
         setIsJobRoleDropdownOpen(false);
         setJobRoleSearchTerm('');
         setShowAddDepartmentAndRoleModal(true);
+    };
+
+    // Group permissions by parent categories
+    const groupedPermissions = React.useMemo(() => {
+        if (!permissionsList || permissionsList.length === 0) return {};
+        
+        const parents = permissionsList.filter(p => p.parent_id === 0);
+        const children = permissionsList.filter(p => p.parent_id !== 0);
+        
+        // Create Finance category (Cost Sheet, Quotes, Invoices)
+        const financeItems = [
+            permissionsList.find(p => p.features === 'Cost Sheet'),
+            permissionsList.find(p => p.features === 'Quotes'),
+            permissionsList.find(p => p.features === 'Invoices')
+        ].filter(Boolean);
+
+        const groups = {};
+        
+        // Add Finance category
+        if (financeItems.length > 0) {
+            groups['Finance'] = financeItems;
+        }
+
+        // Group other categories by parent
+        parents.forEach(parent => {
+            const categoryName = parent.features;
+            if (categoryName !== 'Dashboard' && categoryName !== 'Cost Sheet' && categoryName !== 'Quotes' && categoryName !== 'Invoices') {
+                const childItems = children.filter(child => child.parent_id === parent.id);
+                if (childItems.length > 0) {
+                    // Sort by menu_order
+                    childItems.sort((a, b) => a.menu_order - b.menu_order);
+                    groups[categoryName] = childItems;
+                }
+            }
+        });
+
+        return groups;
+    }, [permissionsList]);
+
+    // Handle permission checkbox change
+    const handlePermissionChange = (featureId, permissionType) => {
+        const key = `${featureId}_${permissionType}`;
+        setPermissions(prev => ({
+            ...prev,
+            [key]: !prev[key]
+        }));
     };
 
     return (
@@ -262,14 +309,70 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
                                    
                                 />
                             </div>
-                            
+
                             <div className='col-12 mb-20'>
-                                {permissionsList.map((permission) => (
-                                    <div key={permission.value}>
-                                        <input type='checkbox' name={permission.value} id={permission.value} />
-                                        <label htmlFor={permission.value}>{permission.label}</label>
-                                    </div>
-                               ))} 
+                                <label
+                                    htmlFor='permissions'
+                                    className='form-label fw-semibold text-primary-light text-sm mb-8'
+                                >
+                                    Permissions
+                                </label>
+                                <div className='row g-3'>
+                                    {Object.entries(groupedPermissions).map(([categoryName, items]) => (
+                                        <div key={categoryName} className='col-12 col-md-6 col-lg-4'>
+                                            <div className="card border radius-8 h-100">
+                                                <div className="card-body p-16">
+                                                    <div className='d-flex align-items-center justify-content-between mb-3 border-bottom pb-12'>
+                                                        <h6 className='fw-bold text-primary-light text-sm mb-0'>{categoryName}</h6>
+                                                    </div>
+                                                    <div className='d-flex flex-column gap-2 mt-3' style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                                        {items.map((item) => {
+                                                            const featureId = item.id;
+                                                            const readKey = `${featureId}_R`;
+                                                            const writeKey = `${featureId}_W`;
+                                                            const blockKey = `${featureId}_B`;
+                                                            
+                                                            return (
+                                                                <div key={item.id} className='d-flex align-items-center justify-content-between py-8 px-12 bg-neutral-50 radius-8'>
+                                                                    <span className='text-sm text-secondary-light'>{item.features}</span>
+                                                                    <div className={styles.permissionCheckboxes}>
+                                                                        <label className={styles.permissionCheckbox}>
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                checked={permissions[readKey] || false}
+                                                                                onChange={() => handlePermissionChange(featureId, 'R')}
+                                                                                name={`${featureId}_R`}
+                                                                            />
+                                                                            <span className={styles.checkboxLabel}>R</span>
+                                                                        </label>
+                                                                        <label className={styles.permissionCheckbox}>
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                checked={permissions[writeKey] || false}
+                                                                                onChange={() => handlePermissionChange(featureId, 'W')}
+                                                                                name={`${featureId}_W`}
+                                                                            />
+                                                                            <span className={styles.checkboxLabel}>W</span>
+                                                                        </label>
+                                                                        <label className={styles.permissionCheckbox}>
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                checked={permissions[blockKey] || false}
+                                                                                onChange={() => handlePermissionChange(featureId, 'B')}
+                                                                                name={`${featureId}_B`}
+                                                                            />
+                                                                            <span className={styles.checkboxLabel}>B</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
 
