@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Icon } from "@iconify/react/dist/iconify.js";
 import styles from './AddAndUpdateRoles.module.css';
 import AddDepartmentAndRoleModal from './AddDepartmentAndRole';
@@ -7,6 +7,10 @@ import AddDepartmentAndRoleModal from './AddDepartmentAndRole';
 export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal, departments, jobRoles }) {
     const [showAddDepartmentAndRoleModal, setShowAddDepartmentAndRoleModal] = useState(false);
     const [type, setType] = useState('Department');
+    const [isDepartmentDropdownOpen, setIsDepartmentDropdownOpen] = useState(false);
+    const [departmentSearchTerm, setDepartmentSearchTerm] = useState('');
+    const [selectedDepartment, setSelectedDepartment] = useState(null);
+    const departmentDropdownRef = useRef(null);
 
 
     if (!showAddAndUpdateRolesModal) return null;
@@ -15,9 +19,46 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
         setShowAddAndUpdateRolesModal(false);
      };
      const handleBackdropClick = (e) => {
-        if (e.target === e.currentTarget) {
+        // Only close if the child modal is not open
+        if (e.target === e.currentTarget && !showAddDepartmentAndRoleModal) {
             handleClose();
         }
+    };
+
+    // Handle click outside department dropdown
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Don't close dropdown if child modal is open
+            if (showAddDepartmentAndRoleModal) return;
+            
+            if (departmentDropdownRef.current && !departmentDropdownRef.current.contains(event.target)) {
+                setIsDepartmentDropdownOpen(false);
+                setDepartmentSearchTerm('');
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showAddDepartmentAndRoleModal]);
+
+    // Filter departments based on search term
+    const filteredDepartments = departments?.filter((department) =>
+        department.label.toLowerCase().includes(departmentSearchTerm.toLowerCase())
+    ) || [];
+
+    const handleDepartmentSelect = (department) => {
+        setSelectedDepartment(department);
+        setIsDepartmentDropdownOpen(false);
+        setDepartmentSearchTerm('');
+    };
+
+    const handleAddNewDepartment = () => {
+        setType('Department');
+        setIsDepartmentDropdownOpen(false);
+        setDepartmentSearchTerm('');
+        setShowAddDepartmentAndRoleModal(true);
     };
 
     return (
@@ -27,7 +68,12 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
        
         <div
             className={styles.modalOverlay}
-            onClick={handleBackdropClick}
+            onClick={(e) => {
+                // Prevent closing parent modal when child modal is open
+                if (!showAddDepartmentAndRoleModal) {
+                    handleBackdropClick(e);
+                }
+            }}
         >
             {/* Modal Content */}
             <div
@@ -54,15 +100,62 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
                                 <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                                     Department
                                 </label>
-                                <select
-                                    className="form-control radius-8 form-select"
-                                    id="department"
-                                  defaultValue="1"
-                                >
-                                    {departments && departments.map((department) => (
-                                        <option key={department.value} value={department.value}>{department.label}</option>
-                                    ))}
-                                </select>
+                                <div className={styles.dropdownContainer} ref={departmentDropdownRef}>
+                                    <button
+                                        type="button"
+                                        className={`form-control radius-8 ${styles.dropdownButton}`}
+                                        onClick={() => setIsDepartmentDropdownOpen(!isDepartmentDropdownOpen)}
+                                    >
+                                        <span className={selectedDepartment ? '' : 'text-secondary-light'}>
+                                            {selectedDepartment ? selectedDepartment.label : 'Select Department'}
+                                        </span>
+                                        <Icon 
+                                            icon={isDepartmentDropdownOpen ? 'mdi:chevron-up' : 'mdi:chevron-down'} 
+                                            className="text-secondary-light"
+                                        />
+                                    </button>
+                                    {isDepartmentDropdownOpen && (
+                                        <div className={styles.dropdownMenu}>
+                                            <input
+                                                type="text"
+                                                className={styles.dropdownSearch}
+                                                placeholder="Search departments..."
+                                                value={departmentSearchTerm}
+                                                onChange={(e) => setDepartmentSearchTerm(e.target.value)}
+                                                autoFocus
+                                            />
+                                            <div className={styles.dropdownList}>
+                                                {filteredDepartments.length > 0 ? (
+                                                    filteredDepartments.map((department) => (
+                                                        <div
+                                                            key={department.value}
+                                                            className={styles.dropdownItem}
+                                                            onClick={() => handleDepartmentSelect(department)}
+                                                        >
+                                                            {department.label}
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className={styles.dropdownNoResults}>
+                                                        No departments found
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div
+                                                className={styles.dropdownAddNew}
+                                                onClick={handleAddNewDepartment}
+                                            >
+                                                <Icon icon="ic:baseline-plus" className={styles.addIcon} />
+                                                Add new department
+                                            </div>
+                                        </div>
+                                    )}
+                                    <input
+                                        type="hidden"
+                                        name="department"
+                                        value={selectedDepartment?.value || ''}
+                                    />
+                                </div>
                             </div>
                             <div className='col-4 mb-20'>
                                 <label

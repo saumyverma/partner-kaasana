@@ -18,13 +18,16 @@ export default function AddDepartmentAndRoleModal({ type, showAddDepartmentAndRo
 
     return (
         <div
-            className={styles.modalOverlay}
-             onClick={handleBackdropClick}
+            className={styles.modalOverlayNested}
+            onClick={(e) => {
+                e.stopPropagation();
+                handleBackdropClick(e);
+            }}
         >
             {/* Modal Content */}
             <div
-                className={styles.modalContent}
-                 onClick={(e) => e.stopPropagation()}
+                className={styles.modalContentChild}
+                onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.modalHeader}>
                     <h1  className="modal-title fs-5" id='AddDepartmentAndRole'>
