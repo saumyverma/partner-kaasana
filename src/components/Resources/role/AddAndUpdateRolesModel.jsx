@@ -1,10 +1,14 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Icon } from "@iconify/react/dist/iconify.js";
 import styles from './AddAndUpdateRoles.module.css';
+import AddDepartmentAndRoleModal from './AddDepartmentAndRole';
 
 export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, setShowAddAndUpdateRolesModal, departments, jobRoles }) {
-    
+    const [showAddDepartmentAndRoleModal, setShowAddDepartmentAndRoleModal] = useState(false);
+    const [type, setType] = useState('Department');
+
+
     if (!showAddAndUpdateRolesModal) return null;
 
      const handleClose = () => {
@@ -17,6 +21,10 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
     };
 
     return (
+        <>
+        {showAddDepartmentAndRoleModal && 
+        <AddDepartmentAndRoleModal type={type} showAddDepartmentAndRoleModal={showAddDepartmentAndRoleModal} setShowAddDepartmentAndRoleModal={setShowAddDepartmentAndRoleModal} />}
+       
         <div
             className={styles.modalOverlay}
             onClick={handleBackdropClick}
@@ -144,5 +152,6 @@ export default function AddAndUpdateRolesModal({ showAddAndUpdateRolesModal, set
                 </div>
             </div>
         </div>
+        </> 
     );
 }
