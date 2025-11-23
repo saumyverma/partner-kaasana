@@ -7,10 +7,12 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import TermsAndConditionsModal from "./modal/TermsAndConditionsModal";
 import { api } from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 const SignUpLayer = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
    const dispatch = useDispatch();
+   const router = useRouter();
    const { isAuthenticated, user } = useSelector((state) => state.auth);
    const [showPassword, setShowPassword] = useState(false);
    const password = watch("password") || "";
@@ -26,12 +28,15 @@ const SignUpLayer = () => {
       console.log("SignUp clicked");
       console.log("data",data);
       const tokenCaptcha="kjdfhdsfsdkjfsdf";
-      const formData = { firstName:data.firstName, lastName:data.lastName, email:data.email, password:data.password, tokenCaptcha };
+      
+      const formData = { firstName:data.firstName, lastName:data.lastName, email:data.email, password:data.password,terms: data.termsAndConditions? 1:0, tokenCaptcha };
      try {
-        const res = await api.post("auth/signup", formData);
-        console.log("res",res);
+        const res = await api.post("auth/signup", formData,{},{showLoader:true ,showToast:true});
+        // console.log("res",res);
+        console.log("res.status",res.status);
         if(res.status==="success"){
-           router.push("/sign-in");
+          console.log("res.data",res.data);
+          //  router.push("/sign-in");
         }
       } catch (err) {
         console.log("err",err);

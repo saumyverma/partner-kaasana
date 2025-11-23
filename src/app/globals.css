@@ -17,3 +17,23 @@
 @import url("~/public/assets/css/lib/animate.min.css");
 @import url("~/public/assets/css/style.css");
 @import url("~/public/assets/css/extra.css");
+
+/* Toast Notification Custom Styles */
+.Toastify__toast--error {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+  border-left: 4px solid #c82333 !important;
+}
+
+.Toastify__toast--error .Toastify__toast-icon {
+  color: #fff !important;
+}
+
+.Toastify__toast--error .Toastify__close-button {
+  color: #fff !important;
+  opacity: 0.8;
+}
+
+.Toastify__toast--error .Toastify__close-button:hover {
+  opacity: 1;
+}

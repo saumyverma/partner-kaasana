@@ -8,7 +8,10 @@ const API_BASE_URL =
  * Core request function
  */
 async function request(url, method = "GET", data = null, customHeaders = {},options = {}) {
-  const { showLoader = true, successMessage = null } = options
+  console.log("options",options);
+  const { showLoader , showToast  } = options
+  console.log("showLoader",showLoader);
+  console.log("showToast",showToast);
   try {
      if (showLoader) loaderRef.show();
     // ✅ token handling (after login)
@@ -26,6 +29,7 @@ async function request(url, method = "GET", data = null, customHeaders = {},opti
     if (data) options.body = JSON.stringify(data);
 
     const res = await fetch(`${API_BASE_URL}${url}`, options);
+    // console.log("res=========>",await res.json());
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
@@ -33,8 +37,13 @@ async function request(url, method = "GET", data = null, customHeaders = {},opti
       // toast.error(msg); // ❌ Show error toast
       throw new Error(msg)
     }
+    const responseData = await res.json();
+     console.log(showToast)
+      if(showToast){
+        toast.success( responseData?.message || "Operation successful");
+      }
 
-    return res.json();
+      return responseData;
   } catch (err) {
     console.error("API Error:", err.message);
     toast.error(err?.message);
