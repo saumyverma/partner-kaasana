@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const AddTransportationModal = () => {
   const [formData, setFormData] = useState({
@@ -16,26 +16,10 @@ const AddTransportationModal = () => {
     supplierId: "",
   });
 
-  const handleClose = () => {
-    const modalElement = document.getElementById('addTransportationModal');
-    if (modalElement) {
-      if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
-        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
-        modal.hide();
-      } else {
-        // Manual cleanup
-        modalElement.classList.remove('show');
-        modalElement.style.display = 'none';
-        modalElement.setAttribute('aria-hidden', 'true');
-        modalElement.setAttribute('aria-modal', 'false');
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
-      }
-    }
-    // Reset form
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission here
+    // Reset form after submission
     setFormData({
       vehicleType: "",
       vehicleCode: "",
@@ -49,46 +33,6 @@ const AddTransportationModal = () => {
     });
   };
 
-  // Listen for Bootstrap modal events to handle cleanup
-  useEffect(() => {
-    const modalElement = document.getElementById('addTransportationModal');
-    if (modalElement) {
-      const cleanupBackdrop = () => {
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        const specificBackdrop = document.getElementById('addTransportationModalBackdrop');
-        if (specificBackdrop) {
-          specificBackdrop.remove();
-        }
-      };
-
-      const handleHide = () => {
-        cleanupBackdrop();
-      };
-
-      const handleHidden = () => {
-        cleanupBackdrop();
-      };
-
-      modalElement.addEventListener('hide.bs.modal', handleHide);
-      modalElement.addEventListener('hidden.bs.modal', handleHidden);
-
-      return () => {
-        modalElement.removeEventListener('hide.bs.modal', handleHide);
-        modalElement.removeEventListener('hidden.bs.modal', handleHidden);
-      };
-    }
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission here
-    handleClose();
-  };
-
   return (
     <div
       className='modal fade'
@@ -96,17 +40,9 @@ const AddTransportationModal = () => {
       tabIndex={-1}
       aria-labelledby='addTransportationModalLabel'
       aria-hidden='true'
-      onClick={(e) => {
-        if (e.target.id === 'addTransportationModal') {
-          handleClose();
-        }
-      }}
     >
       <div className='modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable'>
-        <div
-          className='modal-content border radius-16 bg-base'
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className='modal-content border radius-16 bg-base'>
           <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
             <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='addTransportationModalLabel'>
               Add New Transportation
@@ -115,7 +51,6 @@ const AddTransportationModal = () => {
               type='button'
               className='btn-close'
               data-bs-dismiss='modal'
-              onClick={handleClose}
               aria-label='Close'
             />
           </div>
@@ -267,7 +202,6 @@ const AddTransportationModal = () => {
                   type='button'
                   className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
                   data-bs-dismiss='modal'
-                  onClick={handleClose}
                 >
                   Cancel
                 </button>
