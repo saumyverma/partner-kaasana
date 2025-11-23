@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
+import CKEditorComponent from "../../common/CKEditor";
 
 const OrderByFollowingStep = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -37,6 +38,10 @@ const OrderByFollowingStep = () => {
   const [selectedHotelCity, setSelectedHotelCity] = useState(null);
   const [selectedCheckIn, setSelectedCheckIn] = useState(null);
   const [selectedCheckOut, setSelectedCheckOut] = useState(null);
+  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [termsAndConditions, setTermsAndConditions] = useState("");
+  const [privacyPolicy, setPrivacyPolicy] = useState("");
+  const [refundPolicy, setRefundPolicy] = useState("");
 
   // Dummy data
   const dummyCountries = [
@@ -346,6 +351,14 @@ const OrderByFollowingStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+
+  // Helper function to check if HTML content has meaningful text
+  const hasContent = (htmlString) => {
+    if (!htmlString) return false;
+    // Strip HTML tags and check for meaningful content
+    const text = htmlString.replace(/<[^>]*>/g, "").trim();
+    return text.length > 0;
   };
 
   return (
@@ -997,11 +1010,10 @@ const OrderByFollowingStep = () => {
                   <div className='col-12'>
                     <label className='form-label'>Additional Info*</label>
                     <div className='position-relative'>
-                      <textarea
-                        className='form-control wizard-required'
+                      <CKEditorComponent
+                        value={additionalInfo}
+                        onChange={setAdditionalInfo}
                         placeholder='Enter Additional Information'
-                        rows='5'
-                        required
                       />
                       <div className='wizard-form-error' />
                     </div>
@@ -1009,11 +1021,10 @@ const OrderByFollowingStep = () => {
                   <div className='col-12'>
                     <label className='form-label'>Terms and Conditions*</label>
                     <div className='position-relative'>
-                      <textarea
-                        className='form-control wizard-required'
+                      <CKEditorComponent
+                        value={termsAndConditions}
+                        onChange={setTermsAndConditions}
                         placeholder='Enter Terms and Conditions'
-                        rows='5'
-                        required
                       />
                       <div className='wizard-form-error' />
                     </div>
@@ -1021,11 +1032,10 @@ const OrderByFollowingStep = () => {
                   <div className='col-12'>
                     <label className='form-label'>Privacy Policy*</label>
                     <div className='position-relative'>
-                      <textarea
-                        className='form-control wizard-required'
+                      <CKEditorComponent
+                        value={privacyPolicy}
+                        onChange={setPrivacyPolicy}
                         placeholder='Enter Privacy Policy'
-                        rows='5'
-                        required
                       />
                       <div className='wizard-form-error' />
                     </div>
@@ -1033,11 +1043,10 @@ const OrderByFollowingStep = () => {
                   <div className='col-12'>
                     <label className='form-label'>Refund Policy*</label>
                     <div className='position-relative'>
-                      <textarea
-                        className='form-control wizard-required'
+                      <CKEditorComponent
+                        value={refundPolicy}
+                        onChange={setRefundPolicy}
                         placeholder='Enter Refund Policy'
-                        rows='5'
-                        required
                       />
                       <div className='wizard-form-error' />
                     </div>
@@ -1054,6 +1063,12 @@ const OrderByFollowingStep = () => {
                       onClick={nextStep}
                       type='button'
                       className='form-wizard-next-btn btn btn-primary-600 px-32'
+                      disabled={
+                        !hasContent(additionalInfo) || 
+                        !hasContent(termsAndConditions) || 
+                        !hasContent(privacyPolicy) || 
+                        !hasContent(refundPolicy)
+                      }
                     >
                       Next
                     </button>
