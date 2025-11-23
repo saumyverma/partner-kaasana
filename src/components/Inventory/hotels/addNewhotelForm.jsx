@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import CKEditorComponent from "../../common/CKEditor";
+import AddOurHotelModal from "./AddOurHotelModal";
 
 const OrderByFollowingStep = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -42,6 +43,13 @@ const OrderByFollowingStep = () => {
   const [termsAndConditions, setTermsAndConditions] = useState("");
   const [privacyPolicy, setPrivacyPolicy] = useState("");
   const [refundPolicy, setRefundPolicy] = useState("");
+  const [isAddHotelModalOpen, setIsAddHotelModalOpen] = useState(false);
+  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
+
+  // Set menu portal target on client side
+  useEffect(() => {
+    setMenuPortalTarget(document.body);
+  }, []);
 
   // Dummy data
   const dummyCountries = [
@@ -265,10 +273,17 @@ const OrderByFollowingStep = () => {
     label: city.name,
   }));
 
-  const hotelOptions = dummyHotels.map((hotel) => ({
-    value: hotel.id,
-    label: hotel.name,
-  }));
+  const hotelOptions = [
+    ...dummyHotels.map((hotel) => ({
+      value: hotel.id,
+      label: hotel.name,
+    })),
+    {
+      value: 'add_hotel',
+      label: '+ Add Our Hotel',
+      isAddOption: true,
+    },
+  ];
 
   const supplierOptions = dummySuppliers.map((supplier) => ({
     value: supplier.id,
@@ -361,8 +376,44 @@ const OrderByFollowingStep = () => {
     return text.length > 0;
   };
 
-  return (
+  // Custom Option component with Bootstrap classes (only for hotel select)
+  const CustomHotelOption = (props) => {
+    const { data } = props;
+    const className = data.isAddOption 
+      ? `${props.className || ''} select__option--add-hotel`.trim()
+      : props.className;
     
+    return (
+      <components.Option
+        {...props}
+        className={className}
+      >
+        {props.children}
+      </components.Option>
+    );
+  };
+
+  // Custom MenuList to fix "Add Our Hotel" at bottom
+  const CustomMenuList = (props) => {
+    return (
+      <components.MenuList {...props} className="select__menu-list--custom">
+        {props.children}
+      </components.MenuList>
+    );
+  };
+
+  // Custom filter function to always show "Add Our Hotel" option
+  const filterHotelOptions = (option, inputValue) => {
+    // Always show the "Add Our Hotel" option
+    if (option.data.isAddOption) {
+      return true;
+    }
+    // Filter other options normally
+    return option.label.toLowerCase().includes(inputValue.toLowerCase());
+  };
+
+  return (
+    <>
       <div className='card'>
         <div className='card-body'>
           <p className='text-neutral-500'>
@@ -446,6 +497,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -468,6 +521,8 @@ const OrderByFollowingStep = () => {
                             isDisabled={!selectedCountry}
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -489,6 +544,8 @@ const OrderByFollowingStep = () => {
                             isDisabled={!selectedState}
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -499,8 +556,13 @@ const OrderByFollowingStep = () => {
                           <Select
                             value={selectedHotel}
                             onChange={(selected) => {
-                              setSelectedHotel(selected);
-                              setSelectedSupplier(null);
+                              if (selected && selected.value === 'add_hotel') {
+                                setIsAddHotelModalOpen(true);
+                                setSelectedHotel(null);
+                              } else {
+                                setSelectedHotel(selected);
+                                setSelectedSupplier(null);
+                              }
                             }}
                             options={hotelOptions}
                             placeholder="Select Hotel"
@@ -509,6 +571,13 @@ const OrderByFollowingStep = () => {
                             isDisabled={!selectedCity}
                             className="wizard-required"
                             classNamePrefix="select"
+                            components={{ 
+                              Option: CustomHotelOption,
+                              MenuList: CustomMenuList
+                            }}
+                            filterOption={filterHotelOptions}
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -547,6 +616,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -563,6 +634,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -579,6 +652,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -595,6 +670,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -611,6 +688,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -638,6 +717,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -654,6 +735,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -670,6 +753,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -742,6 +827,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -772,6 +859,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -919,6 +1008,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -949,6 +1040,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -965,6 +1058,8 @@ const OrderByFollowingStep = () => {
                             isSearchable
                             className="wizard-required"
                             classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
                           />
                           <div className='wizard-form-error' />
                         </div>
@@ -1115,6 +1210,13 @@ const OrderByFollowingStep = () => {
           {/* Form Wizard End */}
         </div>
       </div>
+
+      {/* Add Hotel Modal */}
+      <AddOurHotelModal
+        isOpen={isAddHotelModalOpen}
+        onClose={() => setIsAddHotelModalOpen(false)}
+      />
+    </>
   );
 };
 

@@ -16,3 +16,44 @@
 @import url("~/public/assets/css/lib/animate.min.css");
 @import url("~/public/assets/css/style.css");
 @import url("~/public/assets/css/extra.css");
+
+/* React Select Global Styles - Fix dropdown positioning for all selects */
+.select__menu-portal {
+  z-index: 9999 !important;
+}
+
+.select__menu {
+  z-index: 9999 !important;
+}
+
+/* Bootstrap utility classes for react-select "Add Our Hotel" option */
+.select__option--add-hotel {
+  background-color: var(--primary-50) !important;
+  color: var(--primary-600) !important;
+  font-weight: 600 !important;
+}
+
+.select__option--add-hotel:hover {
+  background-color: var(--primary-100) !important;
+  color: var(--primary-600) !important;
+}
+
+/* Custom MenuList structure for fixed bottom option */
+.select__menu-list--custom {
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Make the "Add Our Hotel" option sticky at bottom */
+.select__menu-list--custom .select__option--add-hotel {
+  position: sticky !important;
+  bottom: 0 !important;
+  background-color: white !important;
+  z-index: 10 !important;
+  border-top: 1px solid var(--neutral-200) !important;
+  margin-top: auto !important;
+}
