@@ -37,64 +37,22 @@ const ViewSupplierModal = ({ supplier, onEdit }) => {
     const modalElement = document.getElementById('viewSupplierModal');
     if (modalElement) {
       if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
-        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
-        modal.hide();
+        const modal = window.bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+          modal.hide();
+        }
       } else {
         // Manual cleanup
         modalElement.classList.remove('show');
         modalElement.style.display = 'none';
-        modalElement.setAttribute('aria-hidden', 'true');
-        modalElement.setAttribute('aria-modal', 'false');
         document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
+        const backdrop = document.getElementById('modalBackdrop');
+        if (backdrop) {
+          backdrop.remove();
+        }
       }
     }
   };
-
-  useEffect(() => {
-    const modalElement = document.getElementById('viewSupplierModal');
-    if (modalElement) {
-      const handleShow = () => {
-        if (supplier) {
-          setSupplierData(supplier);
-        }
-      };
-
-      const cleanupBackdrop = () => {
-        // Clean up all backdrops (handle multiple scenarios)
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
-        
-        // Remove modal-open class and restore body styles
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        
-        // Also check for any backdrop with specific IDs
-        const specificBackdrop = document.getElementById('viewSupplierModalBackdrop');
-        if (specificBackdrop) {
-          specificBackdrop.remove();
-        }
-      };
-
-      const handleHide = () => {
-        cleanupBackdrop();
-      };
-
-      modalElement.addEventListener('show.bs.modal', handleShow);
-      modalElement.addEventListener('hide.bs.modal', handleHide);
-      modalElement.addEventListener('hidden.bs.modal', handleHide);
-
-      return () => {
-        modalElement.removeEventListener('show.bs.modal', handleShow);
-        modalElement.removeEventListener('hide.bs.modal', handleHide);
-        modalElement.removeEventListener('hidden.bs.modal', handleHide);
-      };
-    }
-  }, [supplier]);
 
   return (
     <div
@@ -104,13 +62,14 @@ const ViewSupplierModal = ({ supplier, onEdit }) => {
       aria-labelledby='viewSupplierModalLabel'
       aria-hidden='true'
       onClick={(e) => {
+        // Close modal when clicking on backdrop
         if (e.target.id === 'viewSupplierModal') {
           handleClose();
         }
       }}
     >
       <div className='modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable'>
-        <div
+        <div 
           className='modal-content border radius-16 bg-base'
           onClick={(e) => e.stopPropagation()}
         >
@@ -121,7 +80,6 @@ const ViewSupplierModal = ({ supplier, onEdit }) => {
             <button
               type='button'
               className='btn-close'
-              data-bs-dismiss='modal'
               onClick={handleClose}
               aria-label='Close'
             />

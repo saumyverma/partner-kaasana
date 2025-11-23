@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const AddSupplierModal = () => {
   const [contactSections, setContactSections] = useState([
@@ -44,26 +44,10 @@ const AddSupplierModal = () => {
     );
   };
 
-  const handleClose = () => {
-    const modalElement = document.getElementById('addSupplierModal');
-    if (modalElement) {
-      if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
-        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
-        modal.hide();
-      } else {
-        // Manual cleanup
-        modalElement.classList.remove('show');
-        modalElement.style.display = 'none';
-        modalElement.setAttribute('aria-hidden', 'true');
-        modalElement.setAttribute('aria-modal', 'false');
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
-      }
-    }
-    // Reset form
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission here
+    // Reset form after submission
     setContactSections([
       {
         id: 1,
@@ -76,53 +60,6 @@ const AddSupplierModal = () => {
     ]);
   };
 
-  // Listen for Bootstrap modal events to handle cleanup
-  useEffect(() => {
-    const modalElement = document.getElementById('addSupplierModal');
-    if (modalElement) {
-      const cleanupBackdrop = () => {
-        // Clean up all backdrops (handle multiple scenarios)
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
-        
-        // Remove modal-open class and restore body styles
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        
-        // Also check for any backdrop with specific IDs
-        const specificBackdrop = document.getElementById('addSupplierModalBackdrop');
-        if (specificBackdrop) {
-          specificBackdrop.remove();
-        }
-      };
-
-      const handleHide = () => {
-        // Clean up when modal starts hiding
-        cleanupBackdrop();
-      };
-
-      const handleHidden = () => {
-        // Ensure cleanup after modal is fully hidden
-        cleanupBackdrop();
-      };
-
-      modalElement.addEventListener('hide.bs.modal', handleHide);
-      modalElement.addEventListener('hidden.bs.modal', handleHidden);
-
-      return () => {
-        modalElement.removeEventListener('hide.bs.modal', handleHide);
-        modalElement.removeEventListener('hidden.bs.modal', handleHidden);
-      };
-    }
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission here
-    handleClose();
-  };
-
   return (
     <div
       className='modal fade'
@@ -130,17 +67,9 @@ const AddSupplierModal = () => {
       tabIndex={-1}
       aria-labelledby='addSupplierModalLabel'
       aria-hidden='true'
-      onClick={(e) => {
-        if (e.target.id === 'addSupplierModal') {
-          handleClose();
-        }
-      }}
     >
       <div className='modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable'>
-        <div
-          className='modal-content border radius-16 bg-base'
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className='modal-content border radius-16 bg-base'>
           <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
             <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='addSupplierModalLabel'>
               Add New Supplier
@@ -149,7 +78,6 @@ const AddSupplierModal = () => {
               type='button'
               className='btn-close'
               data-bs-dismiss='modal'
-              onClick={handleClose}
               aria-label='Close'
             />
           </div>
@@ -376,7 +304,6 @@ const AddSupplierModal = () => {
                   type='button'
                   className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
                   data-bs-dismiss='modal'
-                  onClick={handleClose}
                 >
                   Cancel
                 </button>
