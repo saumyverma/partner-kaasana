@@ -6,6 +6,7 @@ import { login, logout } from "../store/slices/authSlice";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import TermsAndConditionsModal from "./modal/TermsAndConditionsModal";
+import { api } from "@/utils/api";
 
 const SignUpLayer = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -21,9 +22,20 @@ const SignUpLayer = () => {
    const hasNumber = /[0-9]/.test(password);
    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
    const isPasswordValid = hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
-    const handleSignUp = (data) => {
+    const handleSignUp = async (data) => {
       console.log("SignUp clicked");
       console.log("data",data);
+      const tokenCaptcha="kjdfhdsfsdkjfsdf";
+      const formData = { firstName:data.firstName, lastName:data.lastName, email:data.email, password:data.password, tokenCaptcha };
+     try {
+        const res = await api.post("auth/signup", formData);
+        console.log("res",res);
+        if(res.status==="success"){
+           router.push("/sign-in");
+        }
+      } catch (err) {
+        console.log("err",err);
+      }
   };
   
   return (
@@ -174,7 +186,7 @@ const SignUpLayer = () => {
                   {errors.password.message}
                 </span>
               )}
-              {password && (
+              {password && !isPasswordValid && (
                 <div className='mt-12'>
                   <p className='text-sm text-secondary-light mb-8 fw-semibold'>Password Requirements:</p>
                   <div className='d-flex flex-column gap-2'>
@@ -216,35 +228,44 @@ const SignUpLayer = () => {
                   </div>
                 </div>
               )}
-              {!password && (
+              {/* {!password && (
                 <span className='mt-12 text-sm text-secondary-light d-block'>
                   Your password must be at least 8 characters long
                 </span>
-              )}
+              )} */}
             </div>
             <div className=''>
-              <div className='d-flex justify-content-between gap-2'>
+              <div className='d-flex flex-column gap-2'>
                 <div className='form-check style-check d-flex align-items-start'>
                   <input
-                    className='form-check-input border border-neutral-300 mt-4'
+                    className={`form-check-input mt-4 ${errors.termsAndConditions ? 'border border-danger' : 'border border-neutral-300'}`}
                     type='checkbox'
-                    defaultValue=''
                     id='condition'
-                    {...register("termsAndConditions")}
+                    {...register("termsAndConditions", {
+                      required: "You must agree to the Terms and Conditions"
+                    })}
                   />
                   <label
-                    className='form-check-label text-sm'
+                    className={`form-check-label text-sm ${errors.termsAndConditions ? 'text-danger' : ''}`}
                     htmlFor='condition'
-                  >I agree to <Link
-                  href='#'
-                  className='text-primary-600 fw-medium'
-                  onClick={() => setShowTermsAndConditionsModal(true)}
-                >
-                  Terms and Conditions
-                </Link>
+                  >I agree to{' '}
+                  <Link
+                    href='#'
+                    className={`fw-medium text-primary-600 text-sm mb-0`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowTermsAndConditionsModal(true);
+                    }}
+                  >
+                    Terms and Conditions
+                  </Link>
                   </label>
                 </div>
-                
+                {errors.termsAndConditions && (
+                  <span className='text-sm text-danger d-block'>
+                    {errors.termsAndConditions.message}
+                  </span>
+                )}
               </div>
              
             </div>

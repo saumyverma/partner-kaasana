@@ -23,14 +23,28 @@
 }
 
 .modalHeader {
-    padding: 1rem 1.5rem;
-    border: 1px solid var(--border-color, #d1d5db80);
-    border-top: 0;
-    border-left: 0;
-    border-right: 0;
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+    border-radius: 1rem 1rem 0 0;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+    color: white;
+}
+
+.headerContent {
+    flex: 1;
+}
+
+.headerContent h1 {
+    color: white;
+    margin-bottom: 0.25rem;
+}
+
+.lastUpdated {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
 }
 
 /* .modalTitle {
@@ -48,13 +62,51 @@
     width: 32px;
     height: 32px;
     cursor: pointer;
+    color: white;
 }
 
 .closeIcon {
     font-size: 24px;
+    color: white;
+}
+
+.tabsContainer {
+    padding: 0 1.5rem;
+    background-color: var(--white);
 }
 
 .modalBody {
     padding: 1.5rem;
+    max-height: calc(90vh - 200px);
+    overflow-y: auto;
+}
+
+.tabContent {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contentSection {
+    line-height: 1.6;
+}
+
+.list {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.list li {
+    margin-bottom: 0.75rem;
+    color: var(--text-primary, #1f2937);
 }
 
