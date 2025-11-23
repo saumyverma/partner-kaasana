@@ -3,18 +3,15 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../store/slices/authSlice";
+import { useForm } from "react-hook-form";
 
 const SignUpLayer = () => {
+  const { register, handleSubmit } = useForm();
    const dispatch = useDispatch();
    const { isAuthenticated, user } = useSelector((state) => state.auth);
-    const handleLogin = () => {
-      console.log("Login clicked");
-    dispatch(
-      login({
-        user: { name: "Saumy", email: "saumy@example.com" },
-        token: "abc123xyz",
-      })
-    );
+    const handleSignUp = (data) => {
+      console.log("SignUp clicked");
+      console.log("data",data);
   };
   
   return (
@@ -47,6 +44,7 @@ const SignUpLayer = () => {
                 type='text'
                 className='form-control h-56-px bg-neutral-50 radius-12'
                 placeholder='First Name'
+                {...register("firstName")}
               />
             </div>
             <div className='icon-field mb-16'>
@@ -57,6 +55,7 @@ const SignUpLayer = () => {
                 type='text'
                 className='form-control h-56-px bg-neutral-50 radius-12'
                 placeholder='Last Name'
+                {...register("lastName")}
               />
             </div>
             <div className='icon-field mb-16'>
@@ -67,6 +66,7 @@ const SignUpLayer = () => {
                 type='email'
                 className='form-control h-56-px bg-neutral-50 radius-12'
                 placeholder='Work Email'
+                {...register("email")}
               />
             </div>
             <div className='mb-20'>
@@ -80,7 +80,8 @@ const SignUpLayer = () => {
                     className='form-control h-56-px bg-neutral-50 radius-12'
                     id='your-password'
                     placeholder='Password'
-                  />
+                    {...register("password")}
+                    />
                 </div>
                 <span
                   className='toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light'
@@ -99,6 +100,7 @@ const SignUpLayer = () => {
                     type='checkbox'
                     defaultValue=''
                     id='condition'
+                    {...register("termsAndConditions")}
                   />
                   <label
                     className='form-check-label text-sm'
@@ -111,7 +113,7 @@ const SignUpLayer = () => {
             <button
               type='submit'
               className='btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32'
-              onClick={handleLogin}
+              onClick={handleSubmit(handleSignUp)}
             >
               {" "}
               Sign Up
