@@ -4,17 +4,32 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../store/slices/authSlice";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import TermsAndConditionsModal from "./modal/TermsAndConditionsModal";
 
 const SignUpLayer = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
    const dispatch = useDispatch();
    const { isAuthenticated, user } = useSelector((state) => state.auth);
+   const [showPassword, setShowPassword] = useState(false);
+   const password = watch("password") || "";
+   const [showTermsAndConditionsModal, setShowTermsAndConditionsModal] = useState(false);
+   // Password validation functions
+   const hasMinLength = password.length >= 8;
+   const hasUpperCase = /[A-Z]/.test(password);
+   const hasLowerCase = /[a-z]/.test(password);
+   const hasNumber = /[0-9]/.test(password);
+   const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+   const isPasswordValid = hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar;
     const handleSignUp = (data) => {
       console.log("SignUp clicked");
       console.log("data",data);
   };
   
   return (
+
+    <>
+   {showTermsAndConditionsModal && <TermsAndConditionsModal showTermsAndConditionsModal={showTermsAndConditionsModal} setShowTermsAndConditionsModal={ ()=>setShowTermsAndConditionsModal(false)} />}
     <section className='auth bg-base d-flex flex-wrap'>
       <div className='auth-left d-lg-block d-none'>
         <div className='d-flex align-items-center flex-column h-100 justify-content-center'>
@@ -36,38 +51,85 @@ const SignUpLayer = () => {
             </p>
           </div>
           {/* <form action='#'> */}
-            <div className='icon-field mb-16'>
-              <span className='icon top-50 translate-middle-y'>
-                <Icon icon='f7:person' />
-              </span>
-              <input
-                type='text'
-                className='form-control h-56-px bg-neutral-50 radius-12'
-                placeholder='First Name'
-                {...register("firstName")}
-              />
+            <div className='mb-16'>
+              <div className='icon-field'>
+                <span className='icon top-50 translate-middle-y'>
+                  <Icon icon='f7:person' />
+                </span>
+                <input
+                  type='text'
+                  className={`form-control h-56-px bg-neutral-50 radius-12 ${errors.firstName ? 'border-danger' : ''}`}
+                  placeholder='First Name'
+                  {...register("firstName", {
+                    required: "First name is required",
+                    minLength: {
+                      value: 2,
+                      message: "First name must be at least 2 characters"
+                    },
+                    pattern: {
+                      value: /^[A-Za-z\s]+$/,
+                      message: "First name should only contain letters"
+                    }
+                  })}
+                />
+              </div>
+              {errors.firstName && (
+                <span className='mt-4 text-sm text-danger d-block'>
+                  {errors.firstName.message}
+                </span>
+              )}
             </div>
-            <div className='icon-field mb-16'>
-              <span className='icon top-50 translate-middle-y'>
-                <Icon icon='f7:person' />
-              </span>
-              <input
-                type='text'
-                className='form-control h-56-px bg-neutral-50 radius-12'
-                placeholder='Last Name'
-                {...register("lastName")}
-              />
+            <div className='mb-16'>
+              <div className='icon-field'>
+                <span className='icon top-50 translate-middle-y'>
+                  <Icon icon='f7:person' />
+                </span>
+                <input
+                  type='text'
+                  className={`form-control h-56-px bg-neutral-50 radius-12 ${errors.lastName ? 'border-danger' : ''}`}
+                  placeholder='Last Name'
+                  {...register("lastName", {
+                    required: "Last name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Last name must be at least 2 characters"
+                    },
+                    pattern: {
+                      value: /^[A-Za-z\s]+$/,
+                      message: "Last name should only contain letters"
+                    }
+                  })}
+                />
+              </div>
+              {errors.lastName && (
+                <span className='mt-4 text-sm text-danger d-block'>
+                  {errors.lastName.message}
+                </span>
+              )}
             </div>
-            <div className='icon-field mb-16'>
-              <span className='icon top-50 translate-middle-y'>
-                <Icon icon='mage:email' />
-              </span>
-              <input
-                type='email'
-                className='form-control h-56-px bg-neutral-50 radius-12'
-                placeholder='Work Email'
-                {...register("email")}
-              />
+            <div className='mb-16'>
+              <div className='icon-field'>
+                <span className='icon top-50 translate-middle-y'>
+                  <Icon icon='mage:email' />
+                </span>
+                <input
+                  type='email'
+                  className={`form-control h-56-px bg-neutral-50 radius-12 ${errors.email ? 'border-danger' : ''}`}
+                  placeholder='Work Email'
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Please enter a valid email address"
+                    }
+                  })}
+                />
+              </div>
+              {errors.email && (
+                <span className='mt-4 text-sm text-danger d-block'>
+                  {errors.email.message}
+                </span>
+              )}
             </div>
             <div className='mb-20'>
               <div className='position-relative '>
@@ -76,21 +138,89 @@ const SignUpLayer = () => {
                     <Icon icon='solar:lock-password-outline' />
                   </span>
                   <input
-                    type='password'
-                    className='form-control h-56-px bg-neutral-50 radius-12'
+                    type={showPassword ? 'text' : 'password'}
+                    className={`form-control h-56-px bg-neutral-50 radius-12 ${errors.password ? 'border-danger' : ''}`}
                     id='your-password'
                     placeholder='Password'
-                    {...register("password")}
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters"
+                      },
+                      validate: {
+                        hasUpperCase: (value) => /[A-Z]/.test(value) || "Password must contain at least one uppercase letter",
+                        hasLowerCase: (value) => /[a-z]/.test(value) || "Password must contain at least one lowercase letter",
+                        hasNumber: (value) => /[0-9]/.test(value) || "Password must contain at least one number",
+                        hasSpecialChar: (value) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value) || "Password must contain at least one special character"
+                      }
+                    })}
                     />
                 </div>
                 <span
-                  className='toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light'
-                  data-toggle='#your-password'
-                />
+                  className='cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light'
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Icon 
+                    icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} 
+                    className='text-secondary-light'
+                    style={{ fontSize: '20px' }}
+                  />
+                </span>
               </div>
-              <span className='mt-12 text-sm text-secondary-light'>
-                Your password must have at least 8 characters
-              </span>
+              {errors.password && (
+                <span className='mt-8 text-sm text-danger d-block'>
+                  {errors.password.message}
+                </span>
+              )}
+              {password && (
+                <div className='mt-12'>
+                  <p className='text-sm text-secondary-light mb-8 fw-semibold'>Password Requirements:</p>
+                  <div className='d-flex flex-column gap-2'>
+                    <div className={`d-flex align-items-center gap-2 text-sm ${hasMinLength ? 'text-success' : 'text-secondary-light'}`}>
+                      <Icon 
+                        icon={hasMinLength ? 'mdi:check-circle' : 'mdi:circle-outline'} 
+                        style={{ fontSize: '16px' }}
+                      />
+                      <span>At least 8 characters</span>
+                    </div>
+                    <div className={`d-flex align-items-center gap-2 text-sm ${hasUpperCase ? 'text-success' : 'text-secondary-light'}`}>
+                      <Icon 
+                        icon={hasUpperCase ? 'mdi:check-circle' : 'mdi:circle-outline'} 
+                        style={{ fontSize: '16px' }}
+                      />
+                      <span>One uppercase letter</span>
+                    </div>
+                    <div className={`d-flex align-items-center gap-2 text-sm ${hasLowerCase ? 'text-success' : 'text-secondary-light'}`}>
+                      <Icon 
+                        icon={hasLowerCase ? 'mdi:check-circle' : 'mdi:circle-outline'} 
+                        style={{ fontSize: '16px' }}
+                      />
+                      <span>One lowercase letter</span>
+                    </div>
+                    <div className={`d-flex align-items-center gap-2 text-sm ${hasNumber ? 'text-success' : 'text-secondary-light'}`}>
+                      <Icon 
+                        icon={hasNumber ? 'mdi:check-circle' : 'mdi:circle-outline'} 
+                        style={{ fontSize: '16px' }}
+                      />
+                      <span>One number</span>
+                    </div>
+                    <div className={`d-flex align-items-center gap-2 text-sm ${hasSpecialChar ? 'text-success' : 'text-secondary-light'}`}>
+                      <Icon 
+                        icon={hasSpecialChar ? 'mdi:check-circle' : 'mdi:circle-outline'} 
+                        style={{ fontSize: '16px' }}
+                      />
+                      <span>One special character</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {!password && (
+                <span className='mt-12 text-sm text-secondary-light d-block'>
+                  Your password must be at least 8 characters long
+                </span>
+              )}
             </div>
             <div className=''>
               <div className='d-flex justify-content-between gap-2'>
@@ -105,10 +235,18 @@ const SignUpLayer = () => {
                   <label
                     className='form-check-label text-sm'
                     htmlFor='condition'
-                  >I agree to the Terms & Conditions
+                  >I agree to <Link
+                  href='#'
+                  className='text-primary-600 fw-medium'
+                  onClick={() => setShowTermsAndConditionsModal(true)}
+                >
+                  Terms and Conditions
+                </Link>
                   </label>
                 </div>
+                
               </div>
+             
             </div>
             <button
               type='submit'
@@ -162,6 +300,7 @@ const SignUpLayer = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 
