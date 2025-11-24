@@ -4,7 +4,7 @@ import Select, { components } from "react-select";
 import CKEditorComponent from "../../common/CKEditor";
 import AddOurHotelModal from "./AddOurHotelModal";
 
-const OrderByFollowingStep = () => {
+const AddNewHotelForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
@@ -1220,4 +1220,4 @@ const OrderByFollowingStep = () => {
   );
 };
 
-export default OrderByFollowingStep;
+export default AddNewHotelForm;
