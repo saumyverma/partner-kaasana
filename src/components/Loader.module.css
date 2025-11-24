@@ -1,0 +1,29 @@
+.loaderOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.loaderSpinner {
+  width: 48px;
+  height: 48px;
+  border: 6px solid #fff;
+  border-top: 6px solid transparent;
+  border-radius: 50%;
+  animation: loader-spin 1s linear infinite;
+}
+
+@keyframes loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+

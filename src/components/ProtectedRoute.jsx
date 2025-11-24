@@ -3,6 +3,7 @@
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Loader from "@/components/Loader";
 
 export default function ProtectedRoute({ children }) {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -16,7 +17,7 @@ export default function ProtectedRoute({ children }) {
   }, [isAuthenticated, router]);
 
   // If not logged in, you can show a loader until redirect happens
-  if (!isAuthenticated) return <p>Redirecting...</p>;
+  if (!isAuthenticated) return <Loader />;
 
   return children;
 }

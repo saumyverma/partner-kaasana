@@ -37,3 +37,22 @@
 .Toastify__toast--error .Toastify__close-button:hover {
   opacity: 1;
 }
+
+.Toastify__toast--success {
+  background-color: #16a34a !important;
+  color: #fff !important;
+  border-left: 4px solid #16a34a !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon {
+  color: #fff !important;
+}
+
+.Toastify__toast--success .Toastify__close-button {
+  color: #fff !important;
+  opacity: 0.8;
+}
+
+.Toastify__toast--success .Toastify__close-button:hover {
+  opacity: 1;
+}

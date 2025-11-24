@@ -2,8 +2,24 @@
 import React from 'react'
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { api } from "@/utils/api";
 
 export default function ForgotPasswordPage() {
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();  
+  const isValidForm = watch("email");
+  const handleForgotPassword = async(data) => {
+    console.log("Forgot Password clicked", data);
+    const formData = { email:data.email };
+    try {
+      const tokenCaptcha="sdfsdflnsldkfnlsnk";
+      const formData = { username:data.email, tokenCaptcha };
+      const res = await api.post("auth/resetPassword", formData,{},{showLoader:true ,showToast:true});
+      console.log("res",res);
+    } catch (err) {
+      console.log("err",err);
+    }
+  } 
   return (
     <section className='auth bg-base d-flex flex-wrap'>
     <div className='auth-left d-lg-block d-none'>
@@ -17,48 +33,37 @@ export default function ForgotPasswordPage() {
           <Link href='/' className='mb-40 max-w-290-px'>
             <img src='assets/img/KS-logo.svg' alt='' />
           </Link>
-          <h4 className='mb-12'>Forget Password</h4>
+          <h4 className='mb-12'>Forgot Your Password?</h4>
           <p className='mb-32 text-secondary-light text-lg'>
-            Access your travel business dashboard
+          Enter your email to receive a password reset link
           </p>
         </div>
-        {/* <form action='#'> */}
-          <div className='icon-field mb-16'>
-            <span className='icon top-50 translate-middle-y'>
-              <Icon icon='mage:email' />
-            </span>
-            <input
-              type='email'
-              className='form-control h-56-px bg-neutral-50 radius-12'
-               placeholder='Work Email'
-            />
-          </div>
-          {/* <div className='position-relative mb-20'>
+         <div className='mb-16'>
             <div className='icon-field'>
               <span className='icon top-50 translate-middle-y'>
-                <Icon icon='solar:lock-password-outline' />
+                <Icon icon='mage:email' />
               </span>
               <input
-                type='password'
-                className='form-control h-56-px bg-neutral-50 radius-12'
-                id='your-password'
-                placeholder='Password'
-               
+                type='email'
+                className={`form-control h-56-px bg-neutral-50 radius-12 ${errors.email ? 'border-danger' : ''}`}
+                placeholder='Work Email'
+                {...register("email", { required: "Email is required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email address" } })}
               />
             </div>
-            <span
-              className='toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light'
-              data-toggle='#your-password'
-            />
-          </div> */}
+            {errors.email && (
+              <span className='mt-4 text-sm text-danger d-block'>
+                {errors.email.message}
+              </span>
+            )}
+          </div>
          
-          <button
+           <button
             type='submit'
-            className='btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32'
-           
+            className='btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-10'
+            onClick={handleSubmit(handleForgotPassword)}  
           >
             {" "}
-            Sign In
+            Send Reset Link
           </button>
          
           <div className='mt-32 text-center text-sm'>
@@ -69,7 +74,6 @@ export default function ForgotPasswordPage() {
               </Link>
             </p>
           </div>
-        {/* </form> */}
       </div>
     </div>
   </section>
