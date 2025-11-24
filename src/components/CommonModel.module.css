@@ -1,0 +1,55 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+}
+
+.modalContent {
+    border-radius: 1rem;
+    background-color: var(--white);
+    width: 100%;
+    max-width: 55rem; /* 70rem = 1120px max-width for the modal */
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modalHeader {
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--border-color, #d1d5db80);
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.closeButton {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.closeIcon {
+    font-size: 24px;
+}
+
+.modalBody {
+    padding: 1.5rem;
+}
+

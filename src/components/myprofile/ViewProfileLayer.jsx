@@ -1,17 +1,13 @@
 "use client";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import EditPersonalInfoModal from "@/components/myprofile/EditPersonalInfoModal";
+
 
 const ViewProfileLayer = () => {
-  const [imagePreview, setImagePreview] = useState(
-    "assets/images/user-grid/user-grid-img13.png"
-  );
-  const [coverImagePreview, setCoverImagePreview] = useState(
-    "assets/img/coverimages.jpg"
-  );
-  const [profileImagePreview, setProfileImagePreview] = useState(
-    "assets/img/user.png"
-  );
+  const [showEditPersonalInfoModal, setShowEditPersonalInfoModal] = useState(false);
+ 
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -53,27 +49,16 @@ const ViewProfileLayer = () => {
     }
   };
 
-  const readCoverImage = (input) => {
-    if (input.target.files && input.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setCoverImagePreview(e.target.result);
-      };
-      reader.readAsDataURL(input.target.files[0]);
-    }
-  };
-
-  const readProfileImage = (input) => {
-    if (input.target.files && input.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setProfileImagePreview(e.target.result);
-      };
-      reader.readAsDataURL(input.target.files[0]);
-    }
-  };
+ 
 
   return (
+    <>
+    {showEditPersonalInfoModal && ( 
+      <EditPersonalInfoModal showEditPersonalInfoModal={showEditPersonalInfoModal} setShowEditPersonalInfoModal={setShowEditPersonalInfoModal} />
+    )}
+  
+
+
     <div className='row gy-4'>
       {/* user pofile section */}
       <div className='col-lg-4'>
@@ -101,9 +86,8 @@ const ViewProfileLayer = () => {
                 <button
                   type='button'
                   className='btn p-0 border-0 bg-transparent'
-                  data-bs-toggle='modal'
-                  data-bs-target='#editPersonalInfoModal'
                   aria-label='Edit Personal Info'
+                  onClick={() => setShowEditPersonalInfoModal(true)}
                 >
                   <Icon icon='solar:pen-bold' className='text-primary-600 text-lg cursor-pointer' />
                 </button>
@@ -884,7 +868,7 @@ const ViewProfileLayer = () => {
       </div>
 
       {/* Edit Personal Info Modal */}
-      <div
+      {/* <div
         className='modal fade'
         id='editPersonalInfoModal'
         tabIndex={-1}
@@ -905,7 +889,7 @@ const ViewProfileLayer = () => {
               />
             </div>
             <div className='modal-body p-24'>
-              <form action='#'>
+              <form onSubmit={handleSubmit(handleEditPersonalInfo)}>
                 <div className='row'>
                   <div className='col-6 mb-20'>
                     <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
@@ -954,6 +938,7 @@ const ViewProfileLayer = () => {
                       className='form-control radius-8'
                       placeholder='Enter Name'
                       defaultValue='Jacob Jones'
+                      {...register("name", { required: "Name is required" })}
                     />
                   </div>
                   <div className='col-6 mb-20'>
@@ -965,6 +950,7 @@ const ViewProfileLayer = () => {
                       className='form-control radius-8'
                       placeholder='Enter Email'
                       defaultValue='ifrandom@gmail.com'
+                      {...register("email", { required: "Email is required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email address" } })}
                     />
                   </div>
                   <div className='col-6 mb-20'>
@@ -976,6 +962,7 @@ const ViewProfileLayer = () => {
                       className='form-control radius-8'
                       placeholder='Enter Phone Number'
                       defaultValue='(1) 2536 2561 2365'
+                      {...register("phone", { required: "Phone is required" })}
                     />
                   </div>
                   <div className='col-6 mb-20'>
@@ -987,6 +974,7 @@ const ViewProfileLayer = () => {
                       className='form-control radius-8'
                       placeholder='Enter Designation'
                       defaultValue='UI UX Designer'
+                      {...register("designation", { required: "Designation is required" })}
                     />
                   </div>
                   <div className='col-6 mb-20'>
@@ -998,6 +986,7 @@ const ViewProfileLayer = () => {
                       className='form-control radius-8'
                       placeholder='Enter Reporting Manager'
                       defaultValue='John Smith'
+                      {...register("reportingManager", { required: "Reporting Manager is required" })}
                     />
                   </div>
                   <div className='col-6 mb-20'>
@@ -1009,6 +998,7 @@ const ViewProfileLayer = () => {
                       className='form-control radius-8'
                       placeholder='Enter Branch'
                       defaultValue='New York Office'
+                      {...register("branch", { required: "Branch is required" })}
                     />
                   </div>
                   <div className='col-6 mb-20'>
@@ -1020,6 +1010,7 @@ const ViewProfileLayer = () => {
                       className='form-control radius-8'
                       placeholder='Enter Assigned Roles'
                       defaultValue='Admin, Manager'
+                      {...register("assignedRoles", { required: "Assigned Roles is required" })}
                     />
                   </div>
                 </div>
@@ -1034,7 +1025,9 @@ const ViewProfileLayer = () => {
                   <button
                     type='submit'
                     className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
-                  >
+                    onClick={handleSubmit(handleEditPersonalInfo)}
+                    // disabled={!isValidFormEditPersonalInfo}
+                    >
                     Save
                   </button>
                 </div>
@@ -1042,9 +1035,10 @@ const ViewProfileLayer = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
     </div>
+    </>
   );
 };
 
