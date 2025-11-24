@@ -38,7 +38,7 @@ async function request(url, method = "GET", data = null, customHeaders = {},opti
       throw new Error(msg)
     }
     const responseData = await res.json();
-     console.log(showToast)
+    //  console.log(showToast)
       if(showToast){
         toast.success( responseData?.message || "Operation successful");
       }

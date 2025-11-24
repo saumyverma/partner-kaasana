@@ -3,25 +3,46 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../store/slices/authSlice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "@/utils/api";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 const SignInLayer =  () => {
     const dispatch = useDispatch();
     const router = useRouter();
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
      const { isAuthenticated, user } = useSelector((state) => state.auth);
-
-      const handleLogin = async() => {
-        console.log("Login clicked", email, password);
+     const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();  
+     const isValidForm = watch("email") && watch("password");
+     
+     // Load saved email from localStorage on mount
+     useEffect(() => {
+        if (typeof window !== "undefined") {
+            const savedEmail = localStorage.getItem("rememberedEmail");
+            if (savedEmail) {
+                setValue("email", savedEmail);
+                setRememberMe(true);
+            }
+        }
+     }, [setValue]);
+        const handleLogin = async(data) => {
+        console.log("Login clicked", data);
         const tokenCaptcha="kjdfhdsfsdkjfsdf";
-        const formData = { email, password ,tokenCaptcha};
+        const formData = { email:data.email, password:data.password ,tokenCaptcha};
+        
+        // Handle Remember Me functionality
+        if (rememberMe) {
+            localStorage.setItem("rememberedEmail", data.email);
+        } else {
+            localStorage.removeItem("rememberedEmail");
+        }
+        
            try {
   //     // ✅ Reuse same post method for any form
-      const res = await api.post("auth/signin", formData);
-      console.log("formData",res);
+      const res = await api.post("auth/signin", formData,{},{showLoader:true ,showToast:true});
+      console.log("res",res);
 
       if(res.status==="success"){
          dispatch(
@@ -37,7 +58,7 @@ const SignInLayer =  () => {
       router.push("/");
       }
       
-      console.log("Response:", res);
+      // console.log("Response:", res);
     } catch (err) {
       // setMessage("Error: " + err.message);
     }
@@ -75,11 +96,15 @@ const SignInLayer =  () => {
               </span>
               <input
                 type='email'
-                className='form-control h-56-px bg-neutral-50 radius-12'
+                className={`form-control h-56-px bg-neutral-50 radius-12 ${errors.email ? 'border-danger' : ''}`}
                  placeholder='Work Email'
-                 onChange={(e) => setEmail(e.target.value)}
-                 value={email}
+                 {...register("email", { required: "Email is required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email address" } })}
               />
+              {errors.email && (
+                <span className='mt-4 text-sm text-danger d-block'>
+                  {errors.email.message}
+                </span>
+              )}
             </div>
             <div className='position-relative mb-20'>
               <div className='icon-field'>
@@ -87,18 +112,29 @@ const SignInLayer =  () => {
                   <Icon icon='solar:lock-password-outline' />
                 </span>
                 <input
-                  type='password'
-                  className='form-control h-56-px bg-neutral-50 radius-12'
+                  type={showPassword ? 'text' : 'password'}
+                  className={`form-control h-56-px bg-neutral-50 radius-12 ${errors.password ? 'border-danger' : ''}`}
                   id='your-password'
                   placeholder='Password'
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
+                  {...register("password", { required: "Password is required", minLength: { value: 8, message: "Password must be at least 8 characters" } })}
                 />
               </div>
               <span
-                className='toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light'
-                data-toggle='#your-password'
-              />
+                className='cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light'
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ cursor: 'pointer' }}
+              >
+                <Icon 
+                  icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} 
+                  className='text-secondary-light'
+                  style={{ fontSize: '20px' }}
+                />
+              </span>
+              {errors.password && (
+                <span className='mt-4 text-sm text-danger d-block'>
+                  {errors.password.message}
+                </span>
+              )}
             </div>
             <div className=''>
               <div className='d-flex justify-content-between gap-2'>
@@ -106,10 +142,11 @@ const SignInLayer =  () => {
                   <input
                     className='form-check-input border border-neutral-300'
                     type='checkbox'
-                    defaultValue=''
-                    id='remeber'
+                    id='remember'
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                   />
-                  <label className='form-check-label' htmlFor='remeber'>
+                  <label className='form-check-label' htmlFor='remember'>
                     Remember me{" "}
                   </label>
                 </div>
@@ -121,7 +158,8 @@ const SignInLayer =  () => {
             <button
               type='submit'
               className='btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32'
-              onClick={handleLogin}
+              onClick={handleSubmit(handleLogin) }
+              disabled={!isValidForm}
             >
               {" "}
               Sign In

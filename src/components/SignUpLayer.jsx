@@ -36,7 +36,7 @@ const SignUpLayer = () => {
         console.log("res.status",res.status);
         if(res.status==="success"){
           console.log("res.data",res.data);
-          //  router.push("/sign-in");
+           router.push("/sign-in");
         }
       } catch (err) {
         console.log("err",err);
