@@ -28,7 +28,7 @@ export default async  function Page({params}) {
    return (
      <ProtectedRoute>
         <MasterLayout>
-        <Breadcrumb breadcrumbs={breadcrumbs} />
+        <Breadcrumb title={pageId === "customers" ? "Customer" : "Leads"} breadcrumbs={breadcrumbs} />
           {pageId === "customers" ? (
             <CustomerLayer  pageId={pageId}/>
           ) : (

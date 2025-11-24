@@ -624,7 +624,7 @@ const AddPackageForm = () => {
                         </div>
                       </div>
                       <div className='card-body p-24'>
-                        <div className='row gy-3'>
+                <div className='row gy-3'>
                           {/* Arrival - Text Field - BEFORE Arrival in Country */}
                           <div className='col-sm-4'>
                             <label className='form-label'>Arrival*</label>
@@ -823,10 +823,10 @@ const AddPackageForm = () => {
                           {section.isActivity?.value === 'yes' && (
                             <div className='col-sm-4'>
                               <label className='form-label'>Activity Timing*</label>
-                              <div className='position-relative'>
-                                <input
-                                  type='text'
-                                  className='form-control wizard-required'
+                    <div className='position-relative'>
+                      <input
+                        type='text'
+                        className='form-control wizard-required'
                                   placeholder='Enter Activity Timing (e.g., 09:00 AM)'
                                   value={section.activityTiming}
                                   onChange={(e) => updateDaySection(section.id, 'activityTiming', e.target.value)}

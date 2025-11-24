@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Select from "react-select";
 
@@ -81,6 +81,7 @@ const getOptionsByValues = (options, values) =>
   options.filter((opt) => values.includes(opt.value));
 
 const AddSingleLeadForm = () => {
+  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
   const [leadType, setLeadType] = useState("B2C");
   const [assignedSales, setAssignedSales] = useState("");
   const [companySelection, setCompanySelection] = useState("");
@@ -92,6 +93,10 @@ const AddSingleLeadForm = () => {
   const [durationSelection, setDurationSelection] = useState("");
   const [leadSourceSelection, setLeadSourceSelection] = useState("");
   const [leadMediumSelection, setLeadMediumSelection] = useState("");
+
+  useEffect(() => {
+    setMenuPortalTarget(document.body);
+  }, []);
 
   const nightsOptions = useMemo(
     () => Array.from({ length: 15 }, (_, index) => `${index + 1} Nights`),
@@ -143,473 +148,492 @@ const AddSingleLeadForm = () => {
   };
 
   return (
-    <div className="col-lg-12">
-      <div className="card">
-        <div className="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-          <h5 className="card-title mb-0">Single Lead</h5>
+    <form id="addSingleLeadForm" className="row gy-3 needs-validation" onSubmit={handleSubmit}>
+      {/* Lead Type and Assigned Sales - Row 1 */}
+      <div className="col-md-4">
+        <label className="form-label mb-16">Lead Type*</label>
+        <div className="d-flex flex-wrap gap-3">
+          <div
+            className={`bg-neutral-100 px-20 py-12 radius-8 ${
+              leadType === "B2C" ? "border border-primary" : "border border-transparent"
+            }`}
+          >
+            <span className="form-check checked-success d-flex align-items-center gap-2">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="default_radio"
+                id="leadTypeB2C"
+                value="B2C"
+                checked={leadType === "B2C"}
+                onChange={() => setLeadType("B2C")}
+              />
+              <label
+                className="form-check-label line-height-1 fw-medium text-secondary-light"
+                htmlFor="leadTypeB2C"
+              >
+                B2C
+              </label>
+            </span>
+          </div>
+
+          <div
+            className={`bg-neutral-100 px-20 py-12 radius-8 ${
+              leadType === "B2B" ? "border border-primary" : "border border-transparent"
+            }`}
+          >
+            <span className="form-check checked-success d-flex align-items-center gap-2">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="default_radio"
+                id="leadTypeB2B"
+                value="B2B"
+                checked={leadType === "B2B"}
+                onChange={() => setLeadType("B2B")}
+              />
+              <label
+                className="form-check-label line-height-1 fw-medium text-secondary-light"
+                htmlFor="leadTypeB2B"
+              >
+                B2B
+              </label>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="AssignedSales">
+          Assigned to Sales
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="solar:user-circle-line-duotone" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="AssignedSales"
+              options={salesPersonSelectOptions}
+              placeholder="Select Sales Person"
+              isClearable
+              isSearchable
+              value={getOptionByValue(salesPersonSelectOptions, assignedSales)}
+              onChange={(selected) => setAssignedSales(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {assignedSales && (
+          <input type="hidden" name="AssignedSales" value={assignedSales} />
+        )}
+      </div>
+      <div className={`col-md-4 ${leadType === "B2B" ? "" : "d-none"}`}>
+        <label className="form-label">
           <button
             type="button"
             id="add_company_b2c"
-            className={`btn btn-outline-danger btn-sm ${leadType === "B2B" ? "" : "d-none"}`}
+            className="btn btn-outline-danger btn-sm"
           >
             Add Company
           </button>
+        </label>
+      </div>
+
+      {/* B2B Fields - Row 2 */}
+      <div className={`col-md-4 ${leadType === "B2B" ? "" : "d-none"}`}>
+        <label className="form-label" htmlFor="CompanyName">
+          Company name <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:office-building-outline" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="CompanyName"
+              options={partnerCompanySelectOptions}
+              placeholder="Select Company"
+              isClearable
+              isSearchable
+              value={getOptionByValue(partnerCompanySelectOptions, companySelection)}
+              onChange={(selected) => setCompanySelection(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
         </div>
-        <div className="card-body">
-          <form id="addSingleLeadForm" className="row gy-3 needs-validation" onSubmit={handleSubmit}>
-            <div className="col-md-6">
-              <div className="d-flex flex-wrap gap-3">
-                <div
-                  className={`bg-neutral-100 px-20 py-12 radius-8 ${
-                    leadType === "B2C" ? "border border-primary" : "border border-transparent"
-                  }`}
-                >
-                  <span className="form-check checked-success d-flex align-items-center gap-2">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="default_radio"
-                      id="leadTypeB2C"
-                      value="B2C"
-                      checked={leadType === "B2C"}
-                      onChange={() => setLeadType("B2C")}
-                    />
-                    <label
-                      className="form-check-label line-height-1 fw-medium text-secondary-light"
-                      htmlFor="leadTypeB2C"
-                    >
-                      B2C
-                    </label>
-                  </span>
-                </div>
+        {companySelection && (
+          <input type="hidden" name="CompanyName" value={companySelection} />
+        )}
+      </div>
 
-                <div
-                  className={`bg-neutral-100 px-20 py-12 radius-8 ${
-                    leadType === "B2B" ? "border border-primary" : "border border-transparent"
-                  }`}
-                >
-                  <span className="form-check checked-success d-flex align-items-center gap-2">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="default_radio"
-                      id="leadTypeB2B"
-                      value="B2B"
-                      checked={leadType === "B2B"}
-                      onChange={() => setLeadType("B2B")}
-                    />
-                    <label
-                      className="form-check-label line-height-1 fw-medium text-secondary-light"
-                      htmlFor="leadTypeB2B"
-                    >
-                      B2B
-                    </label>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <label className="form-label" htmlFor="AssignedSales">
-                Assigned to Sales
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="solar:user-circle-line-duotone" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="AssignedSales"
-                    options={salesPersonSelectOptions}
-                    placeholder="Select Sales Person"
-                    isClearable
-                    isSearchable
-                    value={getOptionByValue(salesPersonSelectOptions, assignedSales)}
-                    onChange={(selected) => setAssignedSales(selected ? selected.value : "")}
-                  />
-                </div>
-              </div>
-              {assignedSales && (
-                <input type="hidden" name="AssignedSales" value={assignedSales} />
-              )}
-            </div>
+      <div className={`col-md-4 ${leadType === "B2B" ? "" : "d-none"}`}>
+        <label className="form-label" htmlFor="leadCategoryType">
+          Lead Category Type <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:tag-outline" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="leadCategoryType"
+              options={companyTypeSelectOptions}
+              placeholder="Select Agent Type"
+              isClearable
+              isSearchable
+              value={getOptionByValue(companyTypeSelectOptions, leadCategoryType)}
+              onChange={(selected) => setLeadCategoryType(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {leadCategoryType && (
+          <input type="hidden" name="leadCategoryType" value={leadCategoryType} />
+        )}
+      </div>
 
-            <div className={`col-12 ${leadType === "B2B" ? "" : "d-none"}`}>
-              <div className="row gy-3">
-                <div className="col-md-3">
-                  <label className="form-label" htmlFor="CompanyName">
-                    Company name <sup>*</sup>
-                  </label>
-                  <div className="icon-field">
-                    <span className="icon">
-                      <Icon icon="mdi:office-building-outline" />
-                    </span>
-                    <div className="form-control p-0 border-0">
-                      <Select
-                        inputId="CompanyName"
-                        options={partnerCompanySelectOptions}
-                        placeholder="Select Company"
-                        isClearable
-                        isSearchable
-                        value={getOptionByValue(partnerCompanySelectOptions, companySelection)}
-                        onChange={(selected) => setCompanySelection(selected ? selected.value : "")}
-                      />
-                    </div>
-                  </div>
-                  {companySelection && (
-                    <input type="hidden" name="CompanyName" value={companySelection} />
-                  )}
-                </div>
+      <div className={`col-md-4 ${leadType === "B2B" ? "" : "d-none"}`}>
+        <label className="form-label" htmlFor="email">
+          Email ID <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mage:email" />
+          </span>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="form-control"
+            placeholder="Enter Your Email Address"
+            required
+          />
+        </div>
+        <p id="emailStatus" className="text-sm mt-1 mb-0"></p>
+      </div>
 
-                <div className="col-md-3">
-                  <label className="form-label" htmlFor="leadCategoryType">
-                    Lead Category Type <sup>*</sup>
-                  </label>
-                  <div className="icon-field">
-                    <span className="icon">
-                      <Icon icon="mdi:tag-outline" />
-                    </span>
-                    <div className="form-control p-0 border-0">
-                      <Select
-                        inputId="leadCategoryType"
-                        options={companyTypeSelectOptions}
-                        placeholder="Select Agent Type"
-                        isClearable
-                        isSearchable
-                        value={getOptionByValue(companyTypeSelectOptions, leadCategoryType)}
-                        onChange={(selected) => setLeadCategoryType(selected ? selected.value : "")}
-                      />
-                    </div>
-                  </div>
-                  {leadCategoryType && (
-                    <input type="hidden" name="leadCategoryType" value={leadCategoryType} />
-                  )}
-                </div>
-
-                <div className="col-md-3">
-                  <label className="form-label" htmlFor="email">
-                    Email ID <sup>*</sup>
-                  </label>
-                  <div className="icon-field">
-                    <span className="icon">
-                      <Icon icon="mage:email" />
-                    </span>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="form-control"
-                      placeholder="Enter Your Email Address"
-                      required
-                    />
-                  </div>
-                  <p id="emailStatus" className="text-sm mt-1 mb-0"></p>
-                </div>
-
-                <div className="col-md-3">
-                  <label className="form-label" htmlFor="contactNumber">
-                    contact number <sup>*</sup>
-                  </label>
-                  <div className="icon-field">
-                    <span className="icon">
-                      <Icon icon="solar:phone-calling-linear" />
-                    </span>
-                    <input
-                      type="text"
-                      id="contactNumber"
-                      name="contactNumber"
-                      className="form-control"
-                      placeholder="Enter Your Number"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="CustomerName">
-                Customer Name
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="f7:person" />
-                </span>
-                <input
-                  type="text"
-                  id="CustomerName"
-                  name="CustomerName"
-                  className="form-control"
-                  placeholder="Enter Customer Name"
-                />
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="CustomercontactNumber">
-                Customer Contact No. <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="solar:phone-calling-linear" />
-                </span>
-                <input
-                  type="text"
-                  id="CustomercontactNumber"
-                  name="CustomercontactNumber"
-                  className="form-control"
-                  placeholder="Enter Customer Number"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="Customeremail">
-                Customer Email ID
-              </label>
-              <input type="hidden" name="customer_id" id="customer_id" value="0" />
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mage:email" />
-                </span>
-                <input
-                  type="email"
-                  id="Customeremail"
-                  name="Customeremail"
-                  className="form-control check_exist_email"
-                  placeholder="Enter Customer Email"
-                />
-              </div>
-              <small className="text-success d-block mt-1 show_email_status d-none">
-                Email is available.
-              </small>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="TravelDate">
-                Travel Date
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="solar:calendar-linear" />
-                </span>
-                <input type="date" id="TravelDate" name="TravelDate" className="form-control" />
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="HolidayType">
-                Holiday Type <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:calendar-month-outline" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="HolidayType"
-                    options={holidayTypeSelectOptions}
-                    placeholder="Select Holiday Type"
-                    isClearable
-                    isSearchable
-                    value={getOptionByValue(holidayTypeSelectOptions, holidayTypeSelection)}
-                    onChange={(selected) => setHolidayTypeSelection(selected ? selected.value : "")}
-                  />
-                </div>
-              </div>
-              {holidayTypeSelection && (
-                <input type="hidden" name="HolidayType" value={holidayTypeSelection} />
-              )}
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="NoofPax">
-                No of Pax <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:account-group-outline" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="NoofPax"
-                    options={paxSelectOptions}
-                    placeholder="Select Pax"
-                    isClearable
-                    isSearchable
-                    value={getOptionByValue(paxSelectOptions, paxSelection)}
-                    onChange={(selected) => setPaxSelection(selected ? selected.value : "")}
-                  />
-                </div>
-              </div>
-              {paxSelection && (
-                <input type="hidden" name="NoofPax" value={paxSelection} />
-              )}
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="DestinationsCountry">
-                Destinations Country <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:earth" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="DestinationsCountry"
-                    options={destinationCountryOptions}
-                    placeholder="Select Destinations Country"
-                    isMulti
-                    isClearable
-                    isSearchable
-                    closeMenuOnSelect={false}
-                    value={getOptionsByValues(destinationCountryOptions, destinationsCountry)}
-                    onChange={(selected) =>
-                      setDestinationsCountry(selected ? selected.map((opt) => opt.value) : [])
-                    }
-                  />
-                </div>
-              </div>
-              {destinationsCountry.map((value) => (
-                <input key={`DestinationsCountry-${value}`} type="hidden" name="DestinationsCountry[]" value={value} />
-              ))}
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="Destinations">
-                Destinations City <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:city" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="Destinations"
-                    options={destinationCityOptions}
-                    placeholder="Select Destinations City"
-                    isMulti
-                    isClearable
-                    isSearchable
-                    closeMenuOnSelect={false}
-                    value={getOptionsByValues(destinationCityOptions, destinationsCity)}
-                    onChange={(selected) =>
-                      setDestinationsCity(selected ? selected.map((opt) => opt.value) : [])
-                    }
-                  />
-                </div>
-              </div>
-              {destinationsCity.map((value) => (
-                <input key={`Destinations-${value}`} type="hidden" name="Destinations[]" value={value} />
-              ))}
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="Duration">
-                Duration <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:clock-outline" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="Duration"
-                    options={durationSelectOptions}
-                    placeholder="Select Duration"
-                    isClearable
-                    isSearchable
-                    value={getOptionByValue(durationSelectOptions, durationSelection)}
-                    onChange={(selected) => setDurationSelection(selected ? selected.value : "")}
-                  />
-                </div>
-              </div>
-              {durationSelection && (
-                <input type="hidden" name="Duration" value={durationSelection} />
-              )}
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="Origin">
-                Origin
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:map-marker-outline" />
-                </span>
-                <input
-                  type="text"
-                  id="Origin"
-                  name="Origin"
-                  className="form-control"
-                  placeholder="Enter Your Origin"
-                />
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="leadSource">
-                Lead Source <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:compass-outline" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="leadSource"
-                    options={leadSourceSelectOptions}
-                    placeholder="Select Lead Source"
-                    isClearable
-                    isSearchable
-                    value={getOptionByValue(leadSourceSelectOptions, leadSourceSelection)}
-                    onChange={(selected) => setLeadSourceSelection(selected ? selected.value : "")}
-                  />
-                </div>
-              </div>
-              {leadSourceSelection && (
-                <input type="hidden" name="LeadSource" value={leadSourceSelection} />
-              )}
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label" htmlFor="leadMedium">
-                Lead Medium <sup>*</sup>
-              </label>
-              <div className="icon-field">
-                <span className="icon">
-                  <Icon icon="mdi:bullhorn-outline" />
-                </span>
-                <div className="form-control p-0 border-0">
-                  <Select
-                    inputId="leadMedium"
-                    options={leadMediumSelectOptions}
-                    placeholder="Select Lead Medium"
-                    isClearable
-                    isSearchable
-                    value={getOptionByValue(leadMediumSelectOptions, leadMediumSelection)}
-                    onChange={(selected) => setLeadMediumSelection(selected ? selected.value : "")}
-                  />
-                </div>
-              </div>
-              {leadMediumSelection && (
-                <input type="hidden" name="LeadMedium" value={leadMediumSelection} />
-              )}
-            </div>
-
-            <div className="col-12 d-flex justify-content-end mt-3">
-              <button type="button" className="btn btn-outline-danger me-2">
-                Cancel
-              </button>
-              <button type="submit" id="addSingleLead" className="btn btn-primary">
-                Save
-              </button>
-            </div>
-          </form>
+      <div className={`col-md-4 ${leadType === "B2B" ? "" : "d-none"}`}>
+        <label className="form-label" htmlFor="contactNumber">
+          Contact Number <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="solar:phone-calling-linear" />
+          </span>
+          <input
+            type="text"
+            id="contactNumber"
+            name="contactNumber"
+            className="form-control"
+            placeholder="Enter Your Number"
+            required
+          />
         </div>
       </div>
-    </div>
+
+      {/* Customer Details - Row 3 */}
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="CustomerName">
+          Customer Name
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="f7:person" />
+          </span>
+          <input
+            type="text"
+            id="CustomerName"
+            name="CustomerName"
+            className="form-control"
+            placeholder="Enter Customer Name"
+          />
+        </div>
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="CustomercontactNumber">
+          Customer Contact No. <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="solar:phone-calling-linear" />
+          </span>
+          <input
+            type="text"
+            id="CustomercontactNumber"
+            name="CustomercontactNumber"
+            className="form-control"
+            placeholder="Enter Customer Number"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="Customeremail">
+          Customer Email ID
+        </label>
+        <input type="hidden" name="customer_id" id="customer_id" value="0" />
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mage:email" />
+          </span>
+          <input
+            type="email"
+            id="Customeremail"
+            name="Customeremail"
+            className="form-control check_exist_email"
+            placeholder="Enter Customer Email"
+          />
+        </div>
+        <small className="text-success d-block mt-1 show_email_status d-none">
+          Email is available.
+        </small>
+      </div>
+
+      {/* Travel Information - Row 4 */}
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="TravelDate">
+          Travel Date
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="solar:calendar-linear" />
+          </span>
+          <input type="date" id="TravelDate" name="TravelDate" className="form-control" />
+        </div>
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="HolidayType">
+          Holiday Type <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:calendar-month-outline" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="HolidayType"
+              options={holidayTypeSelectOptions}
+              placeholder="Select Holiday Type"
+              isClearable
+              isSearchable
+              value={getOptionByValue(holidayTypeSelectOptions, holidayTypeSelection)}
+              onChange={(selected) => setHolidayTypeSelection(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {holidayTypeSelection && (
+          <input type="hidden" name="HolidayType" value={holidayTypeSelection} />
+        )}
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="NoofPax">
+          No of Pax <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:account-group-outline" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="NoofPax"
+              options={paxSelectOptions}
+              placeholder="Select Pax"
+              isClearable
+              isSearchable
+              value={getOptionByValue(paxSelectOptions, paxSelection)}
+              onChange={(selected) => setPaxSelection(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {paxSelection && (
+          <input type="hidden" name="NoofPax" value={paxSelection} />
+        )}
+      </div>
+
+      {/* Destinations - Row 5 */}
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="DestinationsCountry">
+          Destinations Country <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:earth" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="DestinationsCountry"
+              options={destinationCountryOptions}
+              placeholder="Select Destinations Country"
+              isMulti
+              isClearable
+              isSearchable
+              closeMenuOnSelect={false}
+              value={getOptionsByValues(destinationCountryOptions, destinationsCountry)}
+              onChange={(selected) =>
+                setDestinationsCountry(selected ? selected.map((opt) => opt.value) : [])
+              }
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {destinationsCountry.map((value) => (
+          <input key={`DestinationsCountry-${value}`} type="hidden" name="DestinationsCountry[]" value={value} />
+        ))}
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="Destinations">
+          Destinations City <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:city" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="Destinations"
+              options={destinationCityOptions}
+              placeholder="Select Destinations City"
+              isMulti
+              isClearable
+              isSearchable
+              closeMenuOnSelect={false}
+              value={getOptionsByValues(destinationCityOptions, destinationsCity)}
+              onChange={(selected) =>
+                setDestinationsCity(selected ? selected.map((opt) => opt.value) : [])
+              }
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {destinationsCity.map((value) => (
+          <input key={`Destinations-${value}`} type="hidden" name="Destinations[]" value={value} />
+        ))}
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="Duration">
+          Duration <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:clock-outline" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="Duration"
+              options={durationSelectOptions}
+              placeholder="Select Duration"
+              isClearable
+              isSearchable
+              value={getOptionByValue(durationSelectOptions, durationSelection)}
+              onChange={(selected) => setDurationSelection(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {durationSelection && (
+          <input type="hidden" name="Duration" value={durationSelection} />
+        )}
+      </div>
+
+      {/* Lead Source and Medium - Row 6 */}
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="Origin">
+          Origin
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:map-marker-outline" />
+          </span>
+          <input
+            type="text"
+            id="Origin"
+            name="Origin"
+            className="form-control"
+            placeholder="Enter Your Origin"
+          />
+        </div>
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="leadSource">
+          Lead Source <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:compass-outline" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="leadSource"
+              options={leadSourceSelectOptions}
+              placeholder="Select Lead Source"
+              isClearable
+              isSearchable
+              value={getOptionByValue(leadSourceSelectOptions, leadSourceSelection)}
+              onChange={(selected) => setLeadSourceSelection(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {leadSourceSelection && (
+          <input type="hidden" name="LeadSource" value={leadSourceSelection} />
+        )}
+      </div>
+
+      <div className="col-md-4">
+        <label className="form-label" htmlFor="leadMedium">
+          Lead Medium <sup>*</sup>
+        </label>
+        <div className="icon-field">
+          <span className="icon">
+            <Icon icon="mdi:bullhorn-outline" />
+          </span>
+          <div className="form-control p-0 border-0">
+            <Select
+              inputId="leadMedium"
+              options={leadMediumSelectOptions}
+              placeholder="Select Lead Medium"
+              isClearable
+              isSearchable
+              value={getOptionByValue(leadMediumSelectOptions, leadMediumSelection)}
+              onChange={(selected) => setLeadMediumSelection(selected ? selected.value : "")}
+              menuPortalTarget={menuPortalTarget}
+              menuPosition="fixed"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+        {leadMediumSelection && (
+          <input type="hidden" name="LeadMedium" value={leadMediumSelection} />
+        )}
+      </div>
+    </form>
   );
 };
 

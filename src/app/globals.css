@@ -26,6 +26,34 @@
   z-index: 9999 !important;
 }
 
+/* Ensure select dropdowns appear above modals (Bootstrap modal z-index is 1055) */
+.modal .select__menu-portal {
+  z-index: 9999 !important;
+}
+
+.modal .select__menu {
+  z-index: 9999 !important;
+}
+
+.modal.show .select__menu-portal {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+/* Additional fix for react-select in modals */
+.modal.show .select__menu {
+  z-index: 9999 !important;
+}
+
+/* Fix for react-select menu list */
+.select__menu-list {
+  z-index: 9999 !important;
+}
+
+.modal .select__menu-list {
+  z-index: 9999 !important;
+}
+
 /* Bootstrap utility classes for react-select "Add Our Hotel" option */
 .select__option--add-hotel {
   background-color: var(--primary-50) !important;
