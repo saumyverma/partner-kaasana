@@ -60,3 +60,17 @@
     border-radius: 0 0 1rem 1rem;
 }
 
+
+/* Rest password modal css start */
+
+.resetPasswordModalContent {
+    border-radius: 1rem;
+    background-color: var(--white);
+    width: 100%;
+    max-width: 30rem; /* 70rem = 1120px max-width for the modal */
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+/* Rest password modal css end */

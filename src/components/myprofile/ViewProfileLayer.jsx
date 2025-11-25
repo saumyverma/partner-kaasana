@@ -3,17 +3,14 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import EditPersonalInfoModal from "@/components/myprofile/EditPersonalInfoModal";
+import ResetPasswordModal from "@/components/myprofile/ResetPasswordModal";
 
 
 const ViewProfileLayer = () => {
   const [showEditPersonalInfoModal, setShowEditPersonalInfoModal] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
  
-  const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [modalCurrentPasswordVisible, setModalCurrentPasswordVisible] = useState(false);
-  const [modalNewPasswordVisible, setModalNewPasswordVisible] = useState(false);
-  const [modalConfirmPasswordVisible, setModalConfirmPasswordVisible] = useState(false);
+  
 
   const toggleCurrentPasswordVisibility = () => {
     setCurrentPasswordVisible(!currentPasswordVisible);
@@ -27,17 +24,7 @@ const ViewProfileLayer = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
-  const toggleModalCurrentPasswordVisibility = () => {
-    setModalCurrentPasswordVisible(!modalCurrentPasswordVisible);
-  };
-
-  const toggleModalNewPasswordVisibility = () => {
-    setModalNewPasswordVisible(!modalNewPasswordVisible);
-  };
-
-  const toggleModalConfirmPasswordVisibility = () => {
-    setModalConfirmPasswordVisible(!modalConfirmPasswordVisible);
-  };
+ 
 
   const readURL = (input) => {
     if (input.target.files && input.target.files[0]) {
@@ -56,7 +43,9 @@ const ViewProfileLayer = () => {
     {showEditPersonalInfoModal && ( 
       <EditPersonalInfoModal showEditPersonalInfoModal={showEditPersonalInfoModal} setShowEditPersonalInfoModal={setShowEditPersonalInfoModal} />
     )}
-  
+    {showResetPasswordModal && ( 
+      <ResetPasswordModal showResetPasswordModal={showResetPasswordModal} setShowResetPasswordModal={setShowResetPasswordModal} />
+    )}
 
 
     <div className='row gy-4'>
@@ -178,8 +167,7 @@ const ViewProfileLayer = () => {
                 <button
                   type='button'
                   className='btn btn-primary border border-primary-600 text-sm px-24 py-10 radius-8 w-100'
-                  data-bs-toggle='modal'
-                  data-bs-target='#passwordResetModal'
+                   onClick={() => setShowResetPasswordModal(true)}
                 >
                   Reset Password
                 </button>
@@ -738,304 +726,6 @@ const ViewProfileLayer = () => {
           </div>
         </div>
       </div>
-
-      {/* Password Reset Modal */}
-      <div
-        className='modal fade'
-        id='passwordResetModal'
-        tabIndex={-1}
-        aria-labelledby='passwordResetModalLabel'
-        aria-hidden='true'
-      >
-        <div className='modal-dialog modal-dialog-centered'>
-          <div className='modal-content border radius-16 bg-base'>
-            <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
-              <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='passwordResetModalLabel'>
-                Reset Password
-              </h1>
-              <button
-                type='button'
-                className='btn-close'
-                data-bs-dismiss='modal'
-                aria-label='Close'
-              />
-            </div>
-            <div className='modal-body p-24'>
-              <form action='#'>
-                <div className='mb-20'>
-                  <label
-                    htmlFor='modal-email'
-                    className='form-label fw-semibold text-primary-light text-sm mb-8'
-                  >
-                    Email
-                  </label>
-                  <input
-                    type='email'
-                    className='form-control radius-8'
-                    id='modal-email'
-                    defaultValue='ifrandom@gmail.com'
-                    disabled
-                    readOnly
-                  />
-                </div>
-                <div className='mb-20'>
-                  <label
-                    htmlFor='modal-current-password'
-                    className='form-label fw-semibold text-primary-light text-sm mb-8'
-                  >
-                    Current Password <span className='text-danger-600'>*</span>
-                  </label>
-                  <div className='position-relative'>
-                    <input
-                      type={modalCurrentPasswordVisible ? "text" : "password"}
-                      className='form-control radius-8'
-                      id='modal-current-password'
-                      placeholder='Enter Current Password'
-                    />
-                    <span
-                      className={`toggle-password ${
-                        modalCurrentPasswordVisible ? "ri-eye-off-line" : "ri-eye-line"
-                      } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
-                      onClick={toggleModalCurrentPasswordVisibility}
-                    ></span>
-                  </div>
-                </div>
-                <div className='mb-20'>
-                  <label
-                    htmlFor='modal-new-password'
-                    className='form-label fw-semibold text-primary-light text-sm mb-8'
-                  >
-                    New Password <span className='text-danger-600'>*</span>
-                  </label>
-                  <div className='position-relative'>
-                    <input
-                      type={modalNewPasswordVisible ? "text" : "password"}
-                      className='form-control radius-8'
-                      id='modal-new-password'
-                      placeholder='Enter New Password'
-                    />
-                    <span
-                      className={`toggle-password ${
-                        modalNewPasswordVisible ? "ri-eye-off-line" : "ri-eye-line"
-                      } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
-                      onClick={toggleModalNewPasswordVisibility}
-                    ></span>
-                  </div>
-                </div>
-                <div className='mb-20'>
-                  <label
-                    htmlFor='modal-confirm-password'
-                    className='form-label fw-semibold text-primary-light text-sm mb-8'
-                  >
-                    Confirm Password <span className='text-danger-600'>*</span>
-                  </label>
-                  <div className='position-relative'>
-                    <input
-                      type={modalConfirmPasswordVisible ? "text" : "password"}
-                      className='form-control radius-8'
-                      id='modal-confirm-password'
-                      placeholder='Confirm New Password'
-                    />
-                    <span
-                      className={`toggle-password ${
-                        modalConfirmPasswordVisible
-                          ? "ri-eye-off-line"
-                          : "ri-eye-line"
-                      } cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light`}
-                      onClick={toggleModalConfirmPasswordVisibility}
-                    ></span>
-                  </div>
-                </div>
-                <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
-                  <button
-                    type='button'
-                    className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-sm px-24 py-10 radius-8'
-                    data-bs-dismiss='modal'
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type='submit'
-                    className='btn btn-primary border border-primary-600 text-sm px-24 py-10 radius-8'
-                  >
-                    Update Password
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Edit Personal Info Modal */}
-      {/* <div
-        className='modal fade'
-        id='editPersonalInfoModal'
-        tabIndex={-1}
-        aria-labelledby='editPersonalInfoModalLabel'
-        aria-hidden='true'
-      >
-        <div className='modal-dialog modal-lg modal-dialog-centered'>
-          <div className='modal-content border radius-16 bg-base'>
-            <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
-              <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='editPersonalInfoModalLabel'>
-                Edit Personal Info
-              </h1>
-              <button
-                type='button'
-                className='btn-close'
-                data-bs-dismiss='modal'
-                aria-label='Close'
-              />
-            </div>
-            <div className='modal-body p-24'>
-              <form onSubmit={handleSubmit(handleEditPersonalInfo)}>
-                <div className='row'>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Cover Image
-                    </label>
-                    <div className='position-relative'>
-                      <img
-                        src={coverImagePreview}
-                        alt='Cover Preview'
-                        className='w-100 h-120-px border radius-8 object-fit-cover mb-8'
-                      />
-                      <input
-                        type='file'
-                        className='form-control radius-8'
-                        accept='image/*'
-                        onChange={readCoverImage}
-                      />
-                    </div>
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Profile Image
-                    </label>
-                    <div className='position-relative'>
-                      <div className='d-flex justify-content-center mb-8'>
-                        <img
-                          src={profileImagePreview}
-                          alt='Profile Preview'
-                          className='w-120-px h-120-px border radius-8 rounded-circle object-fit-cover'
-                        />
-                      </div>
-                      <input
-                        type='file'
-                        className='form-control radius-8'
-                        accept='image/*'
-                        onChange={readProfileImage}
-                      />
-                    </div>
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Name <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control radius-8'
-                      placeholder='Enter Name'
-                      defaultValue='Jacob Jones'
-                      {...register("name", { required: "Name is required" })}
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Email <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='email'
-                      className='form-control radius-8'
-                      placeholder='Enter Email'
-                      defaultValue='ifrandom@gmail.com'
-                      {...register("email", { required: "Email is required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email address" } })}
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Phone
-                    </label>
-                    <input
-                      type='tel'
-                      className='form-control radius-8'
-                      placeholder='Enter Phone Number'
-                      defaultValue='(1) 2536 2561 2365'
-                      {...register("phone", { required: "Phone is required" })}
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Designation <span className='text-danger-600'>*</span>
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control radius-8'
-                      placeholder='Enter Designation'
-                      defaultValue='UI UX Designer'
-                      {...register("designation", { required: "Designation is required" })}
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Reporting Manager
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control radius-8'
-                      placeholder='Enter Reporting Manager'
-                      defaultValue='John Smith'
-                      {...register("reportingManager", { required: "Reporting Manager is required" })}
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Branch
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control radius-8'
-                      placeholder='Enter Branch'
-                      defaultValue='New York Office'
-                      {...register("branch", { required: "Branch is required" })}
-                    />
-                  </div>
-                  <div className='col-6 mb-20'>
-                    <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
-                      Assigned Roles
-                    </label>
-                    <input
-                      type='text'
-                      className='form-control radius-8'
-                      placeholder='Enter Assigned Roles'
-                      defaultValue='Admin, Manager'
-                      {...register("assignedRoles", { required: "Assigned Roles is required" })}
-                    />
-                  </div>
-                </div>
-                <div className='d-flex align-items-center justify-content-center gap-3 mt-24'>
-                  <button
-                    type='button'
-                    className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
-                    data-bs-dismiss='modal'
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type='submit'
-                    className='btn btn-primary border border-primary-600 text-md px-48 py-12 radius-8'
-                    onClick={handleSubmit(handleEditPersonalInfo)}
-                    // disabled={!isValidFormEditPersonalInfo}
-                    >
-                    Save
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div> */}
 
     </div>
     </>
