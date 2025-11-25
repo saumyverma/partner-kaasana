@@ -90,61 +90,22 @@ const EditSupplierModal = ({ supplier }) => {
     const modalElement = document.getElementById('editSupplierModal');
     if (modalElement) {
       if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
-        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
-        modal.hide();
+        const modal = window.bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+          modal.hide();
+        }
       } else {
         // Manual cleanup
         modalElement.classList.remove('show');
         modalElement.style.display = 'none';
-        modalElement.setAttribute('aria-hidden', 'true');
-        modalElement.setAttribute('aria-modal', 'false');
         document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
+        const backdrop = document.getElementById('editModalBackdrop');
+        if (backdrop) {
+          backdrop.remove();
+        }
       }
     }
   };
-
-  // Listen for Bootstrap modal events to handle cleanup
-  useEffect(() => {
-    const modalElement = document.getElementById('editSupplierModal');
-    if (modalElement) {
-      const cleanupBackdrop = () => {
-        // Clean up all backdrops (handle multiple scenarios)
-        const backdrops = document.querySelectorAll('.modal-backdrop');
-        backdrops.forEach((backdrop) => backdrop.remove());
-        
-        // Remove modal-open class and restore body styles
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        
-        // Also check for any backdrop with specific IDs
-        const specificBackdrop = document.getElementById('editSupplierModalBackdrop');
-        if (specificBackdrop) {
-          specificBackdrop.remove();
-        }
-      };
-
-      const handleHide = () => {
-        cleanupBackdrop();
-      };
-
-      const handleHidden = () => {
-        cleanupBackdrop();
-      };
-
-      modalElement.addEventListener('hide.bs.modal', handleHide);
-      modalElement.addEventListener('hidden.bs.modal', handleHidden);
-
-      return () => {
-        modalElement.removeEventListener('hide.bs.modal', handleHide);
-        modalElement.removeEventListener('hidden.bs.modal', handleHidden);
-      };
-    }
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -160,6 +121,7 @@ const EditSupplierModal = ({ supplier }) => {
       aria-labelledby='editSupplierModalLabel'
       aria-hidden='true'
       onClick={(e) => {
+        // Close modal when clicking on backdrop
         if (e.target.id === 'editSupplierModal') {
           handleClose();
         }
@@ -177,7 +139,6 @@ const EditSupplierModal = ({ supplier }) => {
             <button
               type='button'
               className='btn-close'
-              data-bs-dismiss='modal'
               onClick={handleClose}
               aria-label='Close'
             />
@@ -442,7 +403,6 @@ const EditSupplierModal = ({ supplier }) => {
                 <button
                   type='button'
                   className='border border-secondary-600 bg-hover-secondary-200 text-secondary-600 text-md px-40 py-11 radius-8'
-                  data-bs-dismiss='modal'
                   onClick={handleClose}
                 >
                   Cancel

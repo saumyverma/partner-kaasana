@@ -11,31 +11,7 @@ const loadJQueryAndDataTables = async () => {
 };
 
 export default function HotelsLayer() {
-  const openModal = (modalId) => {
-    const modalElement = document.getElementById(modalId);
-    if (modalElement) {
-      if (typeof window !== 'undefined' && window.bootstrap && window.bootstrap.Modal) {
-        const modal = window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
-        modal.show();
-      } else {
-        // Fallback: manual modal opening
-        modalElement.classList.add('show');
-        modalElement.style.display = 'block';
-        modalElement.setAttribute('aria-hidden', 'false');
-        modalElement.setAttribute('aria-modal', 'true');
-        document.body.classList.add('modal-open');
-        const backdrop = document.createElement('div');
-        backdrop.className = 'modal-backdrop fade show';
-        backdrop.id = `${modalId}Backdrop`;
-        document.body.appendChild(backdrop);
-      }
-    }
-  };
-
-  const handleAddHotel = () => {
-    setTimeout(() => openModal('addHotelModal'), 50);
-  };
-    useEffect(() => {
+  useEffect(() => {
     let table;
     loadJQueryAndDataTables()
       .then(($) => {
@@ -175,7 +151,8 @@ export default function HotelsLayer() {
             <button
               type='button'
               className='btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2'
-              onClick={handleAddHotel}
+              data-bs-toggle='modal'
+              data-bs-target='#addHotelModal'
             >
               <Icon
                 icon='ic:baseline-plus'
