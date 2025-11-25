@@ -74,3 +74,16 @@
     flex-direction: column;
 }
 /* Rest password modal css end */
+
+/* Edit user modal css start */
+.editUserModalContent {
+    border-radius: 1rem;
+    background-color: var(--white);
+    width: 100%;
+    max-width: 55rem; /* 70rem = 1120px max-width for the modal */
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+/* Edit user modal css end */

@@ -9,8 +9,8 @@ import EditUserModal from "./EditUserModal";
 
 const UsersGridLayer = () => {
   const [selectedUser, setSelectedUser] = useState(null);
-  const [editUser, setEditUser] = useState(null);
-
+  // const [editUser, setEditUser] = useState(null);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
   // Sample user data - in a real app, this would come from props or API
   const users = [
     {
@@ -226,6 +226,10 @@ const UsersGridLayer = () => {
   };
 
   return (
+    <>
+    {showEditUserModal && ( 
+      <EditUserModal showEditUserModal={showEditUserModal} setShowEditUserModal={setShowEditUserModal} />
+    )}
     <div className='row gy-4'>
       <div className='col-xxl-3'>
         <div className='card h-100 p-0 radius-12 border shadow-sm'>
@@ -394,10 +398,10 @@ const UsersGridLayer = () => {
                           <button
                             type='button'
                             className='dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900 d-flex align-items-center gap-10 w-100 border-0 bg-transparent text-start'
-                            onClick={() => handleEditUser(user)}
+                            onClick={()=>setShowEditUserModal(true)}
                           >
                             Edit
-                          </button>
+                          </button> 
                         </li>
                         <li>
                           <button
@@ -509,11 +513,11 @@ const UsersGridLayer = () => {
         {/* Modals */}
         <AddNewUserModal />
         <ViewUserDetailsModal user={selectedUser} onEdit={handleEditUser} />
-        <EditUserModal user={editUser} />
+        {/* <EditUserModal user={editUser} /> */}
         </div>
 
     </div>
-
+</>
   );
 };
 
