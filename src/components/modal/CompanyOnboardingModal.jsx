@@ -21,7 +21,10 @@ const CompanyOnboardingModal = ({ isOpen, companyDetails }) => {
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content radius-16 bg-base">
             <div className="modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0">
-              <h1 className="modal-title fs-5 mb-0" id="companyOnboardingModalTitle">
+              <h1
+                className="modal-title fs-5 mb-0"
+                id="companyOnboardingModalTitle"
+              >
                 Complete Your Company Profile
               </h1>
             </div>
@@ -30,9 +33,13 @@ const CompanyOnboardingModal = ({ isOpen, companyDetails }) => {
             </div>
             <div className="modal-footer px-24 pb-24 border-0">
               <div className="d-flex w-100 flex-column flex-md-row gap-3">
-                <div className="alert alert-warning radius-12 mb-0" role="alert">
-                  The onboarding modal will stay open until your company profile setup is
-                  marked as complete. Need help? Reach out to {contactEmail}.
+                <div
+                  className="alert alert-warning radius-12 mb-0"
+                  role="alert"
+                >
+                  The onboarding modal will stay open until your company profile
+                  setup is marked as complete. Need help? Reach out to{" "}
+                  {contactEmail}.
                 </div>
               </div>
             </div>
