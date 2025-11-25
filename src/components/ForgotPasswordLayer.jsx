@@ -4,9 +4,11 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { api } from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 export default function ForgotPasswordPage() {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();  
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const router = useRouter();  
   const isValidForm = watch("email");
   const handleForgotPassword = async(data) => {
     console.log("Forgot Password clicked", data);
@@ -15,7 +17,9 @@ export default function ForgotPasswordPage() {
       const tokenCaptcha="sdfsdflnsldkfnlsnk";
       const formData = { username:data.email, tokenCaptcha };
       const res = await api.post("auth/resetPassword", formData,{},{showLoader:true ,showToast:true});
-      console.log("res",res);
+      if(res.status==="success"){
+          router.push("/sign-in");
+      }
     } catch (err) {
       console.log("err",err);
     }
