@@ -18,7 +18,8 @@ export default function ForgotPasswordPage() {
       const formData = { username:data.email, tokenCaptcha };
       const res = await api.post("auth/resetPassword", formData,{},{showLoader:true ,showToast:true});
       if(res.status==="success"){
-          router.push("/sign-in");
+        localStorage.setItem("username", data.email);
+          router.push("/Verify-Otp");
       }
     } catch (err) {
       console.log("err",err);
@@ -67,7 +68,7 @@ export default function ForgotPasswordPage() {
             onClick={handleSubmit(handleForgotPassword)}  
           >
             {" "}
-            Send Reset Link
+            Send Otp
           </button>
          
           <div className='mt-32 text-center text-sm'>
