@@ -1,6 +1,5 @@
 import React from "react";
 
-import AddSingleLeadForm from "@/components/crm/AddSingleLeadForm";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import MasterLayout from "@/masterLayout/MasterLayout";
@@ -20,7 +19,9 @@ const Page = () => {
     <ProtectedRoute>
       <MasterLayout>
         <Breadcrumb title="Add Single Lead" breadcrumbs={breadcrumbs} />
-        <AddSingleLeadForm />
+        <div className="container-fluid">
+          {/* Lead form will be added here */}
+        </div>
       </MasterLayout>
     </ProtectedRoute>
   );

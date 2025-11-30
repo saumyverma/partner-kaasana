@@ -16,7 +16,6 @@ export default function LeadsLayer({ pageId }) {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState(null);
-  const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false);
 
   useEffect(() => {
     setMenuPortalTarget(document.body);
@@ -78,14 +77,15 @@ export default function LeadsLayer({ pageId }) {
           <h5 className='card-title mb-0'>Lead List</h5>
           <button
             type='button'
-            className='btn btn-primary-600 px-24 py-8 d-flex align-items-center gap-2'
-            onClick={() => setIsAddLeadModalOpen(true)}
+            className='btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2'
+            data-bs-toggle='modal'
+            data-bs-target='#addLeadModal'
           >
             <Icon
-              icon='fa6-regular:square-plus'
-              className='icon text-lg line-height-1'
+              icon='ic:baseline-plus'
+              className='icon text-xl line-height-1'
             />
-            Add New Leads
+            Add Lead
           </button>
         </div>
         <div className='card-body'>
@@ -1179,10 +1179,9 @@ export default function LeadsLayer({ pageId }) {
         </div>
       </div>
     </div>
-    <AddLeadModal 
-      isOpen={isAddLeadModalOpen} 
-      onClose={() => setIsAddLeadModalOpen(false)} 
-    />
+
+    {/* Modals */}
+    <AddLeadModal />
     </>
   )
 }
