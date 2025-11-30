@@ -55,3 +55,141 @@
 .Toastify__toast--success .Toastify__close-button:hover {
   opacity: 1;
 }
+
+/* React-Select Dropdown Z-Index Fix for Modals */
+/* Universal fix for all react-select dropdowns - ensures they appear above modals */
+/* Since menus are portaled to body, we need to target them directly */
+
+/* Base z-index for all dropdowns */
+.select__menu,
+.select__menu-portal {
+  z-index: 9999 !important;
+}
+
+/* Target menus inside modals (if not portaled) */
+.modal .select__menu {
+  z-index: 9999 !important;
+}
+
+.modal .select__menu-portal {
+  z-index: 9999 !important;
+}
+
+/* Nested Modal Detection and Fix */
+/* When nested modals are open (z-index >= 1065), lower main modal dropdowns */
+/* Using :has() selector to detect nested modals */
+body:has(.modal[style*="z-index: 1065"], .modal[style*="z-index: 1066"], .modal[style*="z-index: 1067"], .modal[style*="z-index: 1068"], .modal[style*="z-index: 1069"], .modal[style*="z-index: 1070"], .modal[style*="z-index: 1071"], .modal[style*="z-index: 1072"], .modal[data-nested="true"]) .select__menu-portal:not([data-nested-dropdown="true"]),
+body:has(.modal[style*="z-index: 1065"], .modal[style*="z-index: 1066"], .modal[style*="z-index: 1067"], .modal[style*="z-index: 1068"], .modal[style*="z-index: 1069"], .modal[style*="z-index: 1070"], .modal[style*="z-index: 1071"], .modal[style*="z-index: 1072"], .modal[data-nested="true"]) .select__menu:not([data-nested-dropdown="true"]) {
+  z-index: 1000 !important;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Nested Modal Dropdown Z-Index (for modals within modals) */
+/* When a modal contains another modal, the nested modal's dropdowns need higher z-index */
+.modal.show .modal .select__menu {
+  z-index: 10010 !important;
+}
+
+.modal.show .modal .select__menu-portal {
+  z-index: 10010 !important;
+}
+
+/* Dropdowns for nested modals (higher z-index) */
+/* When a nested modal is open, any newly opened dropdown should have high z-index */
+body:has(.modal[data-nested="true"]) .select__menu-portal:not([style*="display: none"]),
+body:has(.modal[data-nested="true"]) .select__menu:not([style*="display: none"]) {
+  z-index: 10010 !important;
+}
+
+/* More specific: Dropdowns that are visible when nested modal is open */
+.select__menu-portal[style*="z-index: 10010"],
+.select__menu[style*="z-index: 10010"] {
+  z-index: 10010 !important;
+}
+
+/* Hide main modal dropdowns when nested modal backdrop is present */
+body:has(.modal-backdrop[style*="z-index: 1065"], .modal-backdrop[style*="z-index: 1066"], .modal-backdrop[style*="z-index: 1067"], .modal-backdrop[style*="z-index: 1068"], .modal-backdrop[style*="z-index: 1069"]) .select__menu-portal:not([data-nested-dropdown="true"]),
+body:has(.modal-backdrop[style*="z-index: 1065"], .modal-backdrop[style*="z-index: 1066"], .modal-backdrop[style*="z-index: 1067"], .modal-backdrop[style*="z-index: 1068"], .modal-backdrop[style*="z-index: 1069"]) .select__menu:not([data-nested-dropdown="true"]) {
+  z-index: 1000 !important;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Responsive fixes for react-select dropdowns */
+/* Ensure dropdown menus are responsive and don't overflow on mobile */
+.select__menu,
+.select__menu-portal {
+  max-width: calc(100vw - 20px) !important;
+  min-width: 200px !important;
+}
+
+/* Responsive menu positioning */
+@media (max-width: 768px) {
+  .select__menu,
+  .select__menu-portal {
+    max-width: calc(100vw - 40px) !important;
+    left: 20px !important;
+    right: 20px !important;
+    width: auto !important;
+  }
+  
+  /* Ensure menu doesn't overflow on small screens */
+  .select__menu-list {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Ensure control is responsive */
+  .select__control {
+    font-size: 14px !important;
+  }
+  
+  .select__single-value,
+  .select__placeholder,
+  .select__input-container {
+    font-size: 14px !important;
+  }
+}
+
+/* Fix for "Add Our Hotel" button in dropdown */
+.select__option--add-hotel {
+  position: sticky !important;
+  bottom: 0 !important;
+  background-color: #f8f9fa !important;
+  border-top: 1px solid #dee2e6 !important;
+  z-index: 10 !important;
+  font-weight: 600 !important;
+  color: #0d6efd !important;
+  padding: 12px 16px !important;
+}
+
+.select__option--add-hotel:hover {
+  background-color: #e7f1ff !important;
+}
+
+/* Responsive styling for Add Our Hotel button */
+@media (max-width: 576px) {
+  .select__option--add-hotel {
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* Ensure dropdown control is responsive */
+.select__control {
+  min-height: 38px !important;
+}
+
+@media (max-width: 768px) {
+  .select__control {
+    font-size: 14px !important;
+  }
+  
+  .select__single-value,
+  .select__placeholder {
+    font-size: 14px !important;
+  }
+}

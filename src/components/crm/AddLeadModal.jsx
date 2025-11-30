@@ -169,44 +169,9 @@ const AddLeadModal = () => {
   useEffect(() => {
     setMenuPortalTarget(document.body);
     
-    // Add custom styles for react-select dropdowns to appear above modal
-    // Lower z-index when nested modal is open
-    const mainModalZIndex = showAddDestinationModal ? 1000 : 9999;
-    const style = document.createElement('style');
-    style.id = 'addLeadModalSelectStyles';
-    style.textContent = `
-      #addLeadModal .select__menu {
-        z-index: ${mainModalZIndex} !important;
-        ${showAddDestinationModal ? 'display: none !important;' : ''}
-      }
-      #addLeadModal .select__menu-portal {
-        z-index: ${mainModalZIndex} !important;
-        ${showAddDestinationModal ? 'display: none !important;' : ''}
-      }
-      ${showAddDestinationModal ? `
-        #addLeadModal .select__control {
-          pointer-events: none !important;
-        }
-        #addLeadModal .select__menu,
-        #addLeadModal .select__menu-portal {
-          display: none !important;
-          visibility: hidden !important;
-          opacity: 0 !important;
-        }
-      ` : ''}
-    `;
-    
-    // Remove existing style if present
-    const existingStyle = document.getElementById('addLeadModalSelectStyles');
-    if (existingStyle) {
-      document.head.removeChild(existingStyle);
-    }
-    
-    document.head.appendChild(style);
-    
     // Close any open Select dropdowns when nested modal opens
     if (showAddDestinationModal) {
-      // Close all react-select menus
+      // Close all react-select menus in main modal
       const selectMenus = document.querySelectorAll('.select__menu-portal, .select__menu');
       selectMenus.forEach(menu => {
         if (menu.closest('#addLeadModal')) {
@@ -220,13 +185,6 @@ const AddLeadModal = () => {
         input.blur();
       });
     }
-    
-    return () => {
-      const styleToRemove = document.getElementById('addLeadModalSelectStyles');
-      if (styleToRemove) {
-        document.head.removeChild(styleToRemove);
-      }
-    };
   }, [showAddDestinationModal]);
 
   const nightsOptions = useMemo(
@@ -512,10 +470,6 @@ const AddLeadModal = () => {
                             menuPortalTarget={menuPortalTarget}
                             menuPosition="fixed"
                             classNamePrefix="select"
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: showAddDestinationModal ? 1000 : 9999 }),
-                              menu: (base) => ({ ...base, zIndex: showAddDestinationModal ? 1000 : 9999 }),
-                            }}
                           />
                         </div>
                       </div>
@@ -544,10 +498,6 @@ const AddLeadModal = () => {
                             menuPortalTarget={menuPortalTarget}
                             menuPosition="fixed"
                             classNamePrefix="select"
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: showAddDestinationModal ? 1000 : 9999 }),
-                              menu: (base) => ({ ...base, zIndex: showAddDestinationModal ? 1000 : 9999 }),
-                            }}
                           />
                         </div>
                       </div>
@@ -705,10 +655,6 @@ const AddLeadModal = () => {
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
                         classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
                       />
                     </div>
                   </div>
@@ -738,10 +684,6 @@ const AddLeadModal = () => {
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
                         classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
                       />
                     </div>
                   </div>
@@ -773,10 +715,6 @@ const AddLeadModal = () => {
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
                         classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
                         components={{
                           Option: ({ innerProps, data, isSelected, isFocused }) => {
                             if (data.isAddOption) {
@@ -843,10 +781,6 @@ const AddLeadModal = () => {
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
                         classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
                       />
                     </div>
                   </div>
@@ -897,10 +831,6 @@ const AddLeadModal = () => {
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
                         classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
                       />
                     </div>
                   </div>
@@ -930,10 +860,6 @@ const AddLeadModal = () => {
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
                         classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
                       />
                     </div>
                   </div>
@@ -963,10 +889,6 @@ const AddLeadModal = () => {
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
                         classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
                       />
                     </div>
                   </div>
@@ -1003,6 +925,7 @@ const AddLeadModal = () => {
             className="modal fade show d-block"
             role="dialog"
             aria-modal="true"
+            data-nested="true"
             style={{ zIndex: 1070, position: "fixed", top: 0, left: 0, width: "100%", height: "100%" }}
           >
             <div className="modal-dialog modal-dialog-centered" style={{ zIndex: 1071 }}>
@@ -1138,10 +1061,6 @@ const AddLeadModal = () => {
                               menuPortalTarget={menuPortalTarget}
                               menuPosition="fixed"
                               classNamePrefix="select"
-                              styles={{
-                                menuPortal: (base) => ({ ...base, zIndex: 10010 }),
-                                menu: (base) => ({ ...base, zIndex: 10010 }),
-                              }}
                             />
                           </div>
                         </div>

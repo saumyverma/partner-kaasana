@@ -183,10 +183,11 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
         role='dialog'
         aria-modal='true'
         aria-labelledby='addOurHotelModalLabel'
-        style={{ zIndex: 1055 }}
+        data-nested="true"
+        style={{ zIndex: 1070, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}
       >
-        <div className='modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable'>
-          <div className='modal-content border radius-16 bg-base'>
+        <div className='modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable' style={{ zIndex: 1071 }}>
+          <div className='modal-content border radius-16 bg-base' style={{ zIndex: 1071 }}>
             <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
               <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='addOurHotelModalLabel'>
                 Add Our Hotel
@@ -415,7 +416,7 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
       </div>
       <div
         className='modal-backdrop fade show'
-        style={{ backgroundColor: 'rgba(15, 23, 42, 0.65)', zIndex: 1050 }}
+        style={{ backgroundColor: 'rgba(15, 23, 42, 0.65)', zIndex: 1065 }}
         onClick={onClose}
       />
     </>

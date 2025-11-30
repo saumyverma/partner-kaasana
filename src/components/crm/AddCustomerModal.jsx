@@ -122,33 +122,6 @@ const AddCustomerModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     setMenuPortalTarget(document.body);
-
-    // Add custom styles for react-select dropdowns to appear above modal
-    const style = document.createElement('style');
-    style.id = 'addCustomerModalSelectStyles';
-    style.textContent = `
-      #addCustomerModal .select__menu {
-        z-index: 9999 !important;
-      }
-      #addCustomerModal .select__menu-portal {
-        z-index: 9999 !important;
-      }
-    `;
-
-    // Remove existing style if present
-    const existingStyle = document.getElementById('addCustomerModalSelectStyles');
-    if (existingStyle) {
-      document.head.removeChild(existingStyle);
-    }
-
-    document.head.appendChild(style);
-
-    return () => {
-      const styleToRemove = document.getElementById('addCustomerModalSelectStyles');
-      if (styleToRemove) {
-        document.head.removeChild(styleToRemove);
-      }
-    };
   }, []);
 
   const salesPersonSelectOptions = useMemo(() => salesPersonOptions, []);
@@ -309,10 +282,6 @@ const AddCustomerModal = ({ isOpen, onClose }) => {
                             menuPortalTarget={menuPortalTarget}
                             menuPosition="fixed"
                             classNamePrefix="select"
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                              menu: (base) => ({ ...base, zIndex: 9999 }),
-                            }}
                           />
                         </div>
                       </div>
@@ -338,10 +307,6 @@ const AddCustomerModal = ({ isOpen, onClose }) => {
                             menuPortalTarget={menuPortalTarget}
                             menuPosition="fixed"
                             classNamePrefix="select"
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                              menu: (base) => ({ ...base, zIndex: 9999 }),
-                            }}
                           />
                         </div>
                       </div>
@@ -475,13 +440,9 @@ const AddCustomerModal = ({ isOpen, onClose }) => {
                         isSearchable
                         value={getOptionByValue(countryOptions, country)}
                         onChange={(selected) => setCountry(selected ? selected.value : "")}
-                        menuPortalTarget={menuPortalTarget}
-                        menuPosition="fixed"
-                        classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
+                          menuPortalTarget={menuPortalTarget}
+                          menuPosition="fixed"
+                          classNamePrefix="select"
                       />
                     </div>
                   </div>
@@ -506,13 +467,9 @@ const AddCustomerModal = ({ isOpen, onClose }) => {
                         isDisabled={!country}
                         value={getOptionByValue(stateOptions, state)}
                         onChange={(selected) => setState(selected ? selected.value : "")}
-                        menuPortalTarget={menuPortalTarget}
-                        menuPosition="fixed"
-                        classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
+                          menuPortalTarget={menuPortalTarget}
+                          menuPosition="fixed"
+                          classNamePrefix="select"
                       />
                     </div>
                   </div>
@@ -537,13 +494,9 @@ const AddCustomerModal = ({ isOpen, onClose }) => {
                         isDisabled={!state}
                         value={getOptionByValue(cityOptions, city)}
                         onChange={(selected) => setCity(selected ? selected.value : "")}
-                        menuPortalTarget={menuPortalTarget}
-                        menuPosition="fixed"
-                        classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
+                          menuPortalTarget={menuPortalTarget}
+                          menuPosition="fixed"
+                          classNamePrefix="select"
                       />
                     </div>
                   </div>
@@ -609,13 +562,9 @@ const AddCustomerModal = ({ isOpen, onClose }) => {
                         isSearchable
                         value={getOptionByValue(salesPersonSelectOptions, assignedSales)}
                         onChange={(selected) => setAssignedSales(selected ? selected.value : "")}
-                        menuPortalTarget={menuPortalTarget}
-                        menuPosition="fixed"
-                        classNamePrefix="select"
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          menu: (base) => ({ ...base, zIndex: 9999 }),
-                        }}
+                          menuPortalTarget={menuPortalTarget}
+                          menuPosition="fixed"
+                          classNamePrefix="select"
                       />
                     </div>
                   </div>

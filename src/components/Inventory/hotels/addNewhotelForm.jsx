@@ -378,10 +378,40 @@ const AddNewHotelForm = () => {
 
   // Custom Option component with Bootstrap classes (only for hotel select)
   const CustomHotelOption = (props) => {
-    const { data } = props;
+    const { data, innerProps } = props;
     const className = data.isAddOption 
       ? `${props.className || ''} select__option--add-hotel`.trim()
       : props.className;
+    
+    if (data.isAddOption) {
+      return (
+        <div
+          {...innerProps}
+          className={className}
+          style={{
+            padding: '12px 16px',
+            fontWeight: 600,
+            color: '#0d6efd',
+            backgroundColor: props.isFocused ? '#e7f1ff' : '#f8f9fa',
+            borderTop: '1px solid #dee2e6',
+            cursor: 'pointer',
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 10,
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsAddHotelModalOpen(true);
+          }}
+        >
+          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>+</span>
+            <span>Add Our Hotel</span>
+          </span>
+        </div>
+      );
+    }
     
     return (
       <components.Option
@@ -396,7 +426,13 @@ const AddNewHotelForm = () => {
   // Custom MenuList to fix "Add Our Hotel" at bottom
   const CustomMenuList = (props) => {
     return (
-      <components.MenuList {...props} className="select__menu-list--custom">
+      <components.MenuList 
+        {...props} 
+        className="select__menu-list--custom"
+        style={{
+          paddingBottom: '0',
+        }}
+      >
         {props.children}
       </components.MenuList>
     );
@@ -578,6 +614,17 @@ const AddNewHotelForm = () => {
                             filterOption={filterHotelOptions}
                             menuPortalTarget={menuPortalTarget}
                             menuPosition="fixed"
+                            styles={{
+                              control: (base) => ({
+                                ...base,
+                                minHeight: '38px',
+                              }),
+                              menuList: (base) => ({
+                                ...base,
+                                maxHeight: '300px',
+                                paddingBottom: '0',
+                              }),
+                            }}
                           />
                           <div className='wizard-form-error' />
                         </div>
