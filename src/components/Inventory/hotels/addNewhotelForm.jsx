@@ -21,15 +21,11 @@ const AddNewHotelForm = () => {
       bedOptions: null,
       numberOfBeds: "",
       singlePricing: "",
-      sharingPricing: "",
       twinPricing: "",
       triplePricing: "",
       childWithBed: "",
       childWithoutBed: "",
-      extraBed: "",
-      discountMultipleOccupancy: "",
       mealPlan: null,
-      hotelPrice: "",
       blackoutDay: null,
       validity: null,
     },
@@ -327,15 +323,11 @@ const AddNewHotelForm = () => {
         bedOptions: null,
         numberOfBeds: "",
         singlePricing: "",
-        sharingPricing: "",
         twinPricing: "",
         triplePricing: "",
         childWithBed: "",
         childWithoutBed: "",
-        extraBed: "",
-        discountMultipleOccupancy: "",
         mealPlan: null,
-        hotelPrice: "",
         blackoutDay: null,
         validity: null,
       },
@@ -948,20 +940,6 @@ const AddNewHotelForm = () => {
                         </div>
                       </div>
                       <div className='col-sm-3'>
-                        <label className='form-label'>Sharing Pricing*</label>
-                        <div className='position-relative'>
-                          <input
-                            type='number'
-                            className='form-control wizard-required'
-                            placeholder='Enter Sharing Pricing'
-                            value={section.sharingPricing}
-                            onChange={(e) => updatePriceSection(section.id, 'sharingPricing', e.target.value)}
-                            required
-                          />
-                          <div className='wizard-form-error' />
-                        </div>
-                      </div>
-                      <div className='col-sm-3'>
                         <label className='form-label'>Twin Pricing*</label>
                         <div className='position-relative'>
                           <input
@@ -1018,34 +996,6 @@ const AddNewHotelForm = () => {
                         </div>
                       </div>
                       <div className='col-sm-3'>
-                        <label className='form-label'>Extra Bed*</label>
-                        <div className='position-relative'>
-                          <input
-                            type='number'
-                            className='form-control wizard-required'
-                            placeholder='Enter Extra Bed Pricing'
-                            value={section.extraBed}
-                            onChange={(e) => updatePriceSection(section.id, 'extraBed', e.target.value)}
-                            required
-                          />
-                          <div className='wizard-form-error' />
-                        </div>
-                      </div>
-                      <div className='col-sm-3'>
-                        <label className='form-label'>Multi-Occupancy Discount*</label>
-                        <div className='position-relative'>
-                          <input
-                            type='number'
-                            className='form-control wizard-required'
-                            placeholder='Enter Discount %'
-                            value={section.discountMultipleOccupancy}
-                            onChange={(e) => updatePriceSection(section.id, 'discountMultipleOccupancy', e.target.value)}
-                            required
-                          />
-                          <div className='wizard-form-error' />
-                        </div>
-                      </div>
-                      <div className='col-sm-3'>
                         <label className='form-label'>Meal Plan*</label>
                         <div className='position-relative'>
                           <Select
@@ -1059,20 +1009,6 @@ const AddNewHotelForm = () => {
                             classNamePrefix="select"
                             menuPortalTarget={menuPortalTarget}
                             menuPosition="fixed"
-                          />
-                          <div className='wizard-form-error' />
-                        </div>
-                      </div>
-                      <div className='col-sm-3'>
-                        <label className='form-label'>Hotel Price*</label>
-                        <div className='position-relative'>
-                          <input
-                            type='number'
-                            className='form-control wizard-required'
-                            placeholder='Enter Hotel Price'
-                            value={section.hotelPrice}
-                            onChange={(e) => updatePriceSection(section.id, 'hotelPrice', e.target.value)}
-                            required
                           />
                           <div className='wizard-form-error' />
                         </div>
