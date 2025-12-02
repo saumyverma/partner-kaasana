@@ -1,8 +1,94 @@
 "use client";
-import React, { useState } from "react";
-import Select from "react-select";
+import React, { useState, useMemo, useEffect } from "react";
+import Select, { components } from "react-select";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import CKEditorComponent from "../../common/CKEditor";
 import UploadWithImagePreview from "../../common/UploadWithImagePreview";
+import AddOurHotelModal from "../hotels/AddOurHotelModal";
+
+// Hierarchical destination structure
+const destinationData = [
+  {
+    id: "india",
+    name: "India",
+    type: "country",
+    states: [
+      {
+        id: "delhi",
+        name: "Delhi",
+        type: "state",
+        cities: [
+          { id: "new-delhi", name: "New Delhi", type: "city" },
+          { id: "noida", name: "Noida", type: "city" },
+        ],
+      },
+      {
+        id: "uttar-pradesh",
+        name: "Uttar Pradesh",
+        type: "state",
+        cities: [
+          { id: "lucknow", name: "Lucknow", type: "city" },
+          { id: "agra", name: "Agra", type: "city" },
+        ],
+      },
+      {
+        id: "maharashtra",
+        name: "Maharashtra",
+        type: "state",
+        cities: [
+          { id: "mumbai", name: "Mumbai", type: "city" },
+          { id: "pune", name: "Pune", type: "city" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "uae",
+    name: "United Arab Emirates",
+    type: "country",
+    states: [
+      {
+        id: "dubai-emirate",
+        name: "Dubai",
+        type: "state",
+        cities: [
+          { id: "dubai-city", name: "Dubai", type: "city" },
+          { id: "jebel-ali", name: "Jebel Ali", type: "city" },
+        ],
+      },
+      {
+        id: "abu-dhabi-emirate",
+        name: "Abu Dhabi",
+        type: "state",
+        cities: [
+          { id: "abu-dhabi-city", name: "Abu Dhabi", type: "city" },
+          { id: "al-ain", name: "Al Ain", type: "city" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "saudi-arabia",
+    name: "Saudi Arabia",
+    type: "country",
+    states: [
+      {
+        id: "riyadh-province",
+        name: "Riyadh",
+        type: "state",
+        cities: [
+          { id: "riyadh-city", name: "Riyadh", type: "city" },
+        ],
+      },
+    ],
+  },
+];
+
+const getOptionByValue = (options, value) =>
+  options.find((opt) => opt.value === value) || null;
+
+const getOptionsByValues = (options, values) =>
+  options.filter((opt) => values.includes(opt.value));
 
 const AddPackageForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -13,24 +99,34 @@ const AddPackageForm = () => {
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [selectedPackageType, setSelectedPackageType] = useState(null);
   const [packageDuration, setPackageDuration] = useState("");
-  const [selectedDestinationCountry, setSelectedDestinationCountry] = useState(null);
-  const [destinationCovered, setDestinationCovered] = useState("");
+  const [destinations, setDestinations] = useState([]);
   const [selectedPriceApplicableTo, setSelectedPriceApplicableTo] = useState(null);
   const [selectedBookingType, setSelectedBookingType] = useState(null);
   const [packageOverview, setPackageOverview] = useState("");
   const [uploadedImages, setUploadedImages] = useState([]);
+
+  // Add Destination Modal State
+  const [showAddDestinationModal, setShowAddDestinationModal] = useState(false);
+  const [newDestinationType, setNewDestinationType] = useState("country");
+  const [newDestinationName, setNewDestinationName] = useState("");
+  const [newDestinationParent, setNewDestinationParent] = useState("");
+  const [destinationList, setDestinationList] = useState(destinationData);
   
   // Tab 2 - Day Wise Itinerary
   const [daySections, setDaySections] = useState([
     {
       id: 1,
       arrival: "", // Text field
-      arrivalCountry: null,
-      city: null,
+      destination: null,
       transfer: null,
-      transferType: null,
+      selectedHotel: null,
       hotelCategory: null,
-      hotelName: "",
+      hotelRating: null,
+      propertyType: null,
+      hotelAddress: "",
+      supplier: null,
+      checkIn: null,
+      checkOut: null,
       typeOfStay: null,
       meal: null,
       isActivity: null, // Yes/No dropdown
@@ -40,6 +136,9 @@ const AddPackageForm = () => {
       images: [],
     },
   ]);
+
+  // Add Hotel Modal State
+  const [isAddHotelModalOpen, setIsAddHotelModalOpen] = useState(false);
   
   // Tab 3 - Price
   const [selectedNationality, setSelectedNationality] = useState(null);
@@ -67,9 +166,148 @@ const AddPackageForm = () => {
   const [cancellationPolicy, setCancellationPolicy] = useState("");
 
   // Set menu portal target on client side
-  React.useEffect(() => {
+  useEffect(() => {
     setMenuPortalTarget(document.body);
   }, []);
+
+  // Flatten hierarchical destination data into options
+  const destinationOptions = useMemo(() => {
+    const options = [];
+    const addOption = (item, parentPath = "") => {
+      const displayName = `${item.name} - ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}`;
+      const fullPath = parentPath ? `${parentPath} > ${item.name}` : item.name;
+      
+      options.push({
+        value: `${item.id}_${item.type}`,
+        label: displayName,
+        type: item.type,
+        name: item.name,
+        id: item.id,
+        fullPath: fullPath,
+      });
+
+      if (item.states) {
+        item.states.forEach((state) => {
+          addOption(state, fullPath);
+          if (state.cities) {
+            state.cities.forEach((city) => {
+              addOption(city, `${fullPath} > ${state.name}`);
+            });
+          }
+        });
+      }
+    };
+
+    destinationList.forEach((country) => {
+      addOption(country);
+    });
+
+    // Add "Add Destination" option at the end
+    options.push({
+      value: "__add_destination__",
+      label: "Add Destination",
+      isAddOption: true,
+    });
+
+    return options;
+  }, [destinationList]);
+
+  // Handle destination selection
+  const handleDestinationChange = (selected) => {
+    const filtered = selected ? selected.filter(opt => !opt.isAddOption) : [];
+    setDestinations(filtered.map((opt) => opt.value));
+  };
+
+  // Handle opening Add Destination modal - close all dropdowns first
+  const handleOpenAddDestinationModal = () => {
+    // Close all react-select dropdowns
+    document.querySelectorAll('.select__menu-portal, .select__menu').forEach(menu => {
+      menu.style.display = 'none';
+    });
+    
+    // Blur all select inputs
+    document.querySelectorAll('.select__control input').forEach(input => {
+      input.blur();
+    });
+    
+    // Small delay to ensure dropdowns are closed
+    setTimeout(() => {
+      setShowAddDestinationModal(true);
+    }, 100);
+  };
+
+  // Handle adding new destination
+  const handleAddDestination = () => {
+    if (!newDestinationName.trim()) return;
+
+    const newDestination = {
+      id: newDestinationName.toLowerCase().replace(/\s+/g, "-"),
+      name: newDestinationName,
+      type: newDestinationType,
+    };
+
+    if (newDestinationType === "country") {
+      setDestinationList([...destinationList, { ...newDestination, states: [] }]);
+    } else if (newDestinationType === "state") {
+      const countryId = newDestinationParent.split("_")[0];
+      const updatedList = destinationList.map((country) => {
+        if (country.id === countryId) {
+          return {
+            ...country,
+            states: [...(country.states || []), { ...newDestination, cities: [] }],
+          };
+        }
+        return country;
+      });
+      setDestinationList(updatedList);
+    } else if (newDestinationType === "city") {
+      const [countryId, stateId] = newDestinationParent.split("_");
+      const updatedList = destinationList.map((country) => {
+        if (country.id === countryId) {
+          return {
+            ...country,
+            states: (country.states || []).map((state) => {
+              if (state.id === stateId) {
+                return {
+                  ...state,
+                  cities: [...(state.cities || []), newDestination],
+                };
+              }
+              return state;
+            }),
+          };
+        }
+        return country;
+      });
+      setDestinationList(updatedList);
+    }
+
+    setNewDestinationName("");
+    setNewDestinationParent("");
+    setShowAddDestinationModal(false);
+  };
+
+  // Get parent options for state/city selection
+  const getParentOptions = () => {
+    if (newDestinationType === "state") {
+      return destinationList.map((country) => ({
+        value: `${country.id}_country`,
+        label: `${country.name} - Country`,
+      }));
+    } else if (newDestinationType === "city") {
+      const options = [];
+      destinationList.forEach((country) => {
+        (country.states || []).forEach((state) => {
+          options.push({
+            value: `${country.id}_${state.id}`,
+            label: `${country.name} > ${state.name} - State`,
+          });
+        });
+      });
+      return options;
+    }
+    return [];
+  };
 
   const nextStep = () => {
     if (currentStep < 5) {
@@ -154,15 +392,19 @@ const AddPackageForm = () => {
       ...daySections,
       {
         id: newId,
-        arrivalCountry: null,
-        city: null,
+        arrival: "",
+        destination: null,
         transfer: null,
-        transferType: null,
+        selectedHotel: null,
         hotelCategory: null,
-        hotelName: "",
+        hotelRating: null,
+        propertyType: null,
+        hotelAddress: "",
+        supplier: null,
+        checkIn: null,
+        checkOut: null,
         typeOfStay: null,
         meal: null,
-        arrival: "",
         isActivity: null,
         activityTiming: "",
         selectedActivity: null,
@@ -188,6 +430,28 @@ const AddPackageForm = () => {
             updatedSection.activityTiming = "";
             updatedSection.selectedActivity = null;
           }
+          // If hotel is selected, auto-fill hotel details
+          if (field === 'selectedHotel' && value && !value.isAddOption) {
+            const hotelDetail = hotelDetails[value.value];
+            if (hotelDetail) {
+              updatedSection.hotelCategory = categoryOptions.find(opt => opt.value === hotelDetail.category) || null;
+              updatedSection.hotelRating = hotelDetail.rating;
+              updatedSection.propertyType = propertyTypeOptions.find(opt => opt.value === hotelDetail.propertyType) || null;
+              updatedSection.hotelAddress = hotelDetail.address;
+              updatedSection.supplier = supplierOptions.find(opt => opt.value === hotelDetail.supplier) || null;
+              updatedSection.checkIn = checkInOptions.find(opt => opt.value === hotelDetail.checkIn) || null;
+              updatedSection.checkOut = checkOutOptions.find(opt => opt.value === hotelDetail.checkOut) || null;
+            }
+          } else if (field === 'selectedHotel' && (!value || value?.isAddOption)) {
+            // Clear hotel details when hotel is deselected
+            updatedSection.hotelCategory = null;
+            updatedSection.hotelRating = null;
+            updatedSection.propertyType = null;
+            updatedSection.hotelAddress = "";
+            updatedSection.supplier = null;
+            updatedSection.checkIn = null;
+            updatedSection.checkOut = null;
+          }
           return updatedSection;
         }
         return section;
@@ -203,26 +467,157 @@ const AddPackageForm = () => {
     );
   };
 
-  // Additional options for day sections
+  // Combined transfer options (transfer + transfer type)
   const transferOptions = [
-    { value: "airport", label: "Airport Transfer" },
-    { value: "hotel", label: "Hotel Transfer" },
-    { value: "station", label: "Station Transfer" },
+    { value: "airport_private", label: "Airport Transfer - Private" },
+    { value: "airport_shared", label: "Airport Transfer - Shared" },
+    { value: "airport_scheduled", label: "Airport Transfer - Scheduled" },
+    { value: "hotel_private", label: "Hotel Transfer - Private" },
+    { value: "hotel_shared", label: "Hotel Transfer - Shared" },
+    { value: "hotel_scheduled", label: "Hotel Transfer - Scheduled" },
+    { value: "station_private", label: "Station Transfer - Private" },
+    { value: "station_shared", label: "Station Transfer - Shared" },
+    { value: "station_scheduled", label: "Station Transfer - Scheduled" },
     { value: "none", label: "No Transfer" },
   ];
 
-  const transferTypeOptions = [
-    { value: "private", label: "Private" },
-    { value: "shared", label: "Shared" },
-    { value: "scheduled", label: "Scheduled" },
+  // Dummy hotels data
+  const dummyHotels = [
+    { id: 1, name: "Grand Hotel, Los Angeles, California, United States" },
+    { id: 2, name: "Luxury Resort, New York City, New York, United States" },
+    { id: 3, name: "Ocean View Hotel, Mumbai, Maharashtra, India" },
+    { id: 4, name: "Desert Palace, Dubai, Dubai, United Arab Emirates" },
+    { id: 5, name: "Royal Suites, Abu Dhabi, Abu Dhabi, United Arab Emirates" },
+    { id: 6, name: "City Center Hotel, Riyadh, Riyadh, Saudi Arabia" },
   ];
 
-  const hotelCategoryOptions = [
+  // Hotel details data
+  const hotelDetails = {
+    1: {
+      name: "Grand Hotel",
+      category: "5 Star",
+      rating: 4.8,
+      propertyType: "Luxury Hotel",
+      address: "123 Sunset Boulevard, Los Angeles, CA 90028",
+      checkIn: "15:00",
+      checkOut: "11:00",
+      supplier: 1,
+    },
+    2: {
+      name: "Luxury Resort",
+      category: "5 Star",
+      rating: 4.9,
+      propertyType: "Resort",
+      address: "456 Fifth Avenue, New York, NY 10001",
+      checkIn: "14:00",
+      checkOut: "12:00",
+      supplier: 2,
+    },
+    3: {
+      name: "Ocean View Hotel",
+      category: "4 Star",
+      rating: 4.5,
+      propertyType: "Beach Hotel",
+      address: "789 Marine Drive, Mumbai, Maharashtra 400001",
+      checkIn: "15:00",
+      checkOut: "11:00",
+      supplier: 3,
+    },
+    4: {
+      name: "Desert Palace",
+      category: "5 Star",
+      rating: 4.7,
+      propertyType: "Luxury Hotel",
+      address: "321 Sheikh Zayed Road, Dubai, UAE",
+      checkIn: "15:00",
+      checkOut: "12:00",
+      supplier: 4,
+    },
+    5: {
+      name: "Royal Suites",
+      category: "5 Star",
+      rating: 4.9,
+      propertyType: "Luxury Suites",
+      address: "654 Corniche Road, Abu Dhabi, UAE",
+      checkIn: "14:00",
+      checkOut: "11:00",
+      supplier: 5,
+    },
+    6: {
+      name: "City Center Hotel",
+      category: "4 Star",
+      rating: 4.6,
+      propertyType: "Business Hotel",
+      address: "987 King Fahd Road, Riyadh, Saudi Arabia",
+      checkIn: "15:00",
+      checkOut: "12:00",
+      supplier: 1,
+    },
+  };
+
+  // Dummy suppliers
+  const dummySuppliers = [
+    { id: 1, name: "Global Travel Solutions" },
+    { id: 2, name: "Premium Hotels Network" },
+    { id: 3, name: "Luxury Accommodations Ltd" },
+    { id: 4, name: "Worldwide Hotel Partners" },
+    { id: 5, name: "Elite Travel Services" },
+  ];
+
+  const supplierOptions = dummySuppliers.map((supplier) => ({
+    value: supplier.id,
+    label: supplier.name,
+  }));
+
+  // Hotel options with Add Hotel option
+  const hotelOptions = [
+    ...dummyHotels.map((hotel) => ({
+      value: hotel.id,
+      label: hotel.name,
+    })),
+    {
+      value: 'add_hotel',
+      label: '+ Add Our Hotel',
+      isAddOption: true,
+    },
+  ];
+
+  // Category options
+  const categoryOptions = [
     { value: "3 Star", label: "3 Star" },
     { value: "4 Star", label: "4 Star" },
     { value: "5 Star", label: "5 Star" },
     { value: "7 Star", label: "7 Star" },
   ];
+
+  // Property type options
+  const propertyTypeOptions = [
+    { value: "Luxury Hotel", label: "Luxury Hotel" },
+    { value: "Resort", label: "Resort" },
+    { value: "Beach Hotel", label: "Beach Hotel" },
+    { value: "Business Hotel", label: "Business Hotel" },
+    { value: "Luxury Suites", label: "Luxury Suites" },
+    { value: "Boutique Hotel", label: "Boutique Hotel" },
+    { value: "Apartment", label: "Apartment" },
+  ];
+
+  // Check-in time options
+  const checkInOptions = [
+    { value: "12:00", label: "12:00" },
+    { value: "13:00", label: "13:00" },
+    { value: "14:00", label: "14:00" },
+    { value: "15:00", label: "15:00" },
+    { value: "16:00", label: "16:00" },
+  ];
+
+  // Check-out time options
+  const checkOutOptions = [
+    { value: "10:00", label: "10:00" },
+    { value: "11:00", label: "11:00" },
+    { value: "12:00", label: "12:00" },
+    { value: "13:00", label: "13:00" },
+  ];
+
 
   const typeOfStayOptions = [
     { value: "single", label: "Single" },
@@ -334,7 +729,80 @@ const AddPackageForm = () => {
       )
     );
   };
+
+  // Custom Hotel Option component for hotel dropdown
+  const CustomHotelOption = ({ data, innerProps, isFocused }) => {
+    const className = data.isAddOption 
+      ? `select__option--add-hotel`.trim()
+      : '';
+    
+    if (data.isAddOption) {
+      return (
+        <div
+          {...innerProps}
+          className={className}
+          style={{
+            padding: '12px 16px',
+            fontWeight: 600,
+            color: '#0d6efd',
+            backgroundColor: isFocused ? '#e7f1ff' : '#f8f9fa',
+            borderTop: '1px solid #dee2e6',
+            cursor: 'pointer',
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 10,
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsAddHotelModalOpen(true);
+          }}
+        >
+          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Icon icon="mdi:plus-circle" />
+            <span>Add Our Hotel</span>
+          </span>
+        </div>
+      );
+    }
+    
+    return (
+      <div
+        {...innerProps}
+        className={className}
+        style={{ cursor: 'pointer' }}
+      >
+        {data.label}
+      </div>
+    );
+  };
+
+  // Custom MenuList to fix "Add Our Hotel" at bottom
+  const CustomMenuList = (props) => {
+    return (
+      <components.MenuList 
+        {...props} 
+        className="select__menu-list--custom"
+        style={{
+          paddingBottom: '0',
+        }}
+      >
+        {props.children}
+      </components.MenuList>
+    );
+  };
+
+  // Custom filter function to always show "Add Our Hotel" option
+  const filterHotelOptions = (option, inputValue) => {
+    // Always show the "Add Our Hotel" option
+    if (option.data.isAddOption) {
+      return true;
+    }
+    // Filter other options normally
+    return option.label.toLowerCase().includes(inputValue.toLowerCase());
+  };
   return (
+    <>
       <div className='card'>
         <div className='card-body'>
           <p className='text-neutral-500'>
@@ -408,7 +876,7 @@ const AddPackageForm = () => {
                 </h6>
                 <div className='row gy-3'>
                   {/* Package Name */}
-                  <div className='col-sm-8'>
+                  <div className='col-sm-6'>
                     <label className='form-label'>Package Name*</label>
                     <div className='position-relative'>
                       <input
@@ -424,7 +892,7 @@ const AddPackageForm = () => {
                   </div>
 
                   {/* Package Theme */}
-                  <div className='col-sm-4'>
+                  <div className='col-sm-3'>
                     <label className='form-label'>Package Theme*</label>
                     <div className='position-relative'>
                       <Select
@@ -444,7 +912,7 @@ const AddPackageForm = () => {
                   </div>
 
                   {/* Package Type */}
-                  <div className='col-sm-4'>
+                  <div className='col-sm-3'>
                     <label className='form-label'>Package Type*</label>
                     <div className='position-relative'>
                       <Select
@@ -464,8 +932,8 @@ const AddPackageForm = () => {
                   </div>
 
                   {/* Package Duration */}
-                  <div className='col-sm-4'>
-                    <label className='form-label'>Package Duration (Days)*</label>
+                  <div className='col-sm-3'>
+                    <label className='form-label'>Package Duration (Nights)*</label>
                     <div className='position-relative'>
                       <input
                         type='number'
@@ -480,51 +948,77 @@ const AddPackageForm = () => {
                     </div>
                   </div>
 
-                  {/* Destination Country */}
-                  <div className='col-sm-4'>
-                    <label className='form-label'>Destination Country*</label>
+                  {/* Destination */}
+                  <div className='col-sm-3'>
+                    <label className='form-label'>Destination*</label>
                     <div className='position-relative'>
                       <Select
-                        value={selectedDestinationCountry}
-                        onChange={setSelectedDestinationCountry}
-                        options={countryOptions}
-                        placeholder="Select Destination Country"
+                        options={destinationOptions}
+                        placeholder="Select Destination"
+                        isMulti
                         isClearable
                         isSearchable
-                        className="wizard-required"
-                        classNamePrefix="select"
+                        closeMenuOnSelect={false}
+                        value={getOptionsByValues(destinationOptions.filter(opt => !opt.isAddOption), destinations)}
+                        onChange={handleDestinationChange}
                         menuPortalTarget={menuPortalTarget}
                         menuPosition="fixed"
+                        className="wizard-required"
+                        classNamePrefix="select"
+                        components={{
+                          Option: ({ innerProps, data, isSelected, isFocused }) => {
+                            if (data.isAddOption) {
+                              return (
+                                <div
+                                  {...innerProps}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleOpenAddDestinationModal();
+                                  }}
+                                  className={`px-3 py-2 d-flex align-items-center gap-2 text-primary ${
+                                    isFocused ? "bg-primary-50" : ""
+                                  }`}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  <Icon icon="mdi:plus-circle" />
+                                  <span className="fw-medium">{data.label}</span>
+                                </div>
+                              );
+                            }
+                            return (
+                              <div
+                                {...innerProps}
+                                className={`px-3 py-2 ${
+                                  isSelected ? "bg-primary-100" : isFocused ? "bg-neutral-50" : ""
+                                }`}
+                                style={{ cursor: "pointer" }}
+                              >
+                                <div className="d-flex align-items-center gap-2">
+                                  {isSelected && <Icon icon="mdi:check" className="text-primary" />}
+                                  <span className={isSelected ? "fw-medium" : ""}>{data.label}</span>
+                                </div>
+                              </div>
+                            );
+                          },
+                        }}
                       />
                       <div className='wizard-form-error' />
                     </div>
-                  </div>
-
-                  {/* Destination Covered */}
-                  <div className='col-sm-4'>
-                    <label className='form-label'>Destination Covered*</label>
-                    <div className='position-relative'>
-                      <input
-                        type='text'
-                        className='form-control wizard-required'
-                        placeholder='Enter Destinations Covered'
-                        value={destinationCovered}
-                        onChange={(e) => setDestinationCovered(e.target.value)}
-                        required
-                      />
-                      <div className='wizard-form-error' />
-                    </div>
+                    {destinations.map((value) => (
+                      <input key={`Destinations-${value}`} type="hidden" name="Destinations[]" value={value} />
+                    ))}
                   </div>
 
                   {/* Price Applicable To */}
-                  <div className='col-sm-4'>
+                  <div className='col-sm-3'>
                     <label className='form-label'>Price Applicable To*</label>
                     <div className='position-relative'>
                       <Select
                         value={selectedPriceApplicableTo}
                         onChange={setSelectedPriceApplicableTo}
                         options={priceApplicableToOptions}
-                        placeholder="Select Price Applicable To"
+                        placeholder="Select Date Range"
                         isClearable
                         isSearchable
                         className="wizard-required"
@@ -537,7 +1031,7 @@ const AddPackageForm = () => {
                   </div>
 
                   {/* Package Booking Type */}
-                  <div className='col-sm-4'>
+                  <div className='col-sm-3'>
                     <label className='form-label'>Package Booking Type*</label>
                     <div className='position-relative'>
                       <Select
@@ -585,8 +1079,7 @@ const AddPackageForm = () => {
                         !selectedTheme ||
                         !selectedPackageType ||
                         !packageDuration ||
-                        !selectedDestinationCountry ||
-                        !destinationCovered ||
+                        destinations.length === 0 ||
                         !selectedPriceApplicableTo ||
                         !selectedBookingType ||
                         !hasContent(packageOverview)
@@ -625,9 +1118,9 @@ const AddPackageForm = () => {
                       </div>
                       <div className='card-body p-24'>
                 <div className='row gy-3'>
-                          {/* Arrival - Text Field - BEFORE Arrival in Country */}
+                          {/* Arrival - Text Field */}
                           <div className='col-sm-4'>
-                            <label className='form-label'>Arrival*</label>
+                            <label className='form-label'>Arrived At*</label>
                             <div className='position-relative'>
                               <input
                                 type='text'
@@ -641,54 +1134,70 @@ const AddPackageForm = () => {
                             </div>
                           </div>
 
-                          {/* Arrival in Country */}
+                          {/* Destination */}
                           <div className='col-sm-4'>
-                            <label className='form-label'>Arrival in Country*</label>
+                            <label className='form-label'>Destination*</label>
                             <div className='position-relative'>
                               <Select
-                                value={section.arrivalCountry}
-                                onChange={(selected) => updateDaySection(section.id, 'arrivalCountry', selected)}
-                                options={countryOptions}
-                                placeholder="Select Country"
+                                options={destinationOptions}
+                                placeholder="Select Destination"
                                 isClearable
                                 isSearchable
-                                className="wizard-required"
-                                classNamePrefix="select"
+                                value={getOptionByValue(destinationOptions.filter(opt => !opt.isAddOption), section.destination)}
+                                onChange={(selected) => updateDaySection(section.id, 'destination', selected ? selected.value : null)}
                                 menuPortalTarget={menuPortalTarget}
                                 menuPosition="fixed"
+                                className="wizard-required"
+                                classNamePrefix="select"
+                                components={{
+                                  Option: ({ innerProps, data, isSelected, isFocused }) => {
+                                    if (data.isAddOption) {
+                                      return (
+                                        <div
+                                          {...innerProps}
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleOpenAddDestinationModal();
+                                          }}
+                                          className={`px-3 py-2 d-flex align-items-center gap-2 text-primary ${
+                                            isFocused ? "bg-primary-50" : ""
+                                          }`}
+                                          style={{ cursor: "pointer" }}
+                                        >
+                                          <Icon icon="mdi:plus-circle" />
+                                          <span className="fw-medium">{data.label}</span>
+                                        </div>
+                                      );
+                                    }
+                                    return (
+                                      <div
+                                        {...innerProps}
+                                        className={`px-3 py-2 ${
+                                          isSelected ? "bg-primary-100" : isFocused ? "bg-neutral-50" : ""
+                                        }`}
+                                        style={{ cursor: "pointer" }}
+                                      >
+                                        <div className="d-flex align-items-center gap-2">
+                                          {isSelected && <Icon icon="mdi:check" className="text-primary" />}
+                                          <span className={isSelected ? "fw-medium" : ""}>{data.label}</span>
+                                        </div>
+                                      </div>
+                                    );
+                                  },
+                                }}
                               />
                               <div className='wizard-form-error' />
                             </div>
                           </div>
 
-                          {/* City */}
-                          <div className='col-sm-4'>
-                            <label className='form-label'>City*</label>
-                            <div className='position-relative'>
-                              <Select
-                                value={section.city}
-                                onChange={(selected) => updateDaySection(section.id, 'city', selected)}
-                                options={cityOptions}
-                                placeholder="Select City"
-                                isClearable
-                                isSearchable
-                                isDisabled={!section.arrivalCountry}
-                                className="wizard-required"
-                                classNamePrefix="select"
-                                menuPortalTarget={menuPortalTarget}
-                                menuPosition="fixed"
-                              />
-                              <div className='wizard-form-error' />
-                            </div>
-                          </div>
-
-                          {/* Transfer */}
+                          {/* Transfer (Combined with Transfer Type) */}
                           <div className='col-sm-4'>
                             <label className='form-label'>Transfer*</label>
                             <div className='position-relative'>
                               <Select
-                                value={section.transfer}
-                                onChange={(selected) => updateDaySection(section.id, 'transfer', selected)}
+                                value={getOptionByValue(transferOptions, section.transfer)}
+                                onChange={(selected) => updateDaySection(section.id, 'transfer', selected ? selected.value : null)}
                                 options={transferOptions}
                                 placeholder="Select Transfer"
                                 isClearable
@@ -702,62 +1211,172 @@ const AddPackageForm = () => {
                             </div>
                           </div>
 
-                          {/* Transfer Type */}
-                          <div className='col-sm-4'>
-                            <label className='form-label'>Transfer Type*</label>
+                          {/* Hotel */}
+                          <div className='col-sm-6'>
+                            <label className='form-label'>Hotel*</label>
                             <div className='position-relative'>
                               <Select
-                                value={section.transferType}
-                                onChange={(selected) => updateDaySection(section.id, 'transferType', selected)}
-                                options={transferTypeOptions}
-                                placeholder="Select Transfer Type"
+                                value={getOptionByValue(hotelOptions.filter(opt => !opt.isAddOption), section.selectedHotel)}
+                                onChange={(selected) => {
+                                  if (selected && selected.value === 'add_hotel') {
+                                    setIsAddHotelModalOpen(true);
+                                    updateDaySection(section.id, 'selectedHotel', null);
+                                  } else {
+                                    updateDaySection(section.id, 'selectedHotel', selected ? selected.value : null);
+                                  }
+                                }}
+                                options={hotelOptions}
+                                placeholder="Select Hotel"
                                 isClearable
                                 isSearchable
-                                isDisabled={!section.transfer}
                                 className="wizard-required"
                                 classNamePrefix="select"
+                                components={{ 
+                                  Option: CustomHotelOption,
+                                  MenuList: CustomMenuList
+                                }}
+                                filterOption={filterHotelOptions}
                                 menuPortalTarget={menuPortalTarget}
                                 menuPosition="fixed"
+                                styles={{
+                                  control: (base) => ({
+                                    ...base,
+                                    minHeight: '38px',
+                                  }),
+                                  menuList: (base) => ({
+                                    ...base,
+                                    maxHeight: '300px',
+                                    paddingBottom: '0',
+                                  }),
+                                }}
                               />
                               <div className='wizard-form-error' />
                             </div>
                           </div>
 
-                          {/* Hotel Category */}
-                          <div className='col-sm-4'>
-                            <label className='form-label'>Hotel Category*</label>
-                            <div className='position-relative'>
-                              <Select
-                                value={section.hotelCategory}
-                                onChange={(selected) => updateDaySection(section.id, 'hotelCategory', selected)}
-                                options={hotelCategoryOptions}
-                                placeholder="Select Hotel Category"
-                                isClearable
-                                isSearchable
-                                className="wizard-required"
-                                classNamePrefix="select"
-                                menuPortalTarget={menuPortalTarget}
-                                menuPosition="fixed"
-                              />
-                              <div className='wizard-form-error' />
+                          {/* Hotel Category (Auto-filled) */}
+                          {section.selectedHotel && (
+                            <div className='col-sm-3'>
+                              <label className='form-label'>Hotel Category</label>
+                              <div className='position-relative'>
+                                <Select
+                                  value={section.hotelCategory}
+                                  onChange={(selected) => updateDaySection(section.id, 'hotelCategory', selected)}
+                                  options={categoryOptions}
+                                  placeholder="Select Category"
+                                  isClearable
+                                  isSearchable
+                                  classNamePrefix="select"
+                                  menuPortalTarget={menuPortalTarget}
+                                  menuPosition="fixed"
+                                />
+                                <div className='wizard-form-error' />
+                              </div>
                             </div>
-                          </div>
+                          )}
 
-                          {/* Hotel Name */}
-                          <div className='col-sm-4'>
-                            <label className='form-label'>Hotel Name*</label>
-                            <div className='position-relative'>
-                              <input
-                                type='text'
-                                className='form-control wizard-required'
-                                placeholder='Enter Hotel Name'
-                                value={section.hotelName}
-                                onChange={(e) => updateDaySection(section.id, 'hotelName', e.target.value)}
-                                required
-                              />
-                              <div className='wizard-form-error' />
+                          {/* Property Type (Auto-filled) */}
+                          {section.selectedHotel && (
+                            <div className='col-sm-3'>
+                              <label className='form-label'>Property Type</label>
+                              <div className='position-relative'>
+                                <Select
+                                  value={section.propertyType}
+                                  onChange={(selected) => updateDaySection(section.id, 'propertyType', selected)}
+                                  options={propertyTypeOptions}
+                                  placeholder="Select Property Type"
+                                  isClearable
+                                  isSearchable
+                                  classNamePrefix="select"
+                                  menuPortalTarget={menuPortalTarget}
+                                  menuPosition="fixed"
+                                />
+                                <div className='wizard-form-error' />
+                              </div>
                             </div>
-                          </div>
+                          )}
+
+                    
+
+                          {/* Check In Time (Auto-filled) */}
+                          {section.selectedHotel && (
+                            <div className='col-sm-4'>
+                              <label className='form-label'>Check In</label>
+                              <div className='position-relative'>
+                                <Select
+                                  value={section.checkIn}
+                                  onChange={(selected) => updateDaySection(section.id, 'checkIn', selected)}
+                                  options={checkInOptions}
+                                  placeholder="Check In"
+                                  isClearable
+                                  isSearchable
+                                  classNamePrefix="select"
+                                  menuPortalTarget={menuPortalTarget}
+                                  menuPosition="fixed"
+                                />
+                                <div className='wizard-form-error' />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Check Out Time (Auto-filled) */}
+                          {section.selectedHotel && (
+                            <div className='col-sm-4'>
+                              <label className='form-label'>Check Out</label>
+                              <div className='position-relative'>
+                                <Select
+                                  value={section.checkOut}
+                                  onChange={(selected) => updateDaySection(section.id, 'checkOut', selected)}
+                                  options={checkOutOptions}
+                                  placeholder="Check Out"
+                                  isClearable
+                                  isSearchable
+                                  classNamePrefix="select"
+                                  menuPortalTarget={menuPortalTarget}
+                                  menuPosition="fixed"
+                                />
+                                <div className='wizard-form-error' />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Supplier (Auto-filled) */}
+                          {section.selectedHotel && (
+                            <div className='col-sm-4'>
+                              <label className='form-label'>Supplier</label>
+                              <div className='position-relative'>
+                                <Select
+                                  value={section.supplier}
+                                  onChange={(selected) => updateDaySection(section.id, 'supplier', selected)}
+                                  options={supplierOptions}
+                                  placeholder="Supplier"
+                                  isClearable
+                                  isSearchable
+                                  classNamePrefix="select"
+                                  menuPortalTarget={menuPortalTarget}
+                                  menuPosition="fixed"
+                                />
+                                <div className='wizard-form-error' />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Hotel Address (Auto-filled) */}
+                          {section.selectedHotel && (
+                            <div className='col-12'>
+                              <label className='form-label'>Hotel Address</label>
+                              <div className='position-relative'>
+                                <input
+                                  type='text'
+                                  className='form-control'
+                                  placeholder='Hotel Address'
+                                  value={section.hotelAddress}
+                                  onChange={(e) => updateDaySection(section.id, 'hotelAddress', e.target.value)}
+                                />
+                                <div className='wizard-form-error' />
+                              </div>
+                            </div>
+                          )}
 
                           {/* Type of Stay */}
                           <div className='col-sm-4'>
@@ -911,14 +1530,11 @@ const AddPackageForm = () => {
                       daySections.length === 0 ||
                       daySections.some(section => 
                         !section.arrival ||
+                        !section.destination ||
+                        !section.transfer ||
+                        !section.selectedHotel ||
                         !section.isActivity ||
                         (section.isActivity?.value === 'yes' && (!section.activityTiming || !section.selectedActivity)) ||
-                        !section.arrivalCountry ||
-                        !section.city ||
-                        !section.transfer ||
-                        !section.transferType ||
-                        !section.hotelCategory ||
-                        !section.hotelName ||
                         !section.typeOfStay ||
                         !section.meal ||
                         !hasContent(section.packageOverview)
@@ -1290,7 +1906,222 @@ const AddPackageForm = () => {
           {/* Form Wizard End */}
         </div>
       </div>
-    
+
+      {/* Add Destination Modal */}
+      {showAddDestinationModal && (
+        <>
+          <div
+            className="modal fade show d-block"
+            role="dialog"
+            aria-modal="true"
+            data-nested="true"
+            style={{ zIndex: 1070, position: "fixed", top: 0, left: 0, width: "100%", height: "100%" }}
+          >
+            <div className="modal-dialog modal-dialog-centered" style={{ zIndex: 1071 }}>
+              <div className="modal-content border radius-16 bg-base" style={{ zIndex: 1071 }}>
+                <div className="modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0">
+                  <h5 className="modal-title fs-5 text-primary-light fw-semibold">
+                    Add New Destination
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => {
+                      setShowAddDestinationModal(false);
+                      setNewDestinationName("");
+                      setNewDestinationParent("");
+                    }}
+                    aria-label="Close"
+                  />
+                </div>
+                <div className="modal-body p-24">
+                  <div className="row gy-3">
+                    <div className="col-12">
+                      <label className="form-label">
+                        Destination Type <sup>*</sup>
+                      </label>
+                      <div className="d-flex flex-wrap gap-3">
+                        <div
+                          className={`bg-neutral-100 px-20 py-6 radius-8 ${
+                            newDestinationType === "country"
+                              ? "border border-primary"
+                              : "border border-transparent"
+                          }`}
+                        >
+                          <span className="form-check checked-success d-flex align-items-center gap-2">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="destinationType"
+                              id="destTypeCountry"
+                              value="country"
+                              checked={newDestinationType === "country"}
+                              onChange={(e) => {
+                                setNewDestinationType(e.target.value);
+                                setNewDestinationParent("");
+                              }}
+                            />
+                            <label
+                              className="form-check-label line-height-1 fw-medium text-secondary-light"
+                              htmlFor="destTypeCountry"
+                            >
+                              Country
+                            </label>
+                          </span>
+                        </div>
+                        <div
+                          className={`bg-neutral-100 px-20 py-6 radius-8 ${
+                            newDestinationType === "state"
+                              ? "border border-primary"
+                              : "border border-transparent"
+                          }`}
+                        >
+                          <span className="form-check checked-success d-flex align-items-center gap-2">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="destinationType"
+                              id="destTypeState"
+                              value="state"
+                              checked={newDestinationType === "state"}
+                              onChange={(e) => {
+                                setNewDestinationType(e.target.value);
+                                setNewDestinationParent("");
+                              }}
+                            />
+                            <label
+                              className="form-check-label line-height-1 fw-medium text-secondary-light"
+                              htmlFor="destTypeState"
+                            >
+                              State
+                            </label>
+                          </span>
+                        </div>
+                        <div
+                          className={`bg-neutral-100 px-20 py-6 radius-8 ${
+                            newDestinationType === "city"
+                              ? "border border-primary"
+                              : "border border-transparent"
+                          }`}
+                        >
+                          <span className="form-check checked-success d-flex align-items-center gap-2">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="destinationType"
+                              id="destTypeCity"
+                              value="city"
+                              checked={newDestinationType === "city"}
+                              onChange={(e) => {
+                                setNewDestinationType(e.target.value);
+                                setNewDestinationParent("");
+                              }}
+                            />
+                            <label
+                              className="form-check-label line-height-1 fw-medium text-secondary-light"
+                              htmlFor="destTypeCity"
+                            >
+                              City
+                            </label>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {(newDestinationType === "state" || newDestinationType === "city") && (
+                      <div className="col-12">
+                        <label className="form-label">
+                          {newDestinationType === "state" ? "Country" : "State"} <sup>*</sup>
+                        </label>
+                        <div className="icon-field">
+                          <span className="icon">
+                            <Icon icon="mdi:earth" />
+                          </span>
+                          <div className="form-control p-0 border-0">
+                            <Select
+                              options={getParentOptions()}
+                              placeholder={`Select ${newDestinationType === "state" ? "Country" : "State"}`}
+                              isClearable
+                              isSearchable
+                              value={getOptionByValue(getParentOptions(), newDestinationParent)}
+                              onChange={(selected) =>
+                                setNewDestinationParent(selected ? selected.value : "")
+                              }
+                              menuPortalTarget={menuPortalTarget}
+                              menuPosition="fixed"
+                              classNamePrefix="select"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="col-12">
+                      <label className="form-label">
+                        {newDestinationType === "country"
+                          ? "Country"
+                          : newDestinationType === "state"
+                          ? "State"
+                          : "City"}{" "}
+                        Name <sup>*</sup>
+                      </label>
+                      <div className="icon-field">
+                        <span className="icon">
+                          <Icon icon="mdi:map-marker" />
+                        </span>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder={`Enter ${newDestinationType === "country" ? "Country" : newDestinationType === "state" ? "State" : "City"} Name`}
+                          value={newDestinationName}
+                          onChange={(e) => setNewDestinationName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer py-16 px-24 border border-bottom-0 border-start-0 border-end-0">
+                  <button
+                    type="button"
+                    className="btn btn-neutral-500 border-neutral-100 px-32"
+                    onClick={() => {
+                      setShowAddDestinationModal(false);
+                      setNewDestinationName("");
+                      setNewDestinationParent("");
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary-600 px-32"
+                    onClick={handleAddDestination}
+                    disabled={!newDestinationName.trim() || (newDestinationType !== "country" && !newDestinationParent)}
+                  >
+                    Add Destination
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="modal-backdrop fade show"
+            style={{ backgroundColor: "rgba(15, 23, 42, 0.65)", zIndex: 1065 }}
+            onClick={() => {
+              setShowAddDestinationModal(false);
+              setNewDestinationName("");
+              setNewDestinationParent("");
+            }}
+          />
+        </>
+      )}
+
+      {/* Add Hotel Modal */}
+      <AddOurHotelModal
+        isOpen={isAddHotelModalOpen}
+        onClose={() => setIsAddHotelModalOpen(false)}
+      />
+    </>
   );
 };
 
