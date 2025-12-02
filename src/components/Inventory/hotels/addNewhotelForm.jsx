@@ -651,7 +651,7 @@ const AddNewHotelForm = () => {
                           />
                         </div>
                       </div>
-                      <div className='col-sm-6'>
+                      <div className='col-sm-3'>
                         <label className='form-label'>Category*</label>
                         <div className='position-relative'>
                           <Select
@@ -669,7 +669,7 @@ const AddNewHotelForm = () => {
                           <div className='wizard-form-error' />
                         </div>
                       </div>
-                      <div className='col-sm-6'>
+                      <div className='col-sm-3'>
                         <label className='form-label'>Property Type*</label>
                         <div className='position-relative'>
                           <Select
@@ -677,6 +677,61 @@ const AddNewHotelForm = () => {
                             onChange={(selected) => setSelectedPropertyType(selected)}
                             options={propertyTypeOptions}
                             placeholder="Select Property Type"
+                            isClearable
+                            isSearchable
+                            className="wizard-required"
+                            classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
+                          />
+                          <div className='wizard-form-error' />
+                        </div>
+                      </div>
+                     
+                      <div className='col-sm-4'>
+                        <label className='form-label'>Check In Time*</label>
+                        <div className='position-relative'>
+                          <Select
+                            value={selectedCheckIn}
+                            onChange={(selected) => setSelectedCheckIn(selected)}
+                            options={checkInOptions}
+                            placeholder="Select Check In Time"
+                            isClearable
+                            isSearchable
+                            className="wizard-required"
+                            classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
+                          />
+                          <div className='wizard-form-error' />
+                        </div>
+                      </div>
+                      <div className='col-sm-4'>  
+                        <label className='form-label'>Check Out Time*</label>
+                        <div className='position-relative'>
+                          <Select
+                            value={selectedCheckOut}
+                            onChange={(selected) => setSelectedCheckOut(selected)}
+                            options={checkOutOptions}
+                            placeholder="Select Check Out Time"
+                            isClearable
+                            isSearchable
+                            className="wizard-required"
+                            classNamePrefix="select"
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition="fixed"
+                          />
+                          <div className='wizard-form-error' />
+                        </div>
+                      </div>
+                      <div className='col-sm-4'>
+                        <label className='form-label'>Supplier*</label>
+                        <div className='position-relative'>
+                          <Select
+                            value={selectedSupplier}
+                            onChange={(selected) => setSelectedSupplier(selected)}
+                            options={supplierOptions}
+                            placeholder="Select Supplier"
                             isClearable
                             isSearchable
                             className="wizard-required"
@@ -752,60 +807,7 @@ const AddNewHotelForm = () => {
                           />
                         </div>
                       </div>
-                      <div className='col-sm-6'>
-                        <label className='form-label'>Check In Time*</label>
-                        <div className='position-relative'>
-                          <Select
-                            value={selectedCheckIn}
-                            onChange={(selected) => setSelectedCheckIn(selected)}
-                            options={checkInOptions}
-                            placeholder="Select Check In Time"
-                            isClearable
-                            isSearchable
-                            className="wizard-required"
-                            classNamePrefix="select"
-                            menuPortalTarget={menuPortalTarget}
-                            menuPosition="fixed"
-                          />
-                          <div className='wizard-form-error' />
-                        </div>
-                      </div>
-                      <div className='col-sm-6'>
-                        <label className='form-label'>Check Out Time*</label>
-                        <div className='position-relative'>
-                          <Select
-                            value={selectedCheckOut}
-                            onChange={(selected) => setSelectedCheckOut(selected)}
-                            options={checkOutOptions}
-                            placeholder="Select Check Out Time"
-                            isClearable
-                            isSearchable
-                            className="wizard-required"
-                            classNamePrefix="select"
-                            menuPortalTarget={menuPortalTarget}
-                            menuPosition="fixed"
-                          />
-                          <div className='wizard-form-error' />
-                        </div>
-                      </div>
-                      <div className='col-12'>
-                        <label className='form-label'>Supplier*</label>
-                        <div className='position-relative'>
-                          <Select
-                            value={selectedSupplier}
-                            onChange={(selected) => setSelectedSupplier(selected)}
-                            options={supplierOptions}
-                            placeholder="Select Supplier"
-                            isClearable
-                            isSearchable
-                            className="wizard-required"
-                            classNamePrefix="select"
-                            menuPortalTarget={menuPortalTarget}
-                            menuPosition="fixed"
-                          />
-                          <div className='wizard-form-error' />
-                        </div>
-                      </div>
+
                     </div>
                   </div>
                 )}

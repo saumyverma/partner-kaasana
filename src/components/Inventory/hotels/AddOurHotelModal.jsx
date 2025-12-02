@@ -18,7 +18,7 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
   const [hotelDescription, setHotelDescription] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
-
+  const [hotelAddress, setHotelAddress] = useState("");
   // Set menu portal target on client side
   useEffect(() => {
     setMenuPortalTarget(document.body);
@@ -203,7 +203,7 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
               <form onSubmit={handleSubmit}>
                 <div className='row gy-3'>
                   {/* Hotel Name */}
-                  <div className='col-12'>
+                  <div className='col-6'>
                     <label className='form-label'>Hotel Name*</label>
                     <input
                       type='text'
@@ -216,7 +216,7 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
                   </div>
 
                   {/* Star Category */}
-                  <div className='col-sm-6'>
+                  <div className='col-sm-3'>
                     <label className='form-label'>Star Category*</label>
                     <Select
                       value={selectedCategory}
@@ -233,7 +233,7 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
                   </div>
 
                   {/* Property Type */}
-                  <div className='col-sm-6'>
+                  <div className='col-sm-3'>
                     <label className='form-label'>Property Type*</label>
                     <Select
                       value={selectedPropertyType}
@@ -309,8 +309,20 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
                     />
                   </div>
 
+                  <div className='col-12'>
+                    <label className='form-label'>Hotel Address*</label>
+                    <input
+                      type='text'
+                      className='form-control'
+                      placeholder='Enter Hotel Address'
+                      value={hotelAddress}
+                      onChange={(e) => setHotelAddress(e.target.value)}
+                      required
+                    />
+                  </div>
+
                   {/* Check In Time */}
-                  <div className='col-sm-6'>
+                  <div className='col-sm-4'>
                     <label className='form-label'>Check In Time*</label>
                     <Select
                       value={selectedCheckIn}
@@ -327,7 +339,7 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
                   </div>
 
                   {/* Check Out Time */}
-                  <div className='col-sm-6'>
+                  <div className='col-sm-4'>
                     <label className='form-label'>Check Out Time*</label>
                     <Select
                       value={selectedCheckOut}
@@ -344,30 +356,13 @@ const AddOurHotelModal = ({ isOpen, onClose }) => {
                   </div>
 
                   {/* Supplier */}
-                  <div className='col-sm-6'>
+                  <div className='col-sm-4'>
                     <label className='form-label'>Supplier*</label>
                     <Select
                       value={selectedSupplier}
                       onChange={setSelectedSupplier}
                       options={supplierOptions}
                       placeholder="Select Supplier"
-                      isClearable
-                      isSearchable
-                      className="wizard-required"
-                      classNamePrefix="select"
-                      menuPortalTarget={menuPortalTarget}
-                      menuPosition="fixed"
-                    />
-                  </div>
-
-                  {/* DMC */}
-                  <div className='col-sm-6'>
-                    <label className='form-label'>DMC*</label>
-                    <Select
-                      value={selectedDMC}
-                      onChange={setSelectedDMC}
-                      options={dmcOptions}
-                      placeholder="Select DMC"
                       isClearable
                       isSearchable
                       className="wizard-required"
