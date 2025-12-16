@@ -270,7 +270,7 @@ export default function SuppliersLayer() {
         </div>
       </div>
       <div className='col-xxl-9'>
-        <div className='card basic-data-table'>
+        <div className='card h-100 p-0 basic-data-table'>
           <div className='card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between'>
             <h5 className='card-title mb-0 text-lg fw-semibold text-primary-light'>Supplier List</h5>
             <button
@@ -286,7 +286,7 @@ export default function SuppliersLayer() {
               Add New Supplier
             </button>
           </div>
-          <div className='card-body'>
+          <div className='card-body table-responsive'>
             <table
               className='table bordered-table mb-0'
               id='dataTable'

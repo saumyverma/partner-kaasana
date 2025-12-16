@@ -72,7 +72,7 @@ export default function LeadsLayer({ pageId }) {
         </div>
       </div>
       <div className='col-xxl-9'>
-        <div className='card basic-data-table'>
+        <div className='card h-100 p-0 basic-data-table'>
         <div className='card-header d-flex align-items-center justify-content-between'>
           <h5 className='card-title mb-0'>Lead List</h5>
           <button
@@ -88,7 +88,7 @@ export default function LeadsLayer({ pageId }) {
             Add Lead
           </button>
         </div>
-        <div className='card-body'>
+        <div className='card-body table-responsive'>
           <table
             className='table bordered-table mb-0'
             id='dataTable'
