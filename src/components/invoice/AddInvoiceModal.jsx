@@ -35,6 +35,7 @@ export default function AddInvoiceModal() {
   const [items, setItems] = useState([
     {
       id: 1,
+      service: null,
       item: null,
       description: "",
       qty: "",
@@ -172,6 +173,14 @@ export default function AddInvoiceModal() {
     { value: "standard", label: "Standard" },
     { value: "proforma", label: "Proforma" },
     { value: "credit", label: "Credit" },
+  ];
+
+  const serviceOptions = [
+    { value: "hotel", label: "Hotel" },
+    { value: "packages", label: "Packages" },
+    { value: "transport", label: "Transport" },
+    { value: "visa", label: "Visa" },
+    { value: "flights", label: "Flights" },
   ];
 
   const [itemMaster, setItemMaster] = useState({
@@ -364,6 +373,7 @@ export default function AddInvoiceModal() {
       ...items,
       {
         id: nextId,
+        service: null,
         item: null,
         description: "",
         qty: "",
@@ -686,12 +696,13 @@ export default function AddInvoiceModal() {
                 <thead>
                   <tr>
                     <th style={{ width: "5%" }}>S.L</th>
-                    <th style={{ width: "25%" }}>Services</th>
-                    <th style={{ width: "22%" }}>Description</th>
-                    <th style={{ width: "10%" }}>Duration</th>
-                    <th style={{ width: "12%" }}>Price/Nights</th>
-                    <th style={{ width: "8%" }}>Tax %</th>
-                    <th style={{ width: "16%" }}>Total Amount</th>
+                    <th style={{ width: "15%" }}>Services</th>
+                    <th style={{ width: "20%" }}>Service Items</th>
+                    <th style={{ width: "20%" }}>Description</th>
+                    <th style={{ width: "8%" }}>Duration</th>
+                    <th style={{ width: "10%" }}>Price/Nights</th>
+                    <th style={{ width: "7%" }}>Tax %</th>
+                    <th style={{ width: "13%" }}>Total Amount</th>
                     <th style={{ width: "8%" }}>&nbsp;</th>
                   </tr>
                 </thead>
@@ -702,6 +713,27 @@ export default function AddInvoiceModal() {
                     return (
                       <tr key={row.id}>
                         <td>{(index + 1).toString().padStart(2, "0")}</td>
+                        <td>
+                          <Select
+                            value={row.service}
+                            onChange={(selected) => updateItemRow(row.id, "service", selected)}
+                            options={serviceOptions}
+                            placeholder='Select service'
+                            isClearable
+                            isSearchable
+                            isDisabled={isDisabled}
+                            classNamePrefix='select'
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition='fixed'
+                            styles={{
+                              control: (base) => ({
+                                ...base,
+                                minHeight: "38px",
+                                opacity: isDisabled ? 0.6 : 1,
+                              }),
+                            }}
+                          />
+                        </td>
                         <td>
                           <Select
                             value={row.item}

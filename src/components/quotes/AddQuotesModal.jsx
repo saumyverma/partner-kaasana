@@ -33,6 +33,7 @@ export default function AddQuotesModal() {
   const [items, setItems] = useState([
     {
       id: 1,
+      service: null,
       item: null,
       description: "",
       qty: "",
@@ -211,6 +212,14 @@ export default function AddQuotesModal() {
     },
   ];
 
+  const serviceOptions = [
+    { value: "hotel", label: "Hotel" },
+    { value: "packages", label: "Packages" },
+    { value: "transport", label: "Transport" },
+    { value: "visa", label: "Visa" },
+    { value: "flights", label: "Flights" },
+  ];
+
   const CustomCustomerOption = (props) => {
     const { data, innerProps } = props;
     const className = data.isAddOption
@@ -341,6 +350,7 @@ export default function AddQuotesModal() {
       ...prev,
       {
         id: nextId,
+        service: null,
         item: null,
         description: "",
         qty: "",
@@ -632,12 +642,13 @@ export default function AddQuotesModal() {
                 <thead>
                   <tr>
                     <th style={{ width: "5%" }}>S.L</th>
-                    <th style={{ width: "25%" }}>Item</th>
-                    <th style={{ width: "22%" }}>Description</th>
-                    <th style={{ width: "10%" }}>Qty</th>
-                    <th style={{ width: "12%" }}>Unit Price</th>
-                    <th style={{ width: "8%" }}>Tax %</th>
-                    <th style={{ width: "16%" }}>Line Total</th>
+                    <th style={{ width: "15%" }}>Services</th>
+                    <th style={{ width: "20%" }}>Service Items</th>
+                    <th style={{ width: "20%" }}>Description</th>
+                    <th style={{ width: "8%" }}>Qty</th>
+                    <th style={{ width: "10%" }}>Unit Price</th>
+                    <th style={{ width: "7%" }}>Tax %</th>
+                    <th style={{ width: "13%" }}>Line Total</th>
                     <th style={{ width: "8%" }}>&nbsp;</th>
                   </tr>
                 </thead>
@@ -648,6 +659,27 @@ export default function AddQuotesModal() {
                     return (
                       <tr key={row.id}>
                         <td>{(index + 1).toString().padStart(2, "0")}</td>
+                        <td>
+                          <Select
+                            value={row.service}
+                            onChange={(selected) => updateItemRow(row.id, "service", selected)}
+                            options={serviceOptions}
+                            placeholder='Select service'
+                            isClearable
+                            isSearchable
+                            isDisabled={isDisabled}
+                            classNamePrefix='select'
+                            menuPortalTarget={menuPortalTarget}
+                            menuPosition='fixed'
+                            styles={{
+                              control: (base) => ({
+                                ...base,
+                                minHeight: "38px",
+                                opacity: isDisabled ? 0.6 : 1,
+                              }),
+                            }}
+                          />
+                        </td>
                         <td>
                           <Select
                             value={row.item}
