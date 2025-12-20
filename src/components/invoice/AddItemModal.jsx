@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-const AddItemModal = ({ isOpen, onClose, onSave }) => {
+const AddItemModal = ({ isOpen, onClose, onSave, selectedService }) => {
   const [itemName, setItemName] = useState("");
   const [description, setDescription] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
@@ -45,7 +45,7 @@ const AddItemModal = ({ isOpen, onClose, onSave }) => {
           <div className='modal-content border radius-16 bg-base' style={{ zIndex: 1071 }}>
             <div className='modal-header py-16 px-24 border border-top-0 border-start-0 border-end-0'>
               <h1 className='modal-title fs-5 text-primary-light fw-semibold' id='addItemModalLabel'>
-                Add New Item
+                Add New Item{selectedService ? ` - ${selectedService.label}` : ""}
               </h1>
               <button
                 type='button'

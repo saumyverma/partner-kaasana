@@ -29,6 +29,7 @@ export default function AddQuotesModal() {
   const [isAddDiscountModalOpen, setIsAddDiscountModalOpen] = useState(false);
   const [quoteDiscount, setQuoteDiscount] = useState(null);
   const [currentItemRowId, setCurrentItemRowId] = useState(null);
+  const [currentServiceForItem, setCurrentServiceForItem] = useState(null);
   const [issuedDate, setIssuedDate] = useState(today);
   const [validTill, setValidTill] = useState(validTillDate);
   const [items, setItems] = useState([
@@ -220,8 +221,10 @@ export default function AddQuotesModal() {
       ...filteredItems,
       {
         value: "add_item",
-        label: "+ Add New Item",
+        label: `+ Add New Item`,
         isAddOption: true,
+        serviceLabel: selectedService.label, // Store service label for display
+        service: selectedService.value, // Store service value for reference
       },
     ];
   };
@@ -301,6 +304,9 @@ export default function AddQuotesModal() {
       : props.className;
 
     if (data.isAddOption) {
+      // Get service label from the option data, or fallback to "Item"
+      const serviceName = data.serviceLabel || "Item";
+      
       return (
         <div
           {...innerProps}
@@ -321,13 +327,15 @@ export default function AddQuotesModal() {
             e.stopPropagation();
             // Find the row ID for the current context (we'll use the last row or a default)
             const rowId = items.length > 0 ? items[items.length - 1].id : 1;
+            const currentRow = items.find(row => row.id === rowId);
             setCurrentItemRowId(rowId);
+            setCurrentServiceForItem(currentRow?.service || null);
             setIsAddItemModalOpen(true);
           }}
         >
           <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <span>+</span>
-            <span>Add New Item</span>
+            <span>Add {serviceName}</span>
           </span>
         </div>
       );
@@ -424,7 +432,9 @@ export default function AddQuotesModal() {
       return;
     }
     if (selected.value === "add_item") {
+      const currentRow = items.find(row => row.id === id);
       setCurrentItemRowId(id);
+      setCurrentServiceForItem(currentRow?.service || null);
       setIsAddItemModalOpen(true);
       return;
     }
@@ -450,9 +460,8 @@ export default function AddQuotesModal() {
   };
 
   const handleSaveNewItem = (newItem) => {
-    // Get the service from the current row context
-    const currentRow = items.find(row => row.id === currentItemRowId);
-    const selectedService = currentRow?.service;
+    // Use the service that was captured when opening the modal
+    const selectedService = currentServiceForItem;
     
     // Add new item to itemMaster
     const newValue = newItem.name.toLowerCase().replace(/\s+/g, "_");
@@ -468,6 +477,7 @@ export default function AddQuotesModal() {
     }));
     setIsAddItemModalOpen(false);
     setCurrentItemRowId(null);
+    setCurrentServiceForItem(null);
   };
 
   const handleSaveDiscount = (discount) => {
@@ -952,8 +962,12 @@ export default function AddQuotesModal() {
       />
       <AddItemModal
         isOpen={isAddItemModalOpen}
-        onClose={() => setIsAddItemModalOpen(false)}
+        onClose={() => {
+          setIsAddItemModalOpen(false);
+          setCurrentServiceForItem(null);
+        }}
         onSave={handleSaveNewItem}
+        selectedService={currentServiceForItem}
       />
       <AddDiscountModal
         isOpen={isAddDiscountModalOpen}
