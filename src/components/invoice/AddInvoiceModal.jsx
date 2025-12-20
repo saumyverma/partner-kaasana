@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Select, { components } from "react-select";
 import AddCustomerModal from "./AddCustomerModal";
 import AddItemModal from "./AddItemModal";
 
 export default function AddInvoiceModal() {
-  const [selectedCustomerType, setSelectedCustomerType] = useState(null);
+  const [selectedCustomerType, setSelectedCustomerType] = useState({ value: "B2C", label: "B2C" });
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedInvoiceType, setSelectedInvoiceType] = useState(null);
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
@@ -28,6 +28,7 @@ export default function AddInvoiceModal() {
   const [invoiceDate, setInvoiceDate] = useState(today);
   const [dueDateState, setDueDateState] = useState(dueDate);
   const [quoteReference, setQuoteReference] = useState("");
+  const [quoteDate, setQuoteDate] = useState(today);
   const [items, setItems] = useState([
     {
       id: 1,
@@ -102,8 +103,32 @@ export default function AddInvoiceModal() {
     return total > 0 ? total.toFixed(2) : "";
   };
 
+  const customerDetails = {
+    kathryn: {
+      type: "B2B",
+      phone: "+1 555-0123",
+      email: "kathryn@example.com",
+      gstTax: "GST123456789",
+      companyName: "Tech Solutions Inc.",
+      companyContactName: "Kathryn Murphy",
+    },
+    annette: {
+      type: "B2C",
+      phone: "+1 555-0456",
+      email: "annette@example.com",
+    },
+    ronald: {
+      type: "B2B",
+      phone: "+1 555-0789",
+      email: "ronald@example.com",
+      gstTax: "GST987654321",
+      companyName: "Business Corp Ltd.",
+      companyContactName: "Ronald Richards",
+    },
+  };
+
   // Filter customer options based on selected customer type
-  const getCustomerOptions = () => {
+  const customerOptions = useMemo(() => {
     const allCustomers = [
       { value: "kathryn", label: "Kathryn Murphy" },
       { value: "annette", label: "Annette Black" },
@@ -132,33 +157,7 @@ export default function AddInvoiceModal() {
         isAddOption: true,
       },
     ];
-  };
-
-  const customerOptions = getCustomerOptions();
-
-  const customerDetails = {
-    kathryn: {
-      type: "B2B",
-      phone: "+1 555-0123",
-      email: "kathryn@example.com",
-      gstTax: "GST123456789",
-      companyName: "Tech Solutions Inc.",
-      companyContactName: "Kathryn Murphy",
-    },
-    annette: {
-      type: "B2C",
-      phone: "+1 555-0456",
-      email: "annette@example.com",
-    },
-    ronald: {
-      type: "B2B",
-      phone: "+1 555-0789",
-      email: "ronald@example.com",
-      gstTax: "GST987654321",
-      companyName: "Business Corp Ltd.",
-      companyContactName: "Ronald Richards",
-    },
-  };
+  }, [selectedCustomerType]);
 
   const customerTypeOptions = [
     { value: "B2B", label: "B2B" },
@@ -469,10 +468,9 @@ export default function AddInvoiceModal() {
           </div>
           <div className='modal-body'>
             {/* Customer & Invoice Details */}
-            <h6 className='text-md fw-semibold mb-16'>Customer &amp; Invoice Details</h6>
             <div className='row g-3'>
               {/* Left Side - Customer Details */}
-              <div className='col-md-6'>
+              <div className='col-md-6 border-end pe-5'>
                 <h6 className='text-sm fw-semibold mb-16'>Customer Details</h6>
                 <div className='row g-3'>
                   <div className='col-md-4'>
@@ -537,7 +535,7 @@ export default function AddInvoiceModal() {
                   </div>
                   {selectedCustomer && selectedCustomer.value !== "add_customer" && (
                     <>
-                      <div className='col-md-12'>
+                      <div className='col-md-4'>
                         <label className='form-label text-sm fw-medium'>Customer Mobile</label>
                         <input
                           type='text'
@@ -546,7 +544,7 @@ export default function AddInvoiceModal() {
                           readOnly
                         />
                       </div>
-                      <div className='col-md-12'>
+                      <div className='col-md-4'>
                         <label className='form-label text-sm fw-medium'>Email Address</label>
                         <input
                           type='email'
@@ -557,7 +555,7 @@ export default function AddInvoiceModal() {
                       </div>
                       {selectedCustomerType?.value === "B2B" && (
                         <>
-                          <div className='col-md-12'>
+                          <div className='col-md-4'>
                             <label className='form-label text-sm fw-medium'>GST/Tax</label>
                             <input
                               type='text'
@@ -566,7 +564,7 @@ export default function AddInvoiceModal() {
                               readOnly
                             />
                           </div>
-                          <div className='col-md-12'>
+                          <div className='col-md-4'>
                             <label className='form-label text-sm fw-medium'>Company Name</label>
                             <input
                               type='text'
@@ -575,7 +573,7 @@ export default function AddInvoiceModal() {
                               readOnly
                             />
                           </div>
-                          <div className='col-md-12'>
+                          <div className='col-md-4'>
                             <label className='form-label text-sm fw-medium'>Company Contact Name</label>
                             <input
                               type='text'
@@ -592,7 +590,7 @@ export default function AddInvoiceModal() {
               </div>
 
               {/* Right Side - Invoice Details */}
-              <div className='col-md-6'>
+              <div className='col-md-6 ps-5'>
                 <h6 className='text-sm fw-semibold mb-16'>Invoice Details</h6>
                 <div className='row g-3'>
                   <div className='col-md-4'>
@@ -663,6 +661,15 @@ export default function AddInvoiceModal() {
                       placeholder='Enter quote reference'
                       value={quoteReference}
                       onChange={(e) => setQuoteReference(e.target.value)}
+                    />
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Quote Date</label>
+                    <input
+                      type='date'
+                      className='form-control'
+                      value={quoteDate}
+                      onChange={(e) => setQuoteDate(e.target.value)}
                     />
                   </div>
                 </div>
