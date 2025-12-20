@@ -5,12 +5,29 @@ import AddCustomerModal from "./AddCustomerModal";
 import AddItemModal from "./AddItemModal";
 
 export default function AddInvoiceModal() {
+  const [selectedCustomerType, setSelectedCustomerType] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedInvoiceType, setSelectedInvoiceType] = useState(null);
-  const [selectedPaymentTerms, setSelectedPaymentTerms] = useState(null);
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  
+  // Helper function to format date as YYYY-MM-DD
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // Set default dates
+  const today = formatDate(new Date());
+  const dueDate = formatDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
+  
+  const [invoiceDate, setInvoiceDate] = useState(today);
+  const [dueDateState, setDueDateState] = useState(dueDate);
+  const [quoteReference, setQuoteReference] = useState("");
   const [items, setItems] = useState([
     {
       id: 1,
@@ -85,22 +102,48 @@ export default function AddInvoiceModal() {
     return total > 0 ? total.toFixed(2) : "";
   };
 
-  const customerOptions = [
-    { value: "kathryn", label: "Kathryn Murphy" },
-    { value: "annette", label: "Annette Black" },
-    { value: "ronald", label: "Ronald Richards" },
-    {
-      value: "add_customer",
-      label: "+ Add New Customer",
-      isAddOption: true,
-    },
-  ];
+  // Filter customer options based on selected customer type
+  const getCustomerOptions = () => {
+    const allCustomers = [
+      { value: "kathryn", label: "Kathryn Murphy" },
+      { value: "annette", label: "Annette Black" },
+      { value: "ronald", label: "Ronald Richards" },
+    ];
+    
+    if (selectedCustomerType) {
+      const filtered = allCustomers.filter(
+        (customer) => customerDetails[customer.value]?.type === selectedCustomerType.value
+      );
+      return [
+        ...filtered,
+        {
+          value: "add_customer",
+          label: "+ Add New Customer",
+          isAddOption: true,
+        },
+      ];
+    }
+    
+    return [
+      ...allCustomers,
+      {
+        value: "add_customer",
+        label: "+ Add New Customer",
+        isAddOption: true,
+      },
+    ];
+  };
+
+  const customerOptions = getCustomerOptions();
 
   const customerDetails = {
     kathryn: {
       type: "B2B",
       phone: "+1 555-0123",
       email: "kathryn@example.com",
+      gstTax: "GST123456789",
+      companyName: "Tech Solutions Inc.",
+      companyContactName: "Kathryn Murphy",
     },
     annette: {
       type: "B2C",
@@ -111,21 +154,21 @@ export default function AddInvoiceModal() {
       type: "B2B",
       phone: "+1 555-0789",
       email: "ronald@example.com",
+      gstTax: "GST987654321",
+      companyName: "Business Corp Ltd.",
+      companyContactName: "Ronald Richards",
     },
   };
+
+  const customerTypeOptions = [
+    { value: "B2B", label: "B2B" },
+    { value: "B2C", label: "B2C" },
+  ];
 
   const invoiceTypeOptions = [
     { value: "standard", label: "Standard" },
     { value: "proforma", label: "Proforma" },
     { value: "credit", label: "Credit" },
-  ];
-
-  const paymentTermOptions = [
-    { value: "advance", label: "Advance Payment" },
-    { value: "on_delivery", label: "On Delivery" },
-    { value: "net15", label: "Net 15 Days" },
-    { value: "net30", label: "Net 30 Days" },
-    { value: "net45", label: "Net 45 Days" },
   ];
 
   const [itemMaster, setItemMaster] = useState({
@@ -428,134 +471,201 @@ export default function AddInvoiceModal() {
             {/* Customer & Invoice Details */}
             <h6 className='text-md fw-semibold mb-16'>Customer &amp; Invoice Details</h6>
             <div className='row g-3'>
-              <div className='col-md-3'>
-                <label className='form-label text-sm fw-medium'>Customer Name</label>
-                <Select
-                  value={selectedCustomer}
-                  onChange={(selected) => {
-                    if (selected && selected.value === "add_customer") {
-                      setIsAddCustomerModalOpen(true);
-                    } else {
-                      setSelectedCustomer(selected);
-                    }
-                  }}
-                  options={customerOptions}
-                  placeholder='Select Customer'
-                  isClearable
-                  isSearchable
-                  classNamePrefix='select'
-                  components={{
-                    Option: CustomCustomerOption,
-                    MenuList: CustomMenuList,
-                  }}
-                  filterOption={filterCustomerOptions}
-                  menuPortalTarget={menuPortalTarget}
-                  menuPosition='fixed'
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      minHeight: "38px",
-                    }),
-                    menuList: (base) => ({
-                      ...base,
-                      maxHeight: "260px",
-                      paddingBottom: 0,
-                    }),
-                  }}
-                />
-              </div>
-              {selectedCustomer && selectedCustomer.value !== "add_customer" && (
-                <>
-                  <div className='col-md-1'>
+              {/* Left Side - Customer Details */}
+              <div className='col-md-6'>
+                <h6 className='text-sm fw-semibold mb-16'>Customer Details</h6>
+                <div className='row g-3'>
+                  <div className='col-md-4'>
                     <label className='form-label text-sm fw-medium'>Customer Type</label>
+                    <Select
+                      value={selectedCustomerType}
+                      onChange={(selected) => {
+                        setSelectedCustomerType(selected);
+                        setSelectedCustomer(null); // Reset customer when type changes
+                      }}
+                      options={customerTypeOptions}
+                      placeholder='Select Customer Type'
+                      isClearable
+                      isSearchable
+                      classNamePrefix='select'
+                      menuPortalTarget={menuPortalTarget}
+                      menuPosition='fixed'
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          minHeight: "38px",
+                        }),
+                      }}
+                    />
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Customer Name</label>
+                    <Select
+                      value={selectedCustomer}
+                      onChange={(selected) => {
+                        if (selected && selected.value === "add_customer") {
+                          setIsAddCustomerModalOpen(true);
+                        } else {
+                          setSelectedCustomer(selected);
+                        }
+                      }}
+                      options={customerOptions}
+                      placeholder='Select Customer'
+                      isClearable
+                      isSearchable
+                      isDisabled={!selectedCustomerType}
+                      classNamePrefix='select'
+                      components={{
+                        Option: CustomCustomerOption,
+                        MenuList: CustomMenuList,
+                      }}
+                      filterOption={filterCustomerOptions}
+                      menuPortalTarget={menuPortalTarget}
+                      menuPosition='fixed'
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          minHeight: "38px",
+                        }),
+                        menuList: (base) => ({
+                          ...base,
+                          maxHeight: "260px",
+                          paddingBottom: 0,
+                        }),
+                      }}
+                    />
+                  </div>
+                  {selectedCustomer && selectedCustomer.value !== "add_customer" && (
+                    <>
+                      <div className='col-md-12'>
+                        <label className='form-label text-sm fw-medium'>Customer Mobile</label>
+                        <input
+                          type='text'
+                          className='form-control'
+                          value={customerDetails[selectedCustomer.value]?.phone || ""}
+                          readOnly
+                        />
+                      </div>
+                      <div className='col-md-12'>
+                        <label className='form-label text-sm fw-medium'>Email Address</label>
+                        <input
+                          type='email'
+                          className='form-control'
+                          value={customerDetails[selectedCustomer.value]?.email || ""}
+                          readOnly
+                        />
+                      </div>
+                      {selectedCustomerType?.value === "B2B" && (
+                        <>
+                          <div className='col-md-12'>
+                            <label className='form-label text-sm fw-medium'>GST/Tax</label>
+                            <input
+                              type='text'
+                              className='form-control'
+                              value={customerDetails[selectedCustomer.value]?.gstTax || ""}
+                              readOnly
+                            />
+                          </div>
+                          <div className='col-md-12'>
+                            <label className='form-label text-sm fw-medium'>Company Name</label>
+                            <input
+                              type='text'
+                              className='form-control'
+                              value={customerDetails[selectedCustomer.value]?.companyName || ""}
+                              readOnly
+                            />
+                          </div>
+                          <div className='col-md-12'>
+                            <label className='form-label text-sm fw-medium'>Company Contact Name</label>
+                            <input
+                              type='text'
+                              className='form-control'
+                              value={customerDetails[selectedCustomer.value]?.companyContactName || ""}
+                              readOnly
+                            />
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Side - Invoice Details */}
+              <div className='col-md-6'>
+                <h6 className='text-sm fw-semibold mb-16'>Invoice Details</h6>
+                <div className='row g-3'>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Invoice Type</label>
+                    <Select
+                      value={selectedInvoiceType}
+                      onChange={setSelectedInvoiceType}
+                      options={invoiceTypeOptions}
+                      placeholder='Select Invoice Type'
+                      isClearable
+                      isSearchable
+                      classNamePrefix='select'
+                      menuPortalTarget={menuPortalTarget}
+                      menuPosition='fixed'
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          minHeight: "38px",
+                        }),
+                      }}
+                    />
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Invoice Number</label>
+                    <div className='d-flex gap-2'>
+                      <input
+                        type='text'
+                        className='form-control'
+                        placeholder='Pattern (e.g. INV-2025-)'
+                      />
+                      <input
+                        type='text'
+                        className='form-control'
+                        placeholder='Number (e.g. 0001)'
+                      />
+                    </div>
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Invoice Date</label>
+                    <input
+                      type='date'
+                      className='form-control'
+                      value={invoiceDate}
+                      onChange={(e) => {
+                        setInvoiceDate(e.target.value);
+                        // Auto-update due date to be 7 days after invoice date
+                        const invDate = new Date(e.target.value);
+                        const newDueDate = new Date(invDate);
+                        newDueDate.setDate(newDueDate.getDate() + 7);
+                        setDueDateState(formatDate(newDueDate));
+                      }}
+                    />
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Invoice Due Date</label>
+                    <input
+                      type='date'
+                      className='form-control'
+                      value={dueDateState}
+                      onChange={(e) => setDueDateState(e.target.value)}
+                    />
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Quote Reference</label>
                     <input
                       type='text'
                       className='form-control'
-                      value={customerDetails[selectedCustomer.value]?.type || ""}
-                      readOnly
+                      placeholder='Enter quote reference'
+                      value={quoteReference}
+                      onChange={(e) => setQuoteReference(e.target.value)}
                     />
                   </div>
-                  <div className='col-md-2'>
-                    <label className='form-label text-sm fw-medium'>Customer Phone</label>
-                    <input
-                      type='text'
-                      className='form-control'
-                      value={customerDetails[selectedCustomer.value]?.phone || ""}
-                      readOnly
-                    />
-                  </div>
-                </>
-              )}
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Invoice Type</label>
-                <Select
-                  value={selectedInvoiceType}
-                  onChange={setSelectedInvoiceType}
-                  options={invoiceTypeOptions}
-                  placeholder='Select'
-                  isClearable
-                  isSearchable
-                  classNamePrefix='select'
-                  menuPortalTarget={menuPortalTarget}
-                  menuPosition='fixed'
-                />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Invoice No</label>
-                <div className='d-flex gap-2'>
-                  <input
-                    type='text'
-                    className='form-control'
-                    placeholder='Pattern (e.g. INV-2025-)'
-                  />
-                  <input
-                    type='text'
-                    className='form-control'
-                    placeholder='Number (e.g. 0001)'
-                  />
                 </div>
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Invoice Date</label>
-                <input type='date' className='form-control' />
-              </div>
-             
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Due Date</label>
-                <input type='date' className='form-control' />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>PO No</label>
-                <div className='d-flex gap-2'>
-                  <input
-                    type='text'
-                    className='form-control'
-                    placeholder='Pattern (e.g. PO-2025-)'
-                  />
-                  <input
-                    type='text'
-                    className='form-control'
-                    placeholder='Number (e.g. 0001)'
-                  />
-                </div>
-              </div>
-                <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>PO Date</label>
-                <input type='date' className='form-control' />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Payment Terms</label>
-                <Select
-                  value={selectedPaymentTerms}
-                  onChange={setSelectedPaymentTerms}
-                  options={paymentTermOptions}
-                  placeholder='Select'
-                  isClearable
-                  isSearchable
-                  classNamePrefix='select'
-                  menuPortalTarget={menuPortalTarget}
-                  menuPosition='fixed'
-                />
               </div>
             </div>
 
@@ -567,14 +677,14 @@ export default function AddInvoiceModal() {
                 <thead>
                   <tr>
                     <th style={{ width: "5%" }}>S.L</th>
-                    <th style={{ width: "23%" }}>Item</th>
+                    <th style={{ width: "23%" }}>Services</th>
                     <th style={{ width: "22%" }}>Description</th>
-                    <th style={{ width: "8%" }}>Qty</th>
-                    <th style={{ width: "10%" }}>Unit Price</th>
+                    <th style={{ width: "8%" }}>Duration</th>
+                    <th style={{ width: "10%" }}>Price/Nights</th>
                     <th style={{ width: "8%" }}>Discount</th>
                     <th style={{ width: "8%" }}>Tax %</th>
-                    <th style={{ width: "14%" }}>Line Total</th>
-                    <th style={{ width: "8%" }}>Action</th>
+                    <th style={{ width: "14%" }}>Total Amount</th>
+                    <th style={{ width: "8%" }}>&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -695,11 +805,11 @@ export default function AddInvoiceModal() {
                           {!row.isCompleted ? (
                             <button
                               type='button'
-                              className='btn btn-xs btn-primary-600'
+                              className='btn btn-xs text-success btn-primary-600'
                               onClick={() => handleAddNewItem(row.id)}
                               disabled={!isRowFilled}
                             >
-                              + Items
+                              +
                             </button>
                           ) : (
                             <div className='d-flex gap-2 justify-content-center'>
@@ -741,21 +851,22 @@ export default function AddInvoiceModal() {
                 <div className='card border-0 bg-primary-50'>
                   <div className='card-body p-16'>
                     <div className='d-flex justify-content-between align-items-center mb-10'>
-                      <span className='text-sm text-neutral-600'>Subtotal</span>
+                      <span className='text-sm text-neutral-600'>Services Total</span>
                       <span className='text-sm text-neutral-800 fw-medium'>
                         {subtotal.toFixed(2)}
                       </span>
                     </div>
-                    <div className='d-flex justify-content-between align-items-center mb-10'>
-                      <span className='text-sm text-neutral-600'>Discount</span>
-                      <span className='text-sm text-neutral-800 fw-medium'>
-                        {totalDiscount.toFixed(2)}
-                      </span>
-                    </div>
+                   
                     <div className='d-flex justify-content-between align-items-center mb-10'>
                       <span className='text-sm text-neutral-600'>Tax</span>
                       <span className='text-sm text-neutral-800 fw-medium'>
                         {totalTax.toFixed(2)}
+                      </span>
+                    </div>
+                     <div className='d-flex justify-content-between align-items-center mb-10'>
+                      <span className='text-sm text-neutral-600'>Discount</span>
+                      <span className='text-sm text-neutral-800 fw-medium'>
+                        {totalDiscount.toFixed(2)}
                       </span>
                     </div>
                     <hr className='my-12' />
