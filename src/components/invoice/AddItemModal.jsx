@@ -6,7 +6,6 @@ const AddItemModal = ({ isOpen, onClose, onSave }) => {
   const [description, setDescription] = useState("");
   const [unitPrice, setUnitPrice] = useState("");
   const [tax, setTax] = useState("");
-  const [discount, setDiscount] = useState("");
 
   useEffect(() => {
     if (!isOpen) {
@@ -14,7 +13,6 @@ const AddItemModal = ({ isOpen, onClose, onSave }) => {
       setDescription("");
       setUnitPrice("");
       setTax("");
-      setDiscount("");
     }
   }, [isOpen]);
 
@@ -26,7 +24,6 @@ const AddItemModal = ({ isOpen, onClose, onSave }) => {
         description,
         rate: parseFloat(unitPrice) || 0,
         tax: parseFloat(tax) || 0,
-        discount: parseFloat(discount) || 0,
       });
     }
     onClose();
@@ -104,18 +101,6 @@ const AddItemModal = ({ isOpen, onClose, onSave }) => {
                       step='0.01'
                       value={tax}
                       onChange={(e) => setTax(e.target.value)}
-                    />
-                  </div>
-                  <div className='col-md-6'>
-                    <label className='form-label'>Discount</label>
-                    <input
-                      type='number'
-                      className='form-control'
-                      placeholder='0.00'
-                      min='0'
-                      step='0.01'
-                      value={discount}
-                      onChange={(e) => setDiscount(e.target.value)}
                     />
                   </div>
                 </div>

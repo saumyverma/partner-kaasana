@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Select, { components } from "react-select";
 import AddCustomerModal from "./AddCustomerModal";
 import AddItemModal from "./AddItemModal";
+import AddDiscountModal from "../invoice/AddDiscountModal";
 
 export default function AddQuotesModal() {
   // Helper function to format date as YYYY-MM-DD
@@ -25,6 +26,8 @@ export default function AddQuotesModal() {
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [isAddDiscountModalOpen, setIsAddDiscountModalOpen] = useState(false);
+  const [quoteDiscount, setQuoteDiscount] = useState(null);
   const [issuedDate, setIssuedDate] = useState(today);
   const [validTill, setValidTill] = useState(validTillDate);
   const [items, setItems] = useState([
@@ -34,7 +37,6 @@ export default function AddQuotesModal() {
       description: "",
       qty: "",
       rate: "",
-      discount: "",
       tax: "",
       total: "",
       isCompleted: false,
@@ -52,51 +54,53 @@ export default function AddQuotesModal() {
     }
   }, []);
 
-  // Calculate totals whenever items change
+  // Calculate totals whenever items or discount change
   useEffect(() => {
     let subtotalSum = 0;
     let taxSum = 0;
-    let discountSum = 0;
 
     items.forEach((row) => {
       const qty = parseFloat(row.qty) || 0;
       const rate = parseFloat(row.rate) || 0;
-      const discount = parseFloat(row.discount) || 0;
       const taxPercent = parseFloat(row.tax) || 0;
 
       const lineSubtotal = qty * rate;
-      const afterDiscount = lineSubtotal - discount;
-      const lineTax = (afterDiscount * taxPercent) / 100;
+      const lineTax = (lineSubtotal * taxPercent) / 100;
 
       subtotalSum += lineSubtotal;
-      discountSum += discount;
       taxSum += lineTax;
     });
 
-    const grandTotalValue = subtotalSum - discountSum + taxSum;
+    // Calculate discount based on type
+    let discountAmount = 0;
+    if (quoteDiscount) {
+      if (quoteDiscount.type === "percentage") {
+        discountAmount = (subtotalSum * quoteDiscount.value) / 100;
+      } else {
+        discountAmount = quoteDiscount.value;
+      }
+    }
+
+    const grandTotalValue = subtotalSum - discountAmount + taxSum;
 
     setSubtotal(subtotalSum);
-    setTotalDiscount(discountSum);
+    setTotalDiscount(discountAmount);
     setTotalTax(taxSum);
     setGrandTotal(grandTotalValue);
-  }, [items]);
+  }, [items, quoteDiscount]);
 
   // Calculate line total for a specific row
   const calculateLineTotal = (row) => {
     const qty = parseFloat(row.qty) || 0;
     const rate = parseFloat(row.rate) || 0;
-    const discount = parseFloat(row.discount) || 0;
     const taxPercent = parseFloat(row.tax) || 0;
 
     // Calculate subtotal: qty * rate
     const subtotal = qty * rate;
 
-    // Apply discount
-    const afterDiscount = subtotal - discount;
-
     // Apply tax
-    const taxAmount = (afterDiscount * taxPercent) / 100;
-    const total = afterDiscount + taxAmount;
+    const taxAmount = (subtotal * taxPercent) / 100;
+    const total = subtotal + taxAmount;
 
     return total > 0 ? total.toFixed(2) : "";
   };
@@ -180,21 +184,18 @@ export default function AddQuotesModal() {
       description: "Standard service charges",
       rate: 100,
       tax: 10,
-      discount: 0,
     },
     consultation: {
       label: "Consultation",
       description: "Professional consultation",
       rate: 200,
       tax: 18,
-      discount: 0,
     },
     misc: {
       label: "Miscellaneous",
       description: "Other charges",
       rate: 50,
       tax: 5,
-      discount: 0,
     },
   });
 
@@ -344,7 +345,6 @@ export default function AddQuotesModal() {
         description: "",
         qty: "",
         rate: "",
-        discount: "",
         tax: "",
         total: "",
         isCompleted: false,
@@ -371,8 +371,8 @@ export default function AddQuotesModal() {
       prev.map((row) => {
         if (row.id === id) {
           const updatedRow = { ...row, [field]: value };
-          // Auto-calculate total when qty, rate, discount, or tax changes
-          if (["qty", "rate", "discount", "tax"].includes(field)) {
+          // Auto-calculate total when qty, rate, or tax changes
+          if (["qty", "rate", "tax"].includes(field)) {
             updatedRow.total = calculateLineTotal(updatedRow);
           }
           return updatedRow;
@@ -402,7 +402,6 @@ export default function AddQuotesModal() {
               description: master?.description || "",
               rate: master?.rate?.toString() || "",
               tax: master?.tax?.toString() || "",
-              discount: master?.discount?.toString() || "",
             };
             updatedRow.total = calculateLineTotal(updatedRow);
             return updatedRow;
@@ -423,10 +422,14 @@ export default function AddQuotesModal() {
         description: newItem.description || "",
         rate: newItem.rate || 0,
         tax: newItem.tax || 0,
-        discount: newItem.discount || 0,
       },
     }));
     setIsAddItemModalOpen(false);
+  };
+
+  const handleSaveDiscount = (discount) => {
+    setQuoteDiscount(discount);
+    setIsAddDiscountModalOpen(false);
   };
 
   return (
@@ -629,14 +632,13 @@ export default function AddQuotesModal() {
                 <thead>
                   <tr>
                     <th style={{ width: "5%" }}>S.L</th>
-                    <th style={{ width: "23%" }}>Item</th>
+                    <th style={{ width: "25%" }}>Item</th>
                     <th style={{ width: "22%" }}>Description</th>
-                    <th style={{ width: "8%" }}>Qty</th>
-                    <th style={{ width: "10%" }}>Unit Price</th>
-                    <th style={{ width: "8%" }}>Discount</th>
+                    <th style={{ width: "10%" }}>Qty</th>
+                    <th style={{ width: "12%" }}>Unit Price</th>
                     <th style={{ width: "8%" }}>Tax %</th>
-                    <th style={{ width: "14%" }}>Line Total</th>
-                    <th style={{ width: "8%" }}>Action</th>
+                    <th style={{ width: "16%" }}>Line Total</th>
+                    <th style={{ width: "8%" }}>&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -720,20 +722,6 @@ export default function AddQuotesModal() {
                           <input
                             type='number'
                             className='form-control form-control-sm'
-                            placeholder='0.00'
-                            min='0'
-                            step='0.01'
-                            value={row.discount}
-                            onChange={(e) =>
-                              updateItemRow(row.id, "discount", e.target.value)
-                            }
-                            disabled={isDisabled}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type='number'
-                            className='form-control form-control-sm'
                             placeholder='0'
                             min='0'
                             step='0.01'
@@ -757,11 +745,11 @@ export default function AddQuotesModal() {
                           {!row.isCompleted ? (
                             <button
                               type='button'
-                              className='btn btn-xs btn-primary-600'
+                              className='btn btn-xs text-success btn-primary-600'
                               onClick={() => handleAddNewItem(row.id)}
                               disabled={!isRowFilled}
                             >
-                              + Items
+                              +
                             </button>
                           ) : (
                             <div className='d-flex gap-2 justify-content-center'>
@@ -793,7 +781,7 @@ export default function AddQuotesModal() {
             </div>
             <div className='mt-12'>
               <span className='text-xs text-neutral-500'>
-                At least one quote item is required. Fill all fields and click "+ Items" to add more rows.
+                At least one quote item is required. Fill all fields and click "Add New Item" to add more rows.
               </span>
             </div>
 
@@ -809,15 +797,33 @@ export default function AddQuotesModal() {
                       </span>
                     </div>
                     <div className='d-flex justify-content-between align-items-center mb-10'>
-                      <span className='text-sm text-neutral-600'>Discount</span>
-                      <span className='text-sm text-neutral-800 fw-medium'>
-                        {totalDiscount.toFixed(2)}
-                      </span>
-                    </div>
-                    <div className='d-flex justify-content-between align-items-center mb-10'>
                       <span className='text-sm text-neutral-600'>Tax</span>
                       <span className='text-sm text-neutral-800 fw-medium'>
                         {totalTax.toFixed(2)}
+                      </span>
+                    </div>
+                    <div className='d-flex justify-content-between align-items-center mb-10'>
+                      <div className='d-flex align-items-center gap-2'>
+                        <span className='text-sm text-neutral-600'>Discount</span>
+                        <button
+                          type='button'
+                          className='btn btn-xs btn-primary-600 p-0'
+                          style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          onClick={() => setIsAddDiscountModalOpen(true)}
+                          title='Add Discount'
+                        >
+                          +
+                        </button>
+                      </div>
+                      <span className='text-sm text-neutral-800 fw-medium'>
+                        {quoteDiscount ? (
+                          <>
+                            {totalDiscount.toFixed(2)}
+                            {quoteDiscount.type === "percentage" && ` (${quoteDiscount.value}%)`}
+                          </>
+                        ) : (
+                          "0.00"
+                        )}
                       </span>
                     </div>
                     <hr className='my-12' />
@@ -875,6 +881,13 @@ export default function AddQuotesModal() {
         isOpen={isAddItemModalOpen}
         onClose={() => setIsAddItemModalOpen(false)}
         onSave={handleSaveNewItem}
+      />
+      <AddDiscountModal
+        isOpen={isAddDiscountModalOpen}
+        onClose={() => setIsAddDiscountModalOpen(false)}
+        onSave={handleSaveDiscount}
+        currentDiscount={quoteDiscount}
+        menuPortalTarget={menuPortalTarget}
       />
     </div>
   );

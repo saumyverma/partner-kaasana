@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Select, { components } from "react-select";
 import AddCustomerModal from "./AddCustomerModal";
 import AddItemModal from "./AddItemModal";
+import AddDiscountModal from "./AddDiscountModal";
 
 export default function AddInvoiceModal() {
   const [selectedCustomerType, setSelectedCustomerType] = useState({ value: "B2C", label: "B2C" });
@@ -11,6 +12,8 @@ export default function AddInvoiceModal() {
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [isAddDiscountModalOpen, setIsAddDiscountModalOpen] = useState(false);
+  const [invoiceDiscount, setInvoiceDiscount] = useState(null);
   
   // Helper function to format date as YYYY-MM-DD
   const formatDate = (date) => {
@@ -36,7 +39,6 @@ export default function AddInvoiceModal() {
       description: "",
       qty: "",
       rate: "",
-      discount: "",
       tax: "",
       total: "",
       isCompleted: false,
@@ -54,51 +56,53 @@ export default function AddInvoiceModal() {
     }
   }, []);
 
-  // Calculate totals whenever items change
+  // Calculate totals whenever items or discount change
   useEffect(() => {
     let subtotalSum = 0;
     let taxSum = 0;
-    let discountSum = 0;
 
     items.forEach((row) => {
       const qty = parseFloat(row.qty) || 0;
       const rate = parseFloat(row.rate) || 0;
-      const discount = parseFloat(row.discount) || 0;
       const taxPercent = parseFloat(row.tax) || 0;
 
       const lineSubtotal = qty * rate;
-      const afterDiscount = lineSubtotal - discount;
-      const lineTax = (afterDiscount * taxPercent) / 100;
+      const lineTax = (lineSubtotal * taxPercent) / 100;
 
       subtotalSum += lineSubtotal;
-      discountSum += discount;
       taxSum += lineTax;
     });
 
-    const grandTotalValue = subtotalSum - discountSum + taxSum;
+    // Calculate discount based on type
+    let discountAmount = 0;
+    if (invoiceDiscount) {
+      if (invoiceDiscount.type === "percentage") {
+        discountAmount = (subtotalSum * invoiceDiscount.value) / 100;
+      } else {
+        discountAmount = invoiceDiscount.value;
+      }
+    }
+
+    const grandTotalValue = subtotalSum - discountAmount + taxSum;
 
     setSubtotal(subtotalSum);
-    setTotalDiscount(discountSum);
+    setTotalDiscount(discountAmount);
     setTotalTax(taxSum);
     setGrandTotal(grandTotalValue);
-  }, [items]);
+  }, [items, invoiceDiscount]);
 
   // Calculate line total for a specific row
   const calculateLineTotal = (row) => {
     const qty = parseFloat(row.qty) || 0;
     const rate = parseFloat(row.rate) || 0;
-    const discount = parseFloat(row.discount) || 0;
     const taxPercent = parseFloat(row.tax) || 0;
 
     // Calculate subtotal: qty * rate
     const subtotal = qty * rate;
 
-    // Apply discount
-    const afterDiscount = subtotal - discount;
-
     // Apply tax
-    const taxAmount = (afterDiscount * taxPercent) / 100;
-    const total = afterDiscount + taxAmount;
+    const taxAmount = (subtotal * taxPercent) / 100;
+    const total = subtotal + taxAmount;
 
     return total > 0 ? total.toFixed(2) : "";
   };
@@ -176,21 +180,18 @@ export default function AddInvoiceModal() {
       description: "Standard service charges",
       rate: 100,
       tax: 10,
-      discount: 0,
     },
     consultation: {
       label: "Consultation",
       description: "Professional consultation",
       rate: 200,
       tax: 18,
-      discount: 0,
     },
     misc: {
       label: "Miscellaneous",
       description: "Other charges",
       rate: 50,
       tax: 5,
-      discount: 0,
     },
   });
 
@@ -340,7 +341,6 @@ export default function AddInvoiceModal() {
         description: "",
         qty: "",
         rate: "",
-        discount: "",
         tax: "",
         total: "",
         isCompleted: false,
@@ -368,7 +368,6 @@ export default function AddInvoiceModal() {
         description: "",
         qty: "",
         rate: "",
-        discount: "",
         tax: "",
         total: "",
         isCompleted: false,
@@ -387,8 +386,8 @@ export default function AddInvoiceModal() {
       prev.map((row) => {
         if (row.id === id) {
           const updatedRow = { ...row, [field]: value };
-          // Auto-calculate total when qty, rate, discount, or tax changes
-          if (["qty", "rate", "discount", "tax"].includes(field)) {
+          // Auto-calculate total when qty, rate, or tax changes
+          if (["qty", "rate", "tax"].includes(field)) {
             updatedRow.total = calculateLineTotal(updatedRow);
           }
           return updatedRow;
@@ -418,7 +417,6 @@ export default function AddInvoiceModal() {
               description: master?.description || "",
               rate: master?.rate?.toString() || "",
               tax: master?.tax?.toString() || "",
-              discount: master?.discount?.toString() || "",
             };
             updatedRow.total = calculateLineTotal(updatedRow);
             return updatedRow;
@@ -439,10 +437,14 @@ export default function AddInvoiceModal() {
         description: newItem.description || "",
         rate: newItem.rate || 0,
         tax: newItem.tax || 0,
-        discount: newItem.discount || 0,
       },
     }));
     setIsAddItemModalOpen(false);
+  };
+
+  const handleSaveDiscount = (discount) => {
+    setInvoiceDiscount(discount);
+    setIsAddDiscountModalOpen(false);
   };
 
   return (
@@ -684,13 +686,12 @@ export default function AddInvoiceModal() {
                 <thead>
                   <tr>
                     <th style={{ width: "5%" }}>S.L</th>
-                    <th style={{ width: "23%" }}>Services</th>
+                    <th style={{ width: "25%" }}>Services</th>
                     <th style={{ width: "22%" }}>Description</th>
-                    <th style={{ width: "8%" }}>Duration</th>
-                    <th style={{ width: "10%" }}>Price/Nights</th>
-                    <th style={{ width: "8%" }}>Discount</th>
+                    <th style={{ width: "10%" }}>Duration</th>
+                    <th style={{ width: "12%" }}>Price/Nights</th>
                     <th style={{ width: "8%" }}>Tax %</th>
-                    <th style={{ width: "14%" }}>Total Amount</th>
+                    <th style={{ width: "16%" }}>Total Amount</th>
                     <th style={{ width: "8%" }}>&nbsp;</th>
                   </tr>
                 </thead>
@@ -767,20 +768,6 @@ export default function AddInvoiceModal() {
                             value={row.rate}
                             onChange={(e) =>
                               updateItemRow(row.id, "rate", e.target.value)
-                            }
-                            disabled={isDisabled}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type='number'
-                            className='form-control form-control-sm'
-                            placeholder='0.00'
-                            min='0'
-                            step='0.01'
-                            value={row.discount}
-                            onChange={(e) =>
-                              updateItemRow(row.id, "discount", e.target.value)
                             }
                             disabled={isDisabled}
                           />
@@ -871,9 +858,27 @@ export default function AddInvoiceModal() {
                       </span>
                     </div>
                      <div className='d-flex justify-content-between align-items-center mb-10'>
-                      <span className='text-sm text-neutral-600'>Discount</span>
+                      <div className='d-flex align-items-center gap-2'>
+                        <span className='text-sm text-neutral-600'>Discount</span>
+                        <button
+                          type='button'
+                          className='btn btn-xs btn-primary-600 p-0'
+                          style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          onClick={() => setIsAddDiscountModalOpen(true)}
+                          title='Add Discount'
+                        >
+                          +
+                        </button>
+                      </div>
                       <span className='text-sm text-neutral-800 fw-medium'>
-                        {totalDiscount.toFixed(2)}
+                        {invoiceDiscount ? (
+                          <>
+                            {totalDiscount.toFixed(2)}
+                            {invoiceDiscount.type === "percentage" && ` (${invoiceDiscount.value}%)`}
+                          </>
+                        ) : (
+                          "0.00"
+                        )}
                       </span>
                     </div>
                     <hr className='my-12' />
@@ -931,6 +936,13 @@ export default function AddInvoiceModal() {
         isOpen={isAddItemModalOpen}
         onClose={() => setIsAddItemModalOpen(false)}
         onSave={handleSaveNewItem}
+      />
+      <AddDiscountModal
+        isOpen={isAddDiscountModalOpen}
+        onClose={() => setIsAddDiscountModalOpen(false)}
+        onSave={handleSaveDiscount}
+        currentDiscount={invoiceDiscount}
+        menuPortalTarget={menuPortalTarget}
       />
     </div>
   );
