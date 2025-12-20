@@ -1,17 +1,32 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Select, { components } from "react-select";
 import AddCustomerModal from "./AddCustomerModal";
 import AddItemModal from "./AddItemModal";
 
 export default function AddQuotesModal() {
+  // Helper function to format date as YYYY-MM-DD
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // Set default dates
+  const today = formatDate(new Date());
+  const validTillDate = formatDate(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000));
+
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [selectedCustomerType, setSelectedCustomerType] = useState(null);
+  const [selectedCustomerType, setSelectedCustomerType] = useState({ value: "B2C", label: "B2C" });
   const [selectedTripDuration, setSelectedTripDuration] = useState(null);
   const [selectedQuoteCreatedBy, setSelectedQuoteCreatedBy] = useState(null);
   const [menuPortalTarget, setMenuPortalTarget] = useState(null);
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
+  const [issuedDate, setIssuedDate] = useState(today);
+  const [validTill, setValidTill] = useState(validTillDate);
   const [items, setItems] = useState([
     {
       id: 1,
@@ -86,22 +101,14 @@ export default function AddQuotesModal() {
     return total > 0 ? total.toFixed(2) : "";
   };
 
-  const customerOptions = [
-    { value: "kathryn", label: "Kathryn Murphy" },
-    { value: "annette", label: "Annette Black" },
-    { value: "ronald", label: "Ronald Richards" },
-    {
-      value: "add_customer",
-      label: "+ Add New Customer",
-      isAddOption: true,
-    },
-  ];
-
   const customerDetails = {
     kathryn: {
       type: "B2B",
       phone: "+1 555-0123",
       email: "kathryn@example.com",
+      gstTax: "GST123456789",
+      companyName: "Tech Solutions Inc.",
+      companyContactName: "Kathryn Murphy",
     },
     annette: {
       type: "B2C",
@@ -112,8 +119,43 @@ export default function AddQuotesModal() {
       type: "B2B",
       phone: "+1 555-0789",
       email: "ronald@example.com",
+      gstTax: "GST987654321",
+      companyName: "Business Corp Ltd.",
+      companyContactName: "Ronald Richards",
     },
   };
+
+  // Filter customer options based on selected customer type
+  const customerOptions = useMemo(() => {
+    const allCustomers = [
+      { value: "kathryn", label: "Kathryn Murphy" },
+      { value: "annette", label: "Annette Black" },
+      { value: "ronald", label: "Ronald Richards" },
+    ];
+    
+    if (selectedCustomerType) {
+      const filtered = allCustomers.filter(
+        (customer) => customerDetails[customer.value]?.type === selectedCustomerType.value
+      );
+      return [
+        ...filtered,
+        {
+          value: "add_customer",
+          label: "+ Add New Customer",
+          isAddOption: true,
+        },
+      ];
+    }
+    
+    return [
+      ...allCustomers,
+      {
+        value: "add_customer",
+        label: "+ Add New Customer",
+        isAddOption: true,
+      },
+    ];
+  }, [selectedCustomerType]);
 
   const customerTypeOptions = [
     { value: "B2B", label: "B2B" },
@@ -410,143 +452,172 @@ export default function AddQuotesModal() {
           </div>
           <div className='modal-body'>
             {/* Customer & Quote Details */}
-            <h6 className='text-md fw-semibold mb-16'>Customer &amp; Quote Details</h6>
             <div className='row g-3'>
-              <div className='col-md-3'>
-                <label className='form-label text-sm fw-medium'>Customer Name</label>
-                <Select
-                  value={selectedCustomer}
-                  onChange={(selected) => {
-                    if (selected && selected.value === "add_customer") {
-                      setIsAddCustomerModalOpen(true);
-                    } else {
-                      setSelectedCustomer(selected);
-                    }
-                  }}
-                  options={customerOptions}
-                  placeholder='Select Customer'
-                  isClearable
-                  isSearchable
-                  classNamePrefix='select'
-                  components={{
-                    Option: CustomCustomerOption,
-                    MenuList: CustomMenuList,
-                  }}
-                  filterOption={filterCustomerOptions}
-                  menuPortalTarget={menuPortalTarget}
-                  menuPosition='fixed'
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      minHeight: "38px",
-                    }),
-                    menuList: (base) => ({
-                      ...base,
-                      maxHeight: "260px",
-                      paddingBottom: 0,
-                    }),
-                  }}
-                />
-              </div>
-              {selectedCustomer && selectedCustomer.value !== "add_customer" && (
-                <>
-                  <div className='col-md-1'>
+              {/* Left Side - Customer Details */}
+              <div className='col-md-6 border-end pe-5'>
+                <h6 className='text-sm fw-semibold mb-16'>Customer Details</h6>
+                <div className='row g-3'>
+                  <div className='col-md-4'>
                     <label className='form-label text-sm fw-medium'>Customer Type</label>
-                    <input
-                      type='text'
-                      className='form-control'
-                      value={customerDetails[selectedCustomer.value]?.type || ""}
-                      readOnly
+                    <Select
+                      value={selectedCustomerType}
+                      onChange={(selected) => {
+                        setSelectedCustomerType(selected);
+                        setSelectedCustomer(null); // Reset customer when type changes
+                      }}
+                      options={customerTypeOptions}
+                      placeholder='Select Customer Type'
+                      isClearable
+                      isSearchable
+                      classNamePrefix='select'
+                      menuPortalTarget={menuPortalTarget}
+                      menuPosition='fixed'
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          minHeight: "38px",
+                        }),
+                      }}
                     />
                   </div>
-                  <div className='col-md-2'>
-                    <label className='form-label text-sm fw-medium'>Customer Phone</label>
-                    <input
-                      type='text'
-                      className='form-control'
-                      value={customerDetails[selectedCustomer.value]?.phone || ""}
-                      readOnly
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Customer Name</label>
+                    <Select
+                      value={selectedCustomer}
+                      onChange={(selected) => {
+                        if (selected && selected.value === "add_customer") {
+                          setIsAddCustomerModalOpen(true);
+                        } else {
+                          setSelectedCustomer(selected);
+                        }
+                      }}
+                      options={customerOptions}
+                      placeholder='Select Customer'
+                      isClearable
+                      isSearchable
+                      isDisabled={!selectedCustomerType}
+                      classNamePrefix='select'
+                      components={{
+                        Option: CustomCustomerOption,
+                        MenuList: CustomMenuList,
+                      }}
+                      filterOption={filterCustomerOptions}
+                      menuPortalTarget={menuPortalTarget}
+                      menuPosition='fixed'
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          minHeight: "38px",
+                        }),
+                        menuList: (base) => ({
+                          ...base,
+                          maxHeight: "260px",
+                          paddingBottom: 0,
+                        }),
+                      }}
                     />
                   </div>
-                  <div className='col-md-2'>
-                    <label className='form-label text-sm fw-medium'>Customer Email</label>
-                    <input
-                      type='text'
-                      className='form-control'
-                      value={customerDetails[selectedCustomer.value]?.email || ""}
-                      readOnly
-                    />
-                  </div>
-                </>
-              )}
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Quotes No</label>
-                <div className='d-flex gap-2'>
-                  <input
-                    type='text'
-                    className='form-control'
-                    placeholder='Pattern (e.g. QT-2025-)'
-                  />
-                  <input
-                    type='text'
-                    className='form-control'
-                    placeholder='Number (e.g. 0001)'
-                  />
+                  {selectedCustomer && selectedCustomer.value !== "add_customer" && (
+                    <>
+                      <div className='col-md-4'>
+                        <label className='form-label text-sm fw-medium'>Customer Mobile</label>
+                        <input
+                          type='text'
+                          className='form-control'
+                          value={customerDetails[selectedCustomer.value]?.phone || ""}
+                          readOnly
+                        />
+                      </div>
+                      <div className='col-md-4'>
+                        <label className='form-label text-sm fw-medium'>Email Address</label>
+                        <input
+                          type='email'
+                          className='form-control'
+                          value={customerDetails[selectedCustomer.value]?.email || ""}
+                          readOnly
+                        />
+                      </div>
+                      {selectedCustomerType?.value === "B2B" && (
+                        <>
+                          <div className='col-md-4'>
+                            <label className='form-label text-sm fw-medium'>GST/Tax</label>
+                            <input
+                              type='text'
+                              className='form-control'
+                              value={customerDetails[selectedCustomer.value]?.gstTax || ""}
+                              readOnly
+                            />
+                          </div>
+                          <div className='col-md-4'>
+                            <label className='form-label text-sm fw-medium'>Company Name</label>
+                            <input
+                              type='text'
+                              className='form-control'
+                              value={customerDetails[selectedCustomer.value]?.companyName || ""}
+                              readOnly
+                            />
+                          </div>
+                          <div className='col-md-4'>
+                            <label className='form-label text-sm fw-medium'>Company Contact Name</label>
+                            <input
+                              type='text'
+                              className='form-control'
+                              value={customerDetails[selectedCustomer.value]?.companyContactName || ""}
+                              readOnly
+                            />
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Issued Date</label>
-                <input type='date' className='form-control' />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Quote Date</label>
-                <input type='date' className='form-control' />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Travel Date</label>
-                <input type='date' className='form-control' />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Customer Type</label>
-                <Select
-                  value={selectedCustomerType}
-                  onChange={setSelectedCustomerType}
-                  options={customerTypeOptions}
-                  placeholder='Select'
-                  isClearable
-                  isSearchable
-                  classNamePrefix='select'
-                  menuPortalTarget={menuPortalTarget}
-                  menuPosition='fixed'
-                />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Trip Duration</label>
-                <Select
-                  value={selectedTripDuration}
-                  onChange={setSelectedTripDuration}
-                  options={tripDurationOptions}
-                  placeholder='Select'
-                  isClearable
-                  isSearchable
-                  classNamePrefix='select'
-                  menuPortalTarget={menuPortalTarget}
-                  menuPosition='fixed'
-                />
-              </div>
-              <div className='col-md-2'>
-                <label className='form-label text-sm fw-medium'>Quote Created By</label>
-                <Select
-                  value={selectedQuoteCreatedBy}
-                  onChange={setSelectedQuoteCreatedBy}
-                  options={quoteCreatedByOptions}
-                  placeholder='Select'
-                  isClearable
-                  isSearchable
-                  classNamePrefix='select'
-                  menuPortalTarget={menuPortalTarget}
-                  menuPosition='fixed'
-                />
+
+              {/* Right Side - Quote Details */}
+              <div className='col-md-6 ps-5'>
+                <h6 className='text-sm fw-semibold mb-16'>Quote Details</h6>
+                <div className='row g-3'>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Quotes No</label>
+                    <div className='d-flex gap-2'>
+                      <input
+                        type='text'
+                        className='form-control'
+                        placeholder='Pattern (e.g. QT-2025-)'
+                      />
+                      <input
+                        type='text'
+                        className='form-control'
+                        placeholder='Number (e.g. 0001)'
+                      />
+                    </div>
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Issued Date</label>
+                    <input
+                      type='date'
+                      className='form-control'
+                      value={issuedDate}
+                      onChange={(e) => {
+                        setIssuedDate(e.target.value);
+                        // Auto-update valid till to be 3 days after issued date
+                        const issuedDateObj = new Date(e.target.value);
+                        const newValidTill = new Date(issuedDateObj);
+                        newValidTill.setDate(newValidTill.getDate() + 3);
+                        setValidTill(formatDate(newValidTill));
+                      }}
+                    />
+                  </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Valid Till</label>
+                    <input
+                      type='date'
+                      className='form-control'
+                      value={validTill}
+                      onChange={(e) => setValidTill(e.target.value)}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
