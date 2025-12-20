@@ -947,9 +947,18 @@ export default function AddInvoiceModal() {
                         <button
                           type='button'
                           className='btn btn-xs btn-primary-600 p-0'
-                          style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ 
+                            width: '20px', 
+                            height: '20px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            opacity: subtotal > 0 ? 1 : 0.5,
+                            cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
+                          }}
                           onClick={() => setIsAddDiscountModalOpen(true)}
-                          title='Add Discount'
+                          disabled={subtotal <= 0}
+                          title={subtotal > 0 ? 'Add Discount' : 'Add items to enable discount'}
                         >
                           +
                         </button>
