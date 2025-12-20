@@ -14,6 +14,7 @@ export default function AddInvoiceModal() {
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [isAddDiscountModalOpen, setIsAddDiscountModalOpen] = useState(false);
   const [invoiceDiscount, setInvoiceDiscount] = useState(null);
+  const [currentItemRowId, setCurrentItemRowId] = useState(null);
   
   // Helper function to format date as YYYY-MM-DD
   const formatDate = (date) => {
@@ -189,32 +190,45 @@ export default function AddInvoiceModal() {
       description: "Standard service charges",
       rate: 100,
       tax: 10,
+      service: "hotel",
     },
     consultation: {
       label: "Consultation",
       description: "Professional consultation",
       rate: 200,
       tax: 18,
+      service: "packages",
     },
     misc: {
       label: "Miscellaneous",
       description: "Other charges",
       rate: 50,
       tax: 5,
+      service: "transport",
     },
   });
 
-  const itemOptions = [
-    ...Object.entries(itemMaster).map(([value, data]) => ({
-      value,
-      label: data.label,
-    })),
-    {
-      value: "add_item",
-      label: "+ Add New Item",
-      isAddOption: true,
-    },
-  ];
+  // Get item options filtered by selected service
+  const getItemOptions = (selectedService) => {
+    if (!selectedService) {
+      return [];
+    }
+    const filteredItems = Object.entries(itemMaster)
+      .filter(([value, data]) => data.service === selectedService.value)
+      .map(([value, data]) => ({
+        value,
+        label: data.label,
+      }));
+    
+    return [
+      ...filteredItems,
+      {
+        value: "add_item",
+        label: "+ Add New Item",
+        isAddOption: true,
+      },
+    ];
+  };
 
   const CustomCustomerOption = (props) => {
     const { data, innerProps } = props;
@@ -301,6 +315,9 @@ export default function AddInvoiceModal() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            // Find the row ID for the current context (we'll use the last row or a default)
+            const rowId = items.length > 0 ? items[items.length - 1].id : 1;
+            setCurrentItemRowId(rowId);
             setIsAddItemModalOpen(true);
           }}
         >
@@ -346,6 +363,7 @@ export default function AddInvoiceModal() {
       ...prev,
       {
         id: nextId,
+        service: null,
         item: null,
         description: "",
         qty: "",
@@ -400,6 +418,15 @@ export default function AddInvoiceModal() {
           if (["qty", "rate", "tax"].includes(field)) {
             updatedRow.total = calculateLineTotal(updatedRow);
           }
+          // When service changes, clear item and reset related fields
+          if (field === "service") {
+            updatedRow.item = null;
+            updatedRow.description = "";
+            updatedRow.rate = "";
+            updatedRow.tax = "";
+            updatedRow.qty = "";
+            updatedRow.total = "";
+          }
           return updatedRow;
         }
         return row;
@@ -413,6 +440,7 @@ export default function AddInvoiceModal() {
       return;
     }
     if (selected.value === "add_item") {
+      setCurrentItemRowId(id);
       setIsAddItemModalOpen(true);
       return;
     }
@@ -438,6 +466,10 @@ export default function AddInvoiceModal() {
   };
 
   const handleSaveNewItem = (newItem) => {
+    // Get the service from the current row context
+    const currentRow = items.find(row => row.id === currentItemRowId);
+    const selectedService = currentRow?.service;
+    
     // Add new item to itemMaster
     const newValue = newItem.name.toLowerCase().replace(/\s+/g, "_");
     setItemMaster((prev) => ({
@@ -447,9 +479,11 @@ export default function AddInvoiceModal() {
         description: newItem.description || "",
         rate: newItem.rate || 0,
         tax: newItem.tax || 0,
+        service: selectedService?.value || "hotel", // Default to hotel if no service selected
       },
     }));
     setIsAddItemModalOpen(false);
+    setCurrentItemRowId(null);
   };
 
   const handleSaveDiscount = (discount) => {
@@ -710,6 +744,14 @@ export default function AddInvoiceModal() {
                   {items.map((row, index) => {
                     const isDisabled = row.isCompleted && !row.isEditing;
                     const isRowFilled = isRowComplete(row);
+                    // Services dropdown is always enabled (unless row is completed and not editing)
+                    const isServiceDisabled = isDisabled;
+                    // Service Items dropdown is disabled if no service is selected or row is disabled
+                    const isItemDisabled = isDisabled || !row.service;
+                    // Other fields are disabled if no item is selected or row is disabled
+                    const areOtherFieldsDisabled = isDisabled || !row.item;
+                    const rowItemOptions = getItemOptions(row.service);
+                    
                     return (
                       <tr key={row.id}>
                         <td>{(index + 1).toString().padStart(2, "0")}</td>
@@ -721,7 +763,7 @@ export default function AddInvoiceModal() {
                             placeholder='Select service'
                             isClearable
                             isSearchable
-                            isDisabled={isDisabled}
+                            isDisabled={isServiceDisabled}
                             classNamePrefix='select'
                             menuPortalTarget={menuPortalTarget}
                             menuPosition='fixed'
@@ -729,7 +771,7 @@ export default function AddInvoiceModal() {
                               control: (base) => ({
                                 ...base,
                                 minHeight: "38px",
-                                opacity: isDisabled ? 0.6 : 1,
+                                opacity: isServiceDisabled ? 0.6 : 1,
                               }),
                             }}
                           />
@@ -738,11 +780,11 @@ export default function AddInvoiceModal() {
                           <Select
                             value={row.item}
                             onChange={(selected) => handleItemSelect(row.id, selected)}
-                            options={itemOptions}
+                            options={rowItemOptions}
                             placeholder='Select item'
                             isClearable
                             isSearchable
-                            isDisabled={isDisabled}
+                            isDisabled={isItemDisabled}
                             classNamePrefix='select'
                             components={{
                               Option: CustomItemOption,
@@ -755,7 +797,7 @@ export default function AddInvoiceModal() {
                               control: (base) => ({
                                 ...base,
                                 minHeight: "38px",
-                                opacity: isDisabled ? 0.6 : 1,
+                                opacity: isItemDisabled ? 0.6 : 1,
                               }),
                               menuList: (base) => ({
                                 ...base,
@@ -774,7 +816,7 @@ export default function AddInvoiceModal() {
                             onChange={(e) =>
                               updateItemRow(row.id, "description", e.target.value)
                             }
-                            disabled={isDisabled}
+                            disabled={areOtherFieldsDisabled}
                           />
                         </td>
                         <td>
@@ -787,7 +829,7 @@ export default function AddInvoiceModal() {
                             onChange={(e) =>
                               updateItemRow(row.id, "qty", e.target.value)
                             }
-                            disabled={isDisabled}
+                            disabled={areOtherFieldsDisabled}
                           />
                         </td>
                         <td>
@@ -801,7 +843,7 @@ export default function AddInvoiceModal() {
                             onChange={(e) =>
                               updateItemRow(row.id, "rate", e.target.value)
                             }
-                            disabled={isDisabled}
+                            disabled={areOtherFieldsDisabled}
                           />
                         </td>
                         <td>
@@ -815,7 +857,7 @@ export default function AddInvoiceModal() {
                             onChange={(e) =>
                               updateItemRow(row.id, "tax", e.target.value)
                             }
-                            disabled={isDisabled}
+                            disabled={areOtherFieldsDisabled}
                           />
                         </td>
                         <td>
