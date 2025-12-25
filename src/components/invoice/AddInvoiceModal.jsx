@@ -512,7 +512,10 @@ export default function AddInvoiceModal() {
       aria-labelledby='addInvoiceModalLabel'
       aria-hidden='true'
     >
-      <div className='modal-dialog modal-fullscreen modal-dialog-centered'>
+      <div 
+        className='modal-dialog modal-fullscreen modal-dialog-centered'
+        style={{ margin: '20px', maxWidth: 'calc(100% - 40px)', maxHeight: 'calc(100% - 40px)' }}
+      >
         <div className='modal-content'>
           <div className='modal-header'>
             <h5 className='modal-title' id='addInvoiceModalLabel'>
