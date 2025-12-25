@@ -7,7 +7,7 @@ import HotelTypeLayer from '@/components/master/HotelTypeLayer';
 import MealOptionsLayer from '@/components/master/MealOptionsLayer';
 import PackageDurationLayer from '@/components/master/PackageDurationLayer';
 import StayTypeLayer from '@/components/master/StayTypeLayer';
-import ThemesLayer from '@/components/master/ThemesLayer';
+import ThemesLayer from '@/components/master/themes/ThemesLayer';
 import PackageTypeLayer from '@/components/master/PackageTypeLayer';
 
 export default async  function Page({params}) {
