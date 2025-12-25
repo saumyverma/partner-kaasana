@@ -997,24 +997,61 @@ export default function AddInvoiceModal() {
                       <div className='d-flex justify-content-between align-items-center mb-2'>
                         <div className='d-flex align-items-center gap-2'>
                           <span className='text-sm text-neutral-600'>Discount</span>
-                          <button
-                            type='button'
-                            className='btn btn-xs btn-primary-600 p-0'
-                            style={{ 
-                              width: '20px', 
-                              height: '20px', 
-                              display: 'flex', 
-                              alignItems: 'center', 
-                              justifyContent: 'center',
-                              opacity: subtotal > 0 ? 1 : 0.5,
-                              cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
-                            }}
-                            onClick={() => setIsAddDiscountModalOpen(true)}
-                            disabled={subtotal <= 0}
-                            title={subtotal > 0 ? 'Add/Edit Discount' : 'Add items to enable discount'}
-                          >
-                            {invoiceDiscount ? <i className='ri-pencil-line' style={{ fontSize: '10px' }}></i> : '+'}
-                          </button>
+                          {invoiceDiscount ? (
+                            <>
+                              <button
+                                type='button'
+                                className='btn btn-xs btn-primary-600 p-0'
+                                style={{ 
+                                  width: '20px', 
+                                  height: '20px', 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={() => setIsAddDiscountModalOpen(true)}
+                                title='Edit Discount'
+                              >
+                                <i className='ri-pencil-line' style={{ fontSize: '10px' }}></i>
+                              </button>
+                              <button
+                                type='button'
+                                className='btn btn-xs btn-danger p-0'
+                                style={{ 
+                                  width: '20px', 
+                                  height: '20px', 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={() => setInvoiceDiscount(null)}
+                                title='Remove Discount'
+                              >
+                                <i className='ri-delete-bin-line' style={{ fontSize: '10px' }}></i>
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              type='button'
+                              className='btn btn-xs btn-primary-600 p-0'
+                              style={{ 
+                                width: '20px', 
+                                height: '20px', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center',
+                                opacity: subtotal > 0 ? 1 : 0.5,
+                                cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
+                              }}
+                              onClick={() => setIsAddDiscountModalOpen(true)}
+                              disabled={subtotal <= 0}
+                              title={subtotal > 0 ? 'Add Discount' : 'Add items to enable discount'}
+                            >
+                              +
+                            </button>
+                          )}
                         </div>
                         <span className='text-sm text-neutral-800 fw-medium'>
                           {invoiceDiscount ? totalDiscount.toFixed(2) : "0.00"}
