@@ -993,38 +993,40 @@ export default function AddInvoiceModal() {
                         {totalTax.toFixed(2)}
                       </span>
                     </div>
-                     <div className='d-flex justify-content-between align-items-center mb-10'>
-                      <div className='d-flex align-items-center gap-2'>
-                        <span className='text-sm text-neutral-600'>Discount</span>
-                        <button
-                          type='button'
-                          className='btn btn-xs btn-primary-600 p-0'
-                          style={{ 
-                            width: '20px', 
-                            height: '20px', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center',
-                            opacity: subtotal > 0 ? 1 : 0.5,
-                            cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
-                          }}
-                          onClick={() => setIsAddDiscountModalOpen(true)}
-                          disabled={subtotal <= 0}
-                          title={subtotal > 0 ? 'Add Discount' : 'Add items to enable discount'}
-                        >
-                          +
-                        </button>
+                    <div className='mb-10'>
+                      <div className='d-flex justify-content-between align-items-center mb-2'>
+                        <div className='d-flex align-items-center gap-2'>
+                          <span className='text-sm text-neutral-600'>Discount</span>
+                          <button
+                            type='button'
+                            className='btn btn-xs btn-primary-600 p-0'
+                            style={{ 
+                              width: '20px', 
+                              height: '20px', 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center',
+                              opacity: subtotal > 0 ? 1 : 0.5,
+                              cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
+                            }}
+                            onClick={() => setIsAddDiscountModalOpen(true)}
+                            disabled={subtotal <= 0}
+                            title={subtotal > 0 ? 'Add/Edit Discount' : 'Add items to enable discount'}
+                          >
+                            {invoiceDiscount ? <i className='ri-pencil-line' style={{ fontSize: '10px' }}></i> : '+'}
+                          </button>
+                        </div>
+                        <span className='text-sm text-neutral-800 fw-medium'>
+                          {invoiceDiscount ? totalDiscount.toFixed(2) : "0.00"}
+                        </span>
                       </div>
-                      <span className='text-sm text-neutral-800 fw-medium'>
-                        {invoiceDiscount ? (
-                          <>
-                            {totalDiscount.toFixed(2)}
-                            {invoiceDiscount.type === "percentage" && ` (${invoiceDiscount.value}%)`}
-                          </>
-                        ) : (
-                          "0.00"
-                        )}
-                      </span>
+                      {invoiceDiscount && (
+                        <div className='text-xs text-neutral-500 text-end'>
+                          {invoiceDiscount.type === "percentage" 
+                            ? `${invoiceDiscount.value}% of ${subtotal.toFixed(2)}` 
+                            : `Fixed: ${invoiceDiscount.value.toFixed(2)}`}
+                        </div>
+                      )}
                     </div>
                     <hr className='my-12' />
                     <div className='d-flex justify-content-between align-items-center'>
