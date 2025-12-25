@@ -128,6 +128,7 @@ export default function AddQuotesModal() {
       type: "B2B",
       phone: "+1 555-0123",
       email: "kathryn@example.com",
+      address: "123 Business Park, Suite 400, New York, NY 10001",
       gstTax: "GST123456789",
       companyName: "Tech Solutions Inc.",
       companyContactName: "Kathryn Murphy",
@@ -136,11 +137,13 @@ export default function AddQuotesModal() {
       type: "B2C",
       phone: "+1 555-0456",
       email: "annette@example.com",
+      address: "456 Residential Street, Los Angeles, CA 90001",
     },
     ronald: {
       type: "B2B",
       phone: "+1 555-0789",
       email: "ronald@example.com",
+      address: "789 Corporate Avenue, Chicago, IL 60601",
       gstTax: "GST987654321",
       companyName: "Business Corp Ltd.",
       companyContactName: "Ronald Richards",
@@ -610,6 +613,15 @@ export default function AddQuotesModal() {
                           type='email'
                           className='form-control'
                           value={customerDetails[selectedCustomer.value]?.email || ""}
+                          readOnly
+                        />
+                      </div>
+                      <div className='col-md-6'>
+                        <label className='form-label text-sm fw-medium'>Address</label>
+                        <textarea
+                          className='form-control'
+                          rows={2}
+                          value={customerDetails[selectedCustomer.value]?.address || ""}
                           readOnly
                         />
                       </div>
