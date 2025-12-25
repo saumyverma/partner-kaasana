@@ -34,6 +34,7 @@ export default function AddInvoiceModal() {
   const [dueDateState, setDueDateState] = useState(dueDate);
   const [quoteReference, setQuoteReference] = useState("");
   const [quoteDate, setQuoteDate] = useState(today);
+  const [totalPax, setTotalPax] = useState(1);
   const [items, setItems] = useState([
     {
       id: 1,
@@ -64,12 +65,14 @@ export default function AddInvoiceModal() {
     let subtotalSum = 0;
     let taxSum = 0;
 
+    const paxMultiplier = parseFloat(totalPax) || 1;
+
     items.forEach((row) => {
       const qty = parseFloat(row.qty) || 0;
       const rate = parseFloat(row.rate) || 0;
       const taxPercent = parseFloat(row.tax) || 0;
 
-      const lineSubtotal = qty * rate;
+      const lineSubtotal = qty * rate * paxMultiplier;
       const lineTax = (lineSubtotal * taxPercent) / 100;
 
       subtotalSum += lineSubtotal;
@@ -92,16 +95,17 @@ export default function AddInvoiceModal() {
     setTotalDiscount(discountAmount);
     setTotalTax(taxSum);
     setGrandTotal(grandTotalValue);
-  }, [items, invoiceDiscount]);
+  }, [items, invoiceDiscount, totalPax]);
 
   // Calculate line total for a specific row
   const calculateLineTotal = (row) => {
     const qty = parseFloat(row.qty) || 0;
     const rate = parseFloat(row.rate) || 0;
     const taxPercent = parseFloat(row.tax) || 0;
+    const paxMultiplier = parseFloat(totalPax) || 1;
 
-    // Calculate subtotal: qty * rate
-    const subtotal = qty * rate;
+    // Calculate subtotal: qty * rate * totalPax
+    const subtotal = qty * rate * paxMultiplier;
 
     // Apply tax
     const taxAmount = (subtotal * taxPercent) / 100;
@@ -109,6 +113,28 @@ export default function AddInvoiceModal() {
 
     return total > 0 ? total.toFixed(2) : "";
   };
+
+  // Recalculate all line totals when totalPax changes
+  useEffect(() => {
+    const paxMultiplier = parseFloat(totalPax) || 1;
+    setItems((prev) =>
+      prev.map((row) => {
+        if (row.qty && row.rate) {
+          const qty = parseFloat(row.qty) || 0;
+          const rate = parseFloat(row.rate) || 0;
+          const taxPercent = parseFloat(row.tax) || 0;
+          const subtotal = qty * rate * paxMultiplier;
+          const taxAmount = (subtotal * taxPercent) / 100;
+          const total = subtotal + taxAmount;
+          return {
+            ...row,
+            total: total > 0 ? total.toFixed(2) : "",
+          };
+        }
+        return row;
+      })
+    );
+  }, [totalPax]);
 
   const customerDetails = {
     kathryn: {
@@ -743,6 +769,17 @@ export default function AddInvoiceModal() {
                       onChange={(e) => setQuoteDate(e.target.value)}
                     />
                   </div>
+                  <div className='col-md-4'>
+                    <label className='form-label text-sm fw-medium'>Total Pax</label>
+                    <input
+                      type='number'
+                      className='form-control'
+                      placeholder='1'
+                      min='1'
+                      value={totalPax}
+                      onChange={(e) => setTotalPax(e.target.value || 1)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -758,8 +795,8 @@ export default function AddInvoiceModal() {
                     <th style={{ width: "15%" }}>Services</th>
                     <th style={{ width: "20%" }}>Service Items</th>
                     <th style={{ width: "20%" }}>Description</th>
-                    <th style={{ width: "8%" }}>Duration</th>
-                    <th style={{ width: "10%" }}>Price/Nights</th>
+                    <th style={{ width: "8%" }}>Qty</th>
+                    <th style={{ width: "10%" }}>Unit Price</th>
                     <th style={{ width: "7%" }}>Tax %</th>
                     <th style={{ width: "13%" }}>Total Amount</th>
                     <th style={{ width: "8%" }}>&nbsp;</th>
