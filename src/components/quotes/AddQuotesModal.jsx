@@ -4,6 +4,7 @@ import Select, { components } from "react-select";
 import AddCustomerModal from "./AddCustomerModal";
 import AddItemModal from "./AddItemModal";
 import AddDiscountModal from "../invoice/AddDiscountModal";
+import AddMarkupModal from "../invoice/AddMarkupModal";
 
 export default function AddQuotesModal() {
   // Helper function to format date as YYYY-MM-DD
@@ -27,7 +28,9 @@ export default function AddQuotesModal() {
   const [isAddCustomerModalOpen, setIsAddCustomerModalOpen] = useState(false);
   const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
   const [isAddDiscountModalOpen, setIsAddDiscountModalOpen] = useState(false);
+  const [isAddMarkupModalOpen, setIsAddMarkupModalOpen] = useState(false);
   const [quoteDiscount, setQuoteDiscount] = useState(null);
+  const [quoteMarkup, setQuoteMarkup] = useState(null);
   const [currentItemRowId, setCurrentItemRowId] = useState(null);
   const [currentServiceForItem, setCurrentServiceForItem] = useState(null);
   const [issuedDate, setIssuedDate] = useState(today);
@@ -49,6 +52,7 @@ export default function AddQuotesModal() {
   const [subtotal, setSubtotal] = useState(0);
   const [totalTax, setTotalTax] = useState(0);
   const [totalDiscount, setTotalDiscount] = useState(0);
+  const [totalMarkup, setTotalMarkup] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
 
   useEffect(() => {
@@ -57,7 +61,7 @@ export default function AddQuotesModal() {
     }
   }, []);
 
-  // Calculate totals whenever items or discount change
+  // Calculate totals whenever items, discount, or markup change
   useEffect(() => {
     let subtotalSum = 0;
     let taxSum = 0;
@@ -84,13 +88,24 @@ export default function AddQuotesModal() {
       }
     }
 
-    const grandTotalValue = subtotalSum - discountAmount + taxSum;
+    // Calculate markup based on type (applied to subtotal)
+    let markupAmount = 0;
+    if (quoteMarkup) {
+      if (quoteMarkup.type === "percentage") {
+        markupAmount = (subtotalSum * quoteMarkup.value) / 100;
+      } else {
+        markupAmount = quoteMarkup.value;
+      }
+    }
+
+    const grandTotalValue = subtotalSum - discountAmount + markupAmount + taxSum;
 
     setSubtotal(subtotalSum);
     setTotalDiscount(discountAmount);
+    setTotalMarkup(markupAmount);
     setTotalTax(taxSum);
     setGrandTotal(grandTotalValue);
-  }, [items, quoteDiscount]);
+  }, [items, quoteDiscount, quoteMarkup]);
 
   // Calculate line total for a specific row
   const calculateLineTotal = (row) => {
@@ -483,6 +498,11 @@ export default function AddQuotesModal() {
   const handleSaveDiscount = (discount) => {
     setQuoteDiscount(discount);
     setIsAddDiscountModalOpen(false);
+  };
+
+  const handleSaveMarkup = (markup) => {
+    setQuoteMarkup(markup);
+    setIsAddMarkupModalOpen(false);
   };
 
   return (
@@ -918,6 +938,39 @@ export default function AddQuotesModal() {
                         )}
                       </span>
                     </div>
+                    <div className='d-flex justify-content-between align-items-center mb-10'>
+                      <div className='d-flex align-items-center gap-2'>
+                        <span className='text-sm text-neutral-600'>Markup</span>
+                        <button
+                          type='button'
+                          className='btn btn-xs btn-primary-600 p-0'
+                          style={{ 
+                            width: '20px', 
+                            height: '20px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            opacity: subtotal > 0 ? 1 : 0.5,
+                            cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
+                          }}
+                          onClick={() => setIsAddMarkupModalOpen(true)}
+                          disabled={subtotal <= 0}
+                          title={subtotal > 0 ? 'Add Markup' : 'Add items to enable markup'}
+                        >
+                          +
+                        </button>
+                      </div>
+                      <span className='text-sm text-neutral-800 fw-medium'>
+                        {quoteMarkup ? (
+                          <>
+                            {totalMarkup.toFixed(2)}
+                            {quoteMarkup.type === "percentage" && ` (${quoteMarkup.value}%)`}
+                          </>
+                        ) : (
+                          "0.00"
+                        )}
+                      </span>
+                    </div>
                     <hr className='my-12' />
                     <div className='d-flex justify-content-between align-items-center'>
                       <span className='text-sm fw-semibold text-neutral-800'>Grand Total</span>
@@ -983,6 +1036,13 @@ export default function AddQuotesModal() {
         onClose={() => setIsAddDiscountModalOpen(false)}
         onSave={handleSaveDiscount}
         currentDiscount={quoteDiscount}
+        menuPortalTarget={menuPortalTarget}
+      />
+      <AddMarkupModal
+        isOpen={isAddMarkupModalOpen}
+        onClose={() => setIsAddMarkupModalOpen(false)}
+        onSave={handleSaveMarkup}
+        currentMarkup={quoteMarkup}
         menuPortalTarget={menuPortalTarget}
       />
     </div>
