@@ -2,13 +2,13 @@ import React from 'react'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import CurrencyLayer from '@/components/master/CurrencyLayer';
-import HotelTypeLayer from '@/components/master/HotelTypeLayer';
-import MealOptionsLayer from '@/components/master/MealOptionsLayer';
-import PackageDurationLayer from '@/components/master/PackageDurationLayer';
-import StayTypeLayer from '@/components/master/StayTypeLayer';
+import CurrencyLayer from '@/components/master/currency/CurrencyLayer';
+import HotelTypeLayer from '@/components/master/hotel-type/HotelTypeLayer';
+import MealOptionsLayer from '@/components/master/meal-options/MealOptionsLayer';
+import PackageDurationLayer from '@/components/master/package-duration/PackageDurationLayer';
+import StayTypeLayer from '@/components/master/stay-type/StayTypeLayer';
 import ThemesLayer from '@/components/master/themes/ThemesLayer';
-import PackageTypeLayer from '@/components/master/PackageTypeLayer';
+import PackageTypeLayer from '@/components/master/package-type/PackageTypeLayer';
 
 export default async  function Page({params}) {
    const resolvedParams = await params;
