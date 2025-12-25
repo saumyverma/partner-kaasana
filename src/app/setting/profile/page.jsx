@@ -440,7 +440,10 @@ const Page = () => {
                                 products/ services
                               </span>
                               <span className="text-secondary-light fw-medium">
-                                : Travel Agent
+                                :{" "}
+                                {operationalInfo.products_and_services.join(
+                                  ","
+                                )}
                               </span>
                             </li>
 
@@ -452,7 +455,10 @@ const Page = () => {
                                 company size
                               </span>
                               <span className="text-secondary-light fw-medium">
-                                : Afganistan
+                                :{" "}
+                                {operationalInfo.location_of_operations_country.join(
+                                  ","
+                                )}
                               </span>
                             </li>
 
@@ -464,7 +470,7 @@ const Page = () => {
                                 booking methods
                               </span>
                               <span className="text-secondary-light fw-medium text-lowercase">
-                                : Baglan
+                                : {operationalInfo.booking_methods.join(",")}
                               </span>
                             </li>
 
@@ -476,7 +482,10 @@ const Page = () => {
                                 Location of operations Country
                               </span>
                               <span className="text-secondary-light fw-medium">
-                                : Baghlan
+                                :{" "}
+                                {operationalInfo.location_of_operations_country.join(
+                                  ","
+                                )}
                               </span>
                             </li>
 
@@ -488,7 +497,10 @@ const Page = () => {
                                 Location of operations
                               </span>
                               <span className="text-secondary-light fw-medium">
-                                : asdfghklwertyuiop
+                                :{" "}
+                                {operationalInfo.location_of_operations.join(
+                                  ","
+                                )}
                               </span>
                             </li>
                           </ul>

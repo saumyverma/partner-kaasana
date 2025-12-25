@@ -4,22 +4,7 @@ import { Icon } from "@iconify/react";
 import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 
-const companyTypeOptions = [
-  "Private Limited",
-  "Public Limited",
-  "Partnership",
-  "Proprietorship",
-];
-
 const countryOptions = ["India", "United Arab Emirates", "Saudi Arabia"];
-
-const stateOptions = [
-  "Maharashtra",
-  "Karnataka",
-  "Dubai Emirate",
-  "Abu Dhabi Emirate",
-  "Riyadh Province",
-];
 
 const cityOptions = ["Dubai", "Abu Dhabi", "Riyadh", "Mumbai", "Delhi"];
 
@@ -35,14 +20,6 @@ const productServiceOptions = [
 
 const bookingMethodOptions = ["Online", "Offline", "Hybrid"];
 
-const designationOptions = [
-  "Founder",
-  "Director",
-  "Manager",
-  "Sales Lead",
-  "Support",
-];
-
 const mapToOptions = (values) =>
   values.map((value) => ({ value, label: value }));
 
@@ -57,7 +34,6 @@ const OperationalInformations = ({ setVisible, operationalInfo }) => {
   const [bookingMethods, setBookingMethods] = useState([]);
 
   const countrySelectOptions = useMemo(() => mapToOptions(countryOptions), []);
-  const stateSelectOptions = useMemo(() => mapToOptions(stateOptions), []);
   const citySelectOptions = useMemo(() => mapToOptions(cityOptions), []);
   const companySizeSelectOptions = useMemo(
     () => mapToOptions(companySizeOptions),
@@ -80,7 +56,7 @@ const OperationalInformations = ({ setVisible, operationalInfo }) => {
       setProductsServices(operationalInfo.products_and_services);
       setBookingMethods(operationalInfo.booking_methods);
     }
-  });
+  }, [operationalInfo]);
 
   return (
     <div
