@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import QuoteReportLayer from "./QuoteReportLayer";
+import QuoteReportLayer from "../quotation/QuoteReportLayer";
 import InvoiceReportLayer from "./InvoiceReportLayer";
 
 export default function InvoicesReportLayer({ pageId }) {
