@@ -33,10 +33,12 @@ export default async function Page({params}) {
     },
   ];
   
+  const pageTitle = getBreadcrumbLabel(pageId);
+  
   return (
     <ProtectedRoute>
       <MasterLayout>
-        <Breadcrumb breadcrumbs={breadcrumbs} />
+        <Breadcrumb title={pageTitle} breadcrumbs={breadcrumbs} />
         {pageId === "sales" ? (
           <SalesReportLayer pageId={pageId}/>
         ) : pageId === "invoices" ? (
