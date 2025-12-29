@@ -140,11 +140,13 @@ const MasterLayout = ({ children }) => {
             {menuList?.map((menu, index) => {
 
               const mainMenuLink = menu?.menu_link ? `/${menu?.menu_link}` : "#";
+               // fallback icon if DB icon is missing
+              const menuIcon = menu?.menu_icon?.trim() ? menu.menu_icon : "solar:home-smile-angle-outline";
 
               return (<li className={` ${menu?.subMenu.length > 0 ? "dropdown" : ""} ${pathname === mainMenuLink ? "active-page" : ""}`} key={index}>
                 <Link href={mainMenuLink} className={` ${pathname === mainMenuLink ? "active-page" : ""}`}>
                   <Icon
-                    icon='flowbite:users-group-outline'
+                    icon={menuIcon}
                     className='menu-icon'
                   />
                   <span>{menu?.menu_name}</span>
