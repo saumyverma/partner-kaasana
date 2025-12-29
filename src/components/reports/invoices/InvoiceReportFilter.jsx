@@ -63,7 +63,7 @@ const InvoiceReportFilter = () => {
             <div className='row g-3 align-items-center'>
               {/* Date Range - col-md-3 */}
               <div className='col-md-3'>
-                <h6 className='mb-16 fw-bold text-lg'>Select your choice</h6>
+                {/* <h6 className='mb-16 fw-bold text-lg'>Select your choice</h6> */}
                 <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                   Date Range
                 </label>
@@ -111,7 +111,7 @@ const InvoiceReportFilter = () => {
 
               {/* Other Filters - col-md-8 */}
               <div className='col-md-8'>
-                <h6 className='mb-16 fw-bold text-lg'>Filters</h6>
+                {/* <h6 className='mb-16 fw-bold text-lg'>Filters</h6> */}    
                 <div className='row g-3'>
                     {/* Branch Dropdown */}
                     <div className='col-md-3'>
