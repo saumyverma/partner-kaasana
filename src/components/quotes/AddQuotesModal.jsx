@@ -959,8 +959,8 @@ export default function AddQuotesModal() {
                     </div>
                     <div className='mb-10'>
                       <div className='d-flex justify-content-between align-items-center mb-2'>
-                        <div className='d-flex align-items-center gap-2'>
-                          <span className='text-sm text-neutral-600'>Discount</span>
+                      <div className='d-flex align-items-center gap-2'>
+                        <span className='text-sm text-neutral-600'>Discount</span>
                           {quoteDiscount ? (
                             <>
                               <button
@@ -997,27 +997,27 @@ export default function AddQuotesModal() {
                               </button>
                             </>
                           ) : (
-                            <button
-                              type='button'
-                              className='btn btn-xs btn-primary-600 p-0'
-                              style={{ 
-                                width: '20px', 
-                                height: '20px', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center',
-                                opacity: subtotal > 0 ? 1 : 0.5,
-                                cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
-                              }}
-                              onClick={() => setIsAddDiscountModalOpen(true)}
-                              disabled={subtotal <= 0}
-                              title={subtotal > 0 ? 'Add Discount' : 'Add items to enable discount'}
-                            >
-                              +
-                            </button>
+                        <button
+                          type='button'
+                          className='btn btn-xs btn-primary-600 p-0'
+                          style={{ 
+                            width: '20px', 
+                            height: '20px', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            opacity: subtotal > 0 ? 1 : 0.5,
+                            cursor: subtotal > 0 ? 'pointer' : 'not-allowed'
+                          }}
+                          onClick={() => setIsAddDiscountModalOpen(true)}
+                          disabled={subtotal <= 0}
+                          title={subtotal > 0 ? 'Add Discount' : 'Add items to enable discount'}
+                        >
+                          +
+                        </button>
                           )}
-                        </div>
-                        <span className='text-sm text-neutral-800 fw-medium'>
+                      </div>
+                      <span className='text-sm text-neutral-800 fw-medium'>
                           {quoteDiscount ? totalDiscount.toFixed(2) : "0.00"}
                         </span>
                       </div>
@@ -1067,8 +1067,8 @@ export default function AddQuotesModal() {
                               >
                                 <i className='ri-delete-bin-line' style={{ fontSize: '10px' }}></i>
                               </button>
-                            </>
-                          ) : (
+                          </>
+                        ) : (
                             <button
                               type='button'
                               className='btn btn-xs btn-primary-600 p-0'
@@ -1091,7 +1091,7 @@ export default function AddQuotesModal() {
                         </div>
                         <span className='text-sm text-neutral-800 fw-medium'>
                           {quoteMarkup ? totalMarkup.toFixed(2) : "0.00"}
-                        </span>
+                      </span>
                       </div>
                       {quoteMarkup && (
                         <div className='text-xs text-neutral-500 text-end'>

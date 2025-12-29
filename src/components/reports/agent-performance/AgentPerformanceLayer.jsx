@@ -1,6 +1,23 @@
 "use client";
-import DashBoardLayerTwo from "../child/DashBoardLayerTwo";
+import AgentPerformanceFilter from "./AgentPerformanceFilter";
+import UpgradeYourPlan from "./UpgradeYourPlan";
+import RevenueStatisticOne from "./RevenueStatisticOne";
+import RecentActivityOne from "./RecentActivityOne";
 
 export default function AgentPerformanceLayer({ pageId }) {
-  return <DashBoardLayerTwo />;
+  return (
+    <div className='row gy-4'>
+      {/* AgentPerformanceFilter */}
+      <AgentPerformanceFilter />
+      
+      {/* UpgradeYourPlan */}
+      <UpgradeYourPlan />
+
+      {/* RevenueStatisticOne */}
+      <RevenueStatisticOne />
+      
+      {/* RecentActivityOne */}
+      <RecentActivityOne />
+    </div>
+  );
 }
