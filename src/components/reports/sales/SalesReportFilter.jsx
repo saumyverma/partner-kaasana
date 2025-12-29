@@ -1,14 +1,65 @@
 import { useState } from "react";
+import Select from "react-select";
+
+// Date Range Options
+const dateRangeOptions = [
+  { value: "", label: "All Data" },
+  { value: "24h", label: "Last 24 Hours" },
+  { value: "7d", label: "Last 7 Days" },
+  { value: "15d", label: "Last 15 Days" },
+  { value: "28d", label: "Last 28 Days" },
+  { value: "3m", label: "Last 3 Months" },
+  { value: "6m", label: "Last 6 Months" },
+  { value: "1y", label: "Last 1 Year" },
+  { value: "custom", label: "Custom Date Range" },
+];
+
+// Branch Options
+const branchOptions = [
+  { value: "", label: "All Branches" },
+  { value: "branch1", label: "Branch 1" },
+  { value: "branch2", label: "Branch 2" },
+  { value: "branch3", label: "Branch 3" },
+];
+
+// User Options
+const userOptions = [
+  { value: "", label: "All Users" },
+  { value: "user1", label: "User 1" },
+  { value: "user2", label: "User 2" },
+  { value: "user3", label: "User 3" },
+];
+
+// Lead Status Options
+const leadStatusOptions = [
+  { value: "", label: "All Status" },
+  { value: "new", label: "New" },
+  { value: "contacted", label: "Contacted" },
+  { value: "qualified", label: "Qualified" },
+  { value: "converted", label: "Converted" },
+];
+
+// Destination Options
+const destinationOptions = [
+  { value: "", label: "All Destinations" },
+  { value: "dest1", label: "Destination 1" },
+  { value: "dest2", label: "Destination 2" },
+  { value: "dest3", label: "Destination 3" },
+];
 
 const SalesReportFilter = () => {
-  const [dateRangeType, setDateRangeType] = useState("");
+  const [dateRangeType, setDateRangeType] = useState(null);
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedLeadStatus, setSelectedLeadStatus] = useState(null);
+  const [selectedDestination, setSelectedDestination] = useState(null);
 
   return (
     <div className='col-xxl-12'>
       <div className='card h-100'>
-        <div className='card-body p-24'>
+        <div className='card-body p-12'>
           {/* Filter Row */}
-          <div className='mb-24'>
+          <div className='mb-0'>
             <div className='row g-3 align-items-center'>
               {/* Date Range - col-md-3 */}
               <div className='col-md-3'>
@@ -16,22 +67,28 @@ const SalesReportFilter = () => {
                 <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                   Date Range
                 </label>
-                <select
-                  className='form-select form-select-sm mb-2'
+                <Select
                   value={dateRangeType}
-                  onChange={(e) => setDateRangeType(e.target.value)}
-                >
-                  <option value=''>All Data</option>
-                  <option value='24h'>Last 24 Hours</option>
-                  <option value='7d'>Last 7 Days</option>
-                  <option value='15d'>Last 15 Days</option>
-                  <option value='28d'>Last 28 Days</option>
-                  <option value='3m'>Last 3 Months</option>
-                  <option value='6m'>Last 6 Months</option>
-                  <option value='1y'>Last 1 Year</option>
-                  <option value='custom'>Custom Date Range</option>
-                </select>
-                {dateRangeType === "custom" && (
+                  onChange={(selected) => setDateRangeType(selected)}
+                  options={dateRangeOptions}
+                  placeholder='Select Date Range'
+                  isClearable
+                  isSearchable
+                  classNamePrefix='select'
+                  className='mb-2'
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      minHeight: "32px",
+                      fontSize: "14px",
+                    }),
+                    menuList: (base) => ({
+                      ...base,
+                      maxHeight: "200px",
+                    }),
+                  }}
+                />
+                {dateRangeType?.value === "custom" && (
                   <div className='d-flex gap-2'>
                     <input
                       type='date'
@@ -55,19 +112,32 @@ const SalesReportFilter = () => {
               {/* Other Filters - col-md-8 */}
               <div className='col-md-8'>
                 <h6 className='mb-16 fw-bold text-lg'>Filters</h6>
-                <div className='border rounded p-3 bg-light'>
-                  <div className='row g-3'>
+                <div className='row g-3'>
                     {/* Branch Dropdown */}
                     <div className='col-md-3'>
                       <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                         Branch
                       </label>
-                      <select className='form-select form-select-sm'>
-                        <option value=''>All Branches</option>
-                        <option value='branch1'>Branch 1</option>
-                        <option value='branch2'>Branch 2</option>
-                        <option value='branch3'>Branch 3</option>
-                      </select>
+                      <Select
+                        value={selectedBranch}
+                        onChange={(selected) => setSelectedBranch(selected)}
+                        options={branchOptions}
+                        placeholder='Select Branch'
+                        isClearable
+                        isSearchable
+                        classNamePrefix='select'
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            minHeight: "32px",
+                            fontSize: "14px",
+                          }),
+                          menuList: (base) => ({
+                            ...base,
+                            maxHeight: "200px",
+                          }),
+                        }}
+                      />
                     </div>
 
                     {/* User Dropdown */}
@@ -75,12 +145,26 @@ const SalesReportFilter = () => {
                       <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                         User
                       </label>
-                      <select className='form-select form-select-sm'>
-                        <option value=''>All Users</option>
-                        <option value='user1'>User 1</option>
-                        <option value='user2'>User 2</option>
-                        <option value='user3'>User 3</option>
-                      </select>
+                      <Select
+                        value={selectedUser}
+                        onChange={(selected) => setSelectedUser(selected)}
+                        options={userOptions}
+                        placeholder='Select User'
+                        isClearable
+                        isSearchable
+                        classNamePrefix='select'
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            minHeight: "32px",
+                            fontSize: "14px",
+                          }),
+                          menuList: (base) => ({
+                            ...base,
+                            maxHeight: "200px",
+                          }),
+                        }}
+                      />
                     </div>
 
                     {/* Lead Status Type Dropdown */}
@@ -88,13 +172,26 @@ const SalesReportFilter = () => {
                       <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                         Lead Status
                       </label>
-                      <select className='form-select form-select-sm'>
-                        <option value=''>All Status</option>
-                        <option value='new'>New</option>
-                        <option value='contacted'>Contacted</option>
-                        <option value='qualified'>Qualified</option>
-                        <option value='converted'>Converted</option>
-                      </select>
+                      <Select
+                        value={selectedLeadStatus}
+                        onChange={(selected) => setSelectedLeadStatus(selected)}
+                        options={leadStatusOptions}
+                        placeholder='Select Status'
+                        isClearable
+                        isSearchable
+                        classNamePrefix='select'
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            minHeight: "32px",
+                            fontSize: "14px",
+                          }),
+                          menuList: (base) => ({
+                            ...base,
+                            maxHeight: "200px",
+                          }),
+                        }}
+                      />
                     </div>
 
                     {/* Destination Dropdown */}
@@ -102,15 +199,28 @@ const SalesReportFilter = () => {
                       <label className='form-label fw-semibold text-primary-light text-sm mb-8'>
                         Destination
                       </label>
-                      <select className='form-select form-select-sm'>
-                        <option value=''>All Destinations</option>
-                        <option value='dest1'>Destination 1</option>
-                        <option value='dest2'>Destination 2</option>
-                        <option value='dest3'>Destination 3</option>
-                      </select>
+                      <Select
+                        value={selectedDestination}
+                        onChange={(selected) => setSelectedDestination(selected)}
+                        options={destinationOptions}
+                        placeholder='Select Destination'
+                        isClearable
+                        isSearchable
+                        classNamePrefix='select'
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            minHeight: "32px",
+                            fontSize: "14px",
+                          }),
+                          menuList: (base) => ({
+                            ...base,
+                            maxHeight: "200px",
+                          }),
+                        }}
+                      />
                     </div>
                   </div>
-                </div>
               </div>
             </div>
           </div>
