@@ -2,12 +2,10 @@ import React from 'react'
 import MasterLayout from "@/masterLayout/MasterLayout";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import SalesReportLayer from '@/components/reports/sales/SalesReportLayer';
 import InvoicesReportLayer from '@/components/reports/invoices/InvoicesReportLayer';
 import AgentPerformanceLayer from '@/components/reports/agent-performance/AgentPerformanceLayer';
 import BranchPerformanceLayer from '@/components/reports/branch-performance/BranchPerformanceLayer';
 import LeadReportsLayer from '@/components/reports/lead-reports/LeadReportsLayer';
-import PaymentStatusLayer from '@/components/reports/payment-status/PaymentStatusLayer';
 
 export default async function Page({params}) {
   const resolvedParams = await params;
@@ -15,12 +13,10 @@ export default async function Page({params}) {
   
   const getBreadcrumbLabel = (id) => {
     const labels = {
-      "sales": "Sales Report",
       "invoices": "Invoices Report",
       "agent-performance": "Agent Performance Report",
       "branch-performance": "Branch Performance Report",
-      "lead-reports": "Lead Reports",
-      "payment-status": "Payment Status Report"
+      "lead-reports": "Lead Reports"
     };
     return labels[id] || "";
   };
@@ -39,9 +35,7 @@ export default async function Page({params}) {
     <ProtectedRoute>
       <MasterLayout>
         <Breadcrumb title={pageTitle} breadcrumbs={breadcrumbs} />
-        {pageId === "sales" ? (
-          <SalesReportLayer pageId={pageId}/>
-        ) : pageId === "invoices" ? (
+        {pageId === "invoices" ? (
           <InvoicesReportLayer pageId={pageId}/>
         ) : pageId === "agent-performance" ? (
           <AgentPerformanceLayer pageId={pageId}/>
@@ -49,8 +43,6 @@ export default async function Page({params}) {
           <BranchPerformanceLayer pageId={pageId}/>
         ) : pageId === "lead-reports" ? (
           <LeadReportsLayer pageId={pageId}/>
-        ) : pageId === "payment-status" ? (
-          <PaymentStatusLayer pageId={pageId}/>
         ) : (
           null
         )}

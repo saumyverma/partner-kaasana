@@ -2,6 +2,8 @@
 import { useState } from "react";
 import QuoteReportLayer from "../quotation/QuoteReportLayer";
 import InvoiceReportLayer from "./InvoiceReportLayer";
+import SalesReportLayer from "../sales/SalesReportLayer";
+import PaymentStatusLayer from "../payment-status/PaymentStatusLayer";
 
 export default function InvoicesReportLayer({ pageId }) {
   const [activeTab, setActiveTab] = useState("quote-report");
@@ -45,6 +47,36 @@ export default function InvoicesReportLayer({ pageId }) {
                 Invoice Report
               </button>
             </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link d-flex align-items-center ${
+                  activeTab === "sales-report" ? "active" : ""
+                }`}
+                id="sales-report-tab"
+                onClick={() => setActiveTab("sales-report")}
+                type="button"
+                role="tab"
+                aria-controls="sales-report"
+                aria-selected={activeTab === "sales-report"}
+              >
+                Sales Report
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link d-flex align-items-center ${
+                  activeTab === "payment-status-report" ? "active" : ""
+                }`}
+                id="payment-status-report-tab"
+                onClick={() => setActiveTab("payment-status-report")}
+                type="button"
+                role="tab"
+                aria-controls="payment-status-report"
+                aria-selected={activeTab === "payment-status-report"}
+              >
+                Payment Status Report
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -67,6 +99,26 @@ export default function InvoicesReportLayer({ pageId }) {
             aria-labelledby="invoice-report-tab"
           >
             <InvoiceReportLayer pageId="invoice-report" />
+          </div>
+        )}
+        {activeTab === "sales-report" && (
+          <div
+            className="tab-pane fade show active"
+            id="sales-report"
+            role="tabpanel"
+            aria-labelledby="sales-report-tab"
+          >
+            <SalesReportLayer pageId="sales-report" />
+          </div>
+        )}
+        {activeTab === "payment-status-report" && (
+          <div
+            className="tab-pane fade show active"
+            id="payment-status-report"
+            role="tabpanel"
+            aria-labelledby="payment-status-report-tab"
+          >
+            <PaymentStatusLayer pageId="payment-status-report" />
           </div>
         )}
       </div>
