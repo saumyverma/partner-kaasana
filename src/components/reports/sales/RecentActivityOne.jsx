@@ -21,16 +21,34 @@ const RecentActivityOne = () => {
               <thead>
                 <tr>
                   <th scope='col' className='bg-transparent rounded-0'>
-                    Customer
+                    Proposal #
                   </th>
                   <th scope='col' className='bg-transparent rounded-0'>
-                    ID
+                    Subject
                   </th>
                   <th scope='col' className='bg-transparent rounded-0'>
-                    Retained
+                    To
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Date
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Open Till
                   </th>
                   <th scope='col' className='bg-transparent rounded-0'>
                     Amount
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Amount with tax
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Total Tax
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Discount
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Adjustment
                   </th>
                   <th scope='col' className='bg-transparent rounded-0'>
                     Status
@@ -39,6 +57,8 @@ const RecentActivityOne = () => {
               </thead>
               <tbody>
                 <tr>
+                  <td>#PROP-001</td>
+                  <td>Summer Vacation Package</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -54,17 +74,22 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>5 min ago</td>
-                  <td>$12,408.12</td>
+                  <td>2024-01-15</td>
+                  <td>2024-02-15</td>
+                  <td>$10,000.00</td>
+                  <td>$12,000.00</td>
+                  <td>$2,000.00</td>
+                  <td>$500.00</td>
+                  <td>$0.00</td>
                   <td>
-                    {" "}
                     <span className='bg-success-focus text-success-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Member
+                      Accepted
                     </span>
                   </td>
                 </tr>
                 <tr>
+                  <td>#PROP-002</td>
+                  <td>Business Travel Package</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -80,17 +105,22 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>12 min ago</td>
-                  <td>$12,408.12</td>
+                  <td>2024-01-16</td>
+                  <td>2024-02-16</td>
+                  <td>$8,500.00</td>
+                  <td>$10,200.00</td>
+                  <td>$1,700.00</td>
+                  <td>$300.00</td>
+                  <td>$100.00</td>
                   <td>
-                    {" "}
-                    <span className='bg-lilac-100 text-lilac-600 px-10 py-4 radius-8 fw-medium text-sm'>
-                      New Customer
-                    </span>{" "}
+                    <span className='bg-warning-focus text-warning-main px-10 py-4 radius-8 fw-medium text-sm'>
+                      Pending
+                    </span>
                   </td>
                 </tr>
                 <tr>
+                  <td>#PROP-003</td>
+                  <td>Family Holiday Package</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -106,17 +136,22 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>15 min ago</td>
-                  <td>$12,408.12</td>
+                  <td>2024-01-17</td>
+                  <td>2024-02-17</td>
+                  <td>$15,000.00</td>
+                  <td>$18,000.00</td>
+                  <td>$3,000.00</td>
+                  <td>$1,000.00</td>
+                  <td>$0.00</td>
                   <td>
-                    {" "}
-                    <span className='bg-warning-focus text-warning-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Signed Up{" "}
-                    </span>{" "}
+                    <span className='bg-danger-focus text-danger-main px-10 py-4 radius-8 fw-medium text-sm'>
+                      Rejected
+                    </span>
                   </td>
                 </tr>
                 <tr>
+                  <td>#PROP-004</td>
+                  <td>Honeymoon Package</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -132,17 +167,22 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>17 min ago</td>
-                  <td>$12,408.12</td>
+                  <td>2024-01-18</td>
+                  <td>2024-02-18</td>
+                  <td>$5,000.00</td>
+                  <td>$6,000.00</td>
+                  <td>$1,000.00</td>
+                  <td>$200.00</td>
+                  <td>$0.00</td>
                   <td>
-                    {" "}
                     <span className='bg-success-focus text-success-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Member
+                      Accepted
                     </span>
                   </td>
                 </tr>
                 <tr>
+                  <td>#PROP-005</td>
+                  <td>Adventure Tour Package</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -158,14 +198,17 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>25 min ago</td>
-                  <td>$12,408.12</td>
+                  <td>2024-01-19</td>
+                  <td>2024-02-19</td>
+                  <td>$12,000.00</td>
+                  <td>$14,400.00</td>
+                  <td>$2,400.00</td>
+                  <td>$600.00</td>
+                  <td>$200.00</td>
                   <td>
-                    {" "}
                     <span className='bg-warning-focus text-warning-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Signed Up{" "}
-                    </span>{" "}
+                      Pending
+                    </span>
                   </td>
                 </tr>
               </tbody>

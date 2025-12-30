@@ -13,12 +13,12 @@ export default function SalesReportWrapper({ initialTitle, initialBreadcrumbs })
 
   const getTabLabel = (tabId) => {
     const labels = {
-      "sales-report": "Sales Report",
+      "sales-report": "Cost Sheet Report",
       "quote-report": "Quote Report",
       "invoice-report": "Invoice Report",
       "payment-status-report": "Payment Status Report"
     };
-    return labels[tabId] || "Sales Report";
+    return labels[tabId] || "Cost Sheet Report";
   };
 
   const handleTabChange = (tabId) => {
@@ -54,7 +54,7 @@ export default function SalesReportWrapper({ initialTitle, initialBreadcrumbs })
                   aria-controls="sales-report"
                   aria-selected={activeTab === "sales-report"}
                 >
-                  Sales Report
+                  Cost Sheet Report
                 </button>
               </li>
               <li className="nav-item" role="presentation">

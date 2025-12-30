@@ -21,24 +21,36 @@ const RecentActivityOne = () => {
               <thead>
                 <tr>
                   <th scope='col' className='bg-transparent rounded-0'>
+                    Payment #
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Date
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Invoice #
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
                     Customer
                   </th>
                   <th scope='col' className='bg-transparent rounded-0'>
-                    ID
+                    Payment Mode
                   </th>
                   <th scope='col' className='bg-transparent rounded-0'>
-                    Retained
+                    Transaction ID
+                  </th>
+                  <th scope='col' className='bg-transparent rounded-0'>
+                    Note
                   </th>
                   <th scope='col' className='bg-transparent rounded-0'>
                     Amount
-                  </th>
-                  <th scope='col' className='bg-transparent rounded-0'>
-                    Status
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
+                  <td>#PAY-001</td>
+                  <td>2024-01-15</td>
+                  <td>#INV-001</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -54,17 +66,15 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>5 min ago</td>
-                  <td>$12,408.12</td>
-                  <td>
-                    {" "}
-                    <span className='bg-success-focus text-success-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Member
-                    </span>
-                  </td>
+                  <td>Credit Card</td>
+                  <td>TXN-123456789</td>
+                  <td>Payment for invoice #INV-001</td>
+                  <td>$12,000.00</td>
                 </tr>
                 <tr>
+                  <td>#PAY-002</td>
+                  <td>2024-01-16</td>
+                  <td>#INV-002</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -80,17 +90,15 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>12 min ago</td>
-                  <td>$12,408.12</td>
-                  <td>
-                    {" "}
-                    <span className='bg-lilac-100 text-lilac-600 px-10 py-4 radius-8 fw-medium text-sm'>
-                      New Customer
-                    </span>{" "}
-                  </td>
+                  <td>Bank Transfer</td>
+                  <td>TXN-987654321</td>
+                  <td>Partial payment</td>
+                  <td>$5,000.00</td>
                 </tr>
                 <tr>
+                  <td>#PAY-003</td>
+                  <td>2024-01-17</td>
+                  <td>#INV-003</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -106,17 +114,15 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>15 min ago</td>
-                  <td>$12,408.12</td>
-                  <td>
-                    {" "}
-                    <span className='bg-warning-focus text-warning-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Signed Up{" "}
-                    </span>{" "}
-                  </td>
+                  <td>Cash</td>
+                  <td>TXN-456789123</td>
+                  <td>Full payment received</td>
+                  <td>$18,000.00</td>
                 </tr>
                 <tr>
+                  <td>#PAY-004</td>
+                  <td>2024-01-18</td>
+                  <td>#INV-004</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -132,17 +138,15 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>17 min ago</td>
-                  <td>$12,408.12</td>
-                  <td>
-                    {" "}
-                    <span className='bg-success-focus text-success-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Member
-                    </span>
-                  </td>
+                  <td>PayPal</td>
+                  <td>TXN-789123456</td>
+                  <td>Online payment</td>
+                  <td>$6,000.00</td>
                 </tr>
                 <tr>
+                  <td>#PAY-005</td>
+                  <td>2024-01-19</td>
+                  <td>#INV-005</td>
                   <td>
                     <div className='d-flex align-items-center'>
                       <img
@@ -158,15 +162,10 @@ const RecentActivityOne = () => {
                       </div>
                     </div>
                   </td>
-                  <td>#63254</td>
-                  <td>25 min ago</td>
-                  <td>$12,408.12</td>
-                  <td>
-                    {" "}
-                    <span className='bg-warning-focus text-warning-main px-10 py-4 radius-8 fw-medium text-sm'>
-                      Signed Up{" "}
-                    </span>{" "}
-                  </td>
+                  <td>Debit Card</td>
+                  <td>TXN-321654987</td>
+                  <td>First installment</td>
+                  <td>$7,000.00</td>
                 </tr>
               </tbody>
             </table>

@@ -13,7 +13,7 @@ export default async function Page({params}) {
   
   const getBreadcrumbLabel = (id) => {
     const labels = {
-      "sales": "Sales Report",
+      "sales": "Cost Sheet Report",
       "agent-performance": "Agent Performance Report",
       "branch-performance": "Branch Performance Report",
       "lead-reports": "Lead Reports"
