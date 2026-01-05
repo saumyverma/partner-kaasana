@@ -5,56 +5,7 @@ import AddCommunicationModal from "./AddCommunicationModal";
 export default function CommunicationLayer() {
   return (
     <div className='row gy-4'>
-      <div className='col-xxl-3'>
-        <div className='card h-100 p-0'>
-          <div className='card-body p-24'>
-            <h6 className='text-lg fw-semibold mb-16'>Communication Filters</h6>
-            <div className='mb-16'>
-              <label className='form-label text-sm fw-medium'>Title</label>
-              <input
-                type='text'
-                className='form-control form-control-sm'
-                placeholder='Search by title'
-              />
-            </div>
-            <div className='mb-16'>
-              <label className='form-label text-sm fw-medium'>Channel</label>
-              <select className='form-select form-select-sm'>
-                <option value=''>All</option>
-                <option value='email'>Email</option>
-                <option value='sms'>SMS</option>
-                <option value='whatsapp'>WhatsApp</option>
-                <option value='phone'>Phone</option>
-              </select>
-            </div>
-            <div className='mb-16'>
-              <label className='form-label text-sm fw-medium'>Status</label>
-              <select className='form-select form-select-sm'>
-                <option value=''>All</option>
-                <option value='active'>Active</option>
-                <option value='inactive'>Inactive</option>
-              </select>
-            </div>
-            <div className='mb-16'>
-              <label className='form-label text-sm fw-medium'>Created Date</label>
-              <input type='date' className='form-control form-control-sm' />
-            </div>
-            <div className='mb-16'>
-              <label className='form-label text-sm fw-medium'>Updated Date</label>
-              <input type='date' className='form-control form-control-sm' />
-            </div>
-            <div className='d-flex flex-column gap-2 mt-16'>
-              <button type='button' className='btn btn-sm btn-primary-600 w-100'>
-                Apply Filter
-              </button>
-              <button type='button' className='btn btn-sm btn-outline-light w-100'>
-                Reset
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className='col-xxl-9'>
+      <div className='col-12'>
         <div className='card h-100 p-0'>
           <div className='card-header d-flex flex-wrap align-items-center justify-content-between gap-3'>
             <div className='d-flex flex-wrap align-items-center gap-3'>
