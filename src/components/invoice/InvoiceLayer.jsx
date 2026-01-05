@@ -1,8 +1,36 @@
+"use client";
+import { useEffect } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
 import AddInvoiceModal from "./AddInvoiceModal";
 
+const loadJQueryAndDataTables = async () => {
+  const $ = (await import("jquery")).default;
+  await import("datatables.net-dt/js/dataTables.dataTables.js");
+  return $;
+};
+
 export default function InvoiceLayer({ pageId }) {
+  useEffect(() => {
+    let table;
+    loadJQueryAndDataTables()
+      .then(($) => {
+        window.$ = window.jQuery = $;
+        // Initialize DataTable
+        table = $("#invoiceDataTable").DataTable({
+          pageLength: 10,
+        });
+      })
+      .catch((error) => {
+        console.error("Error loading jQuery or DataTables:", error);
+      });
+
+    return () => {
+      // Cleanup DataTable instance
+      if (table) table.destroy(true);
+    };
+  }, []);
+
   return (
     <div className='row gy-4'>
       <div className='col-xxl-3'>
@@ -54,21 +82,9 @@ export default function InvoiceLayer({ pageId }) {
         </div>
       </div>
       <div className='col-xxl-9'>
-        <div className='card h-100 p-0'>
+        <div className='card h-100 p-0 basic-data-table'>
           <div className='card-header d-flex flex-wrap align-items-center justify-content-between gap-3'>
             <div className='d-flex flex-wrap align-items-center gap-3'>
-            
-              <div className='icon-field'>
-                <input
-                  type='text'
-                  name='#0'
-                  className='form-control form-control-sm w-auto'
-                  placeholder='Search'
-                />
-                <span className='icon'>
-                  <Icon icon='ion:search-outline' />
-                </span>
-              </div>
             </div>
             <div className='d-flex flex-wrap align-items-center gap-3'>
               <button
@@ -82,7 +98,11 @@ export default function InvoiceLayer({ pageId }) {
             </div>
           </div>
           <div className='card-body table-responsive'>
-            <table className='table bordered-table mb-0'>
+            <table
+              className='table bordered-table mb-0'
+              id='invoiceDataTable'
+              data-page-length={10}
+            >
               <thead>
                 <tr>
                   <th scope='col'>
@@ -709,52 +729,6 @@ export default function InvoiceLayer({ pageId }) {
                 </tr>
               </tbody>
             </table>
-            <div className='d-flex flex-wrap align-items-center justify-content-between gap-2 mt-24'>
-              <span>Showing 1 to 10 of 12 entries</span>
-              <ul className='pagination d-flex flex-wrap align-items-center gap-2 justify-content-center'>
-                <li className='page-item'>
-                  <Link
-                    className='page-link text-secondary-light fw-medium radius-4 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px  me-8 w-32-px bg-base'
-                    href='#'
-                  >
-                    <Icon icon='ep:d-arrow-left' className='text-xl' />
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-primary-600 text-white fw-medium radius-4 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px  me-8 w-32-px'
-                    href='#'
-                  >
-                    1
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-primary-50 text-secondary-light fw-medium radius-4 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px  me-8 w-32-px'
-                    href='#'
-                  >
-                    2
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link bg-primary-50 text-secondary-light fw-medium radius-4 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px  me-8 w-32-px'
-                    href='#'
-                  >
-                    3
-                  </Link>
-                </li>
-                <li className='page-item'>
-                  <Link
-                    className='page-link text-secondary-light fw-medium radius-4 border-0 px-10 py-10 d-flex align-items-center justify-content-center h-32-px  me-8 w-32-px bg-base'
-                    href='#'
-                  >
-                    {" "}
-                    <Icon icon='ep:d-arrow-right' className='text-xl' />{" "}
-                  </Link>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
         <AddInvoiceModal />

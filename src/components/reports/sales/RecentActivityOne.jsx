@@ -1,10 +1,38 @@
+"use client";
+import { useEffect } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
+const loadJQueryAndDataTables = async () => {
+  const $ = (await import("jquery")).default;
+  await import("datatables.net-dt/js/dataTables.dataTables.js");
+  return $;
+};
+
 const RecentActivityOne = () => {
+  useEffect(() => {
+    let table;
+    loadJQueryAndDataTables()
+      .then(($) => {
+        window.$ = window.jQuery = $;
+        // Initialize DataTable
+        table = $("#salesRecentActivityTable").DataTable({
+          pageLength: 10,
+        });
+      })
+      .catch((error) => {
+        console.error("Error loading jQuery or DataTables:", error);
+      });
+
+    return () => {
+      // Cleanup DataTable instance
+      if (table) table.destroy(true);
+    };
+  }, []);
+
   return (
     <div className='col-xxl-12'>
-      <div className='card h-100'>
+      <div className='card h-100 basic-data-table'>
         <div className='card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between'>
           <h6 className='text-lg fw-semibold mb-0'>Recent Activity</h6>
           <Link
@@ -17,7 +45,11 @@ const RecentActivityOne = () => {
         </div>
         <div className='card-body p-0'>
           <div className='table-responsive scroll-sm'>
-            <table className='table bordered-table mb-0 rounded-0 border-0'>
+            <table
+              className='table bordered-table mb-0 rounded-0 border-0'
+              id='salesRecentActivityTable'
+              data-page-length={10}
+            >
               <thead>
                 <tr>
                   <th scope='col' className='bg-transparent rounded-0'>
