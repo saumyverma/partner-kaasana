@@ -1,0 +1,171 @@
+{
+  "monthly": [
+    {
+      "id": 1,
+      "name": "Basic",
+      "subtitle": "For individuals",
+      "description": "Perfect for individuals and small teams getting started",
+      "price": "$99",
+      "period": "/monthly",
+      "icon": "/assets/images/pricing/price-icon1.png",
+      "bgColor": "bg-lilac-50",
+      "checkIconBg": "bg-lilac-600",
+      "buttonClass": "bg-lilac-600 bg-hover-lilac-700 text-white border border-lilac-600",
+      "isPopular": false,
+      "features": [
+        "All analytics features",
+        "Up to 250,000 tracked visits",
+        "Normal support",
+        "Up to 3 team members"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Premium",
+      "subtitle": "For small businesses",
+      "description": "Enhanced features for small businesses and growing teams",
+      "price": "$149",
+      "period": "/monthly",
+      "icon": "/assets/images/pricing/price-icon4.png",
+      "bgColor": "bg-warning-50",
+      "checkIconBg": "bg-warning-600",
+      "buttonClass": "bg-warning-600 bg-hover-warning-700 text-white border border-warning-600",
+      "isPopular": false,
+      "features": [
+        "All analytics features",
+        "Up to 500,000 tracked visits",
+        "Priority support",
+        "Up to 10 team members",
+        "Advanced reporting"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pro",
+      "subtitle": "For startups",
+      "description": "Ideal for growing startups and small businesses",
+      "price": "$199",
+      "period": "/monthly",
+      "icon": "/assets/images/pricing/price-icon2.png",
+      "bgColor": "bg-danger-50",
+      "checkIconBg": "bg-danger-600",
+      "buttonClass": "bg-danger-600 bg-hover-danger-700 text-white border border-danger-600",
+      "isPopular": true,
+      "features": [
+        "All analytics features",
+        "Up to 1,000,000 tracked visits",
+        "Priority support",
+        "Up to 25 team members",
+        "Advanced reporting",
+        "Custom integrations"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Enterprise",
+      "subtitle": "For big companies",
+      "description": "Complete solution for large enterprises and organizations",
+      "price": "$399",
+      "period": "/monthly",
+      "icon": "/assets/images/pricing/price-icon3.png",
+      "bgColor": "bg-success-50",
+      "checkIconBg": "bg-success-600",
+      "buttonClass": "bg-success-600 bg-hover-success-700 text-white border border-success-600",
+      "isPopular": false,
+      "features": [
+        "All analytics features",
+        "Unlimited tracked visits",
+        "24/7 dedicated support",
+        "Unlimited team members",
+        "Advanced reporting",
+        "Custom integrations",
+        "Dedicated account manager"
+      ]
+    }
+  ],
+  "yearly": [
+    {
+      "id": 1,
+      "name": "Basic",
+      "subtitle": "For individuals",
+      "description": "Perfect for individuals and small teams getting started",
+      "price": "$399",
+      "period": "/yearly",
+      "icon": "/assets/images/pricing/price-icon1.png",
+      "bgColor": "bg-lilac-50",
+      "checkIconBg": "bg-lilac-600",
+      "buttonClass": "bg-lilac-600 bg-hover-lilac-700 text-white border border-lilac-600",
+      "isPopular": false,
+      "features": [
+        "All analytics features",
+        "Up to 250,000 tracked visits",
+        "Normal support",
+        "Up to 3 team members"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Premium",
+      "subtitle": "For small businesses",
+      "description": "Enhanced features for small businesses and growing teams",
+      "price": "$599",
+      "period": "/yearly",
+      "icon": "/assets/images/pricing/price-icon4.png",
+      "bgColor": "bg-warning-50",
+      "checkIconBg": "bg-warning-600",
+      "buttonClass": "bg-warning-600 bg-hover-warning-700 text-white border border-warning-600",
+      "isPopular": false,
+      "features": [
+        "All analytics features",
+        "Up to 500,000 tracked visits",
+        "Priority support",
+        "Up to 10 team members",
+        "Advanced reporting"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Pro",
+      "subtitle": "For startups",
+      "description": "Ideal for growing startups and small businesses",
+      "price": "$799",
+      "period": "/yearly",
+      "icon": "/assets/images/pricing/price-icon2.png",
+      "bgColor": "bg-danger-50",
+      "checkIconBg": "bg-danger-600",
+      "buttonClass": "bg-danger-600 bg-hover-danger-700 text-white border border-danger-600",
+      "isPopular": true,
+      "features": [
+        "All analytics features",
+        "Up to 1,000,000 tracked visits",
+        "Priority support",
+        "Up to 25 team members",
+        "Advanced reporting",
+        "Custom integrations"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Enterprise",
+      "subtitle": "For big companies",
+      "description": "Complete solution for large enterprises and organizations",
+      "price": "$1599",
+      "period": "/yearly",
+      "icon": "/assets/images/pricing/price-icon3.png",
+      "bgColor": "bg-success-50",
+      "checkIconBg": "bg-success-600",
+      "buttonClass": "bg-success-600 bg-hover-success-700 text-white border border-success-600",
+      "isPopular": false,
+      "features": [
+        "All analytics features",
+        "Unlimited tracked visits",
+        "24/7 dedicated support",
+        "Unlimited team members",
+        "Advanced reporting",
+        "Custom integrations",
+        "Dedicated account manager"
+      ]
+    }
+  ]
+}
+

@@ -5,7 +5,7 @@ import TncLayer from "@/components/settings/tnc/TncLayer";
 import MarkupLayer from "@/components/settings/markup/MarkupLayer";
 import NotificationLayer from "@/components/settings/notification/NotificationLayer";
 import CommunicationLayer from "@/components/settings/communication/CommunicationLayer";
-import SubscriptionPlansLayer from "@/components/settings/subscription-plans";
+import SubscriptionLayer from "@/components/settings/subscription-plans/SubscriptionLayer";
 import OtherSettingsLayer from "@/components/settings/other-settings";
 import MasterLayout from "@/masterLayout/MasterLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -45,7 +45,7 @@ const Page = ({ params }) => {
       case "communications":
         return <CommunicationLayer />;
       case "subscription-plan":
-        return <SubscriptionPlansLayer />;
+        return <SubscriptionLayer />;
       case "other-settings":
         return <OtherSettingsLayer />;
       default:
